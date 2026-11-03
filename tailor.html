@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>定制服务 | 丝路之家</title>
+<link rel="stylesheet" href="./site-source/css/entry.89d5752e.css">
+<link rel="stylesheet" href="./site-source/css/index.449605d2.css">
+<style>
+/* ══ 阿里巴巴普惠体 3.0（自托管 woff2，仅标题字族）：65-Medium→500/600，85-Bold→700 ══ */
+@font-face{
+  font-family:'Alibaba PuHuiTi 3.0';
+  src:url('./site-source/fonts/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+  font-weight:500 600; font-display:swap;
+}
+@font-face{
+  font-family:'Alibaba PuHuiTi 3.0';
+  src:url('./site-source/fonts/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+  font-weight:700; font-display:swap;
+}
+/* 模块标题统一规范（对齐「品牌简介」参考样式）：联系区大标题加橙色短线 */
+.ct-title::before{
+  content:''; display:block; width:44px; height:2px; border-radius:2px;
+  background:#CD7A36; margin-bottom:14px;
+}
+/* ══════════════════════════════════════════════════════════
+   线上缺失的 Tailwind 类（entry.89d5752e.css 中 emerald / amber /
+   prose / from-black 出现次数均为 0，说明构建时未生成）
+   默认关闭 = 还原线上真实渲染；开启 = 还原设计意图
+   ══════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════
+   导航配色：纯白 #FFFFFF 底 + #666 常规字重（未触发）+ #094949 600（选中）
+   对比度（底 #FFFFFF，相对亮度 1.0000）：
+     未触发文字 #666       5.36:1 ✅ AA
+     触发/选中/下划线 #094949  9.51:1 ✅（与未触发拉开 1.77:1 明度差）
+     logo #CD7A36（大字号，门槛 3:1） 3.05:1 ⚠️ 仅够大字
+   ══════════════════════════════════════════════════════════ */
+.bg-nav-light{background-color:#FFFFFF}
+/* 导航只用投影分层，不再描边：底部线条全部去掉，靠柔和投影浮起 */
+#siteHeader{
+  border-bottom:0 !important;
+  box-shadow:0 6px 22px -8px rgba(8,32,26,.22);
+}
+#siteHeader.is-solid{box-shadow:0 10px 30px -10px rgba(8,32,26,.30)}
+
+/* 导航项：未触发=常规字重 + 中灰；选中态才加粗上墨绿
+   #666 在 #FFFFFF 上 5.74:1（AA 正文达标），与选中 #094949（10.19:1）拉开两级明度 */
+.nav-link{
+  position:relative; display:inline-flex; align-items:center;
+  min-height:44px;                 /* WCAG 触控目标 ≥44px */
+  padding:0 4px;
+  font-size:1.125rem; font-weight:400; line-height:1.5;
+  color:#666; text-decoration:none; white-space:nowrap;
+  transition:color .22s ease;
+}
+.nav-link::after{                  /* 下划线：居中短横线，仅选中态显示 */
+  content:''; position:absolute;
+  left:50%; width:22px; margin-left:-11px;
+  bottom:calc(-1 * var(--nav-bottom-gap, 16px));  /* 贴齐导航条背景底边 */
+  height:2px; border-radius:2px; background:#094949;
+  transform:scaleX(0); transform-origin:center center;
+  transition:transform .26s cubic-bezier(.4,0,.2,1);
+}
+.nav-link:hover,.nav-link:focus-visible{color:#094949}
+.nav-link.is-active{color:#094949; font-weight:600}
+.nav-link.is-active::after{transform:scaleX(1)}
+.nav-link:focus-visible{outline:2px solid #094949; outline-offset:4px; border-radius:3px}
+
+/* 定制服务按钮：#094949 描边/文字，全尺寸显示 */
+.tailor-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:40px; padding:8px 20px;
+  border:2px solid #094949; border-radius:9999px;
+  font-size:.875rem; font-weight:600; line-height:1.2;
+  color:#094949; text-decoration:none; white-space:nowrap;
+  background:transparent;
+  transition:background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+/* 两个 CTA 按钮触发态统一：主色 #094949 提亮版 #094949 + 白字（对比度实测） */
+.tailor-btn:hover{background:#094949; color:#fff; transform:translateY(-1px)}
+.tailor-btn:focus-visible{outline:2px solid #094949; outline-offset:3px}
+
+/* 小屏汉堡入口（md 以下 nav 整块隐藏，原本无替代入口） */
+.hamburger{
+  display:none; width:44px; height:44px; flex:none;
+  align-items:center; justify-content:center; flex-direction:column; gap:5px;
+  padding:0; border:0; border-radius:8px; background:transparent; cursor:pointer;
+}
+.hamburger span{display:block; width:22px; height:2px; border-radius:2px; background:#666; transition:transform .26s ease, opacity .2s ease}
+.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hamburger:focus-visible{outline:2px solid #094949; outline-offset:2px}
+
+/* 需求①：小屏用「整体缩放」保住按钮，而不是隐藏它 */
+@media (max-width:767px){
+  .hamburger{display:flex}
+  .tailor-btn{padding:7px 14px; font-size:.8125rem; min-height:38px}
+}
+/* ── 品牌 Logo：图片版（179×64 透明 PNG，宽高比 2.8:1）──
+   显示高 44px（与原文字 logo 视觉量级一致），≤520px 缩到 34px 防挤压 */
+.logo-link{display:inline-flex; align-items:center; flex:none}
+.logo-img{height:44px; width:auto; display:block}
+/* 全部文字/线条均不加投影（需求） */
+header .nav-link, header .lang-btn,
+header .logo-img, header .tailor-btn{ text-shadow:none }
+.hamburger span{box-shadow:none}
+
+@media (max-width:520px){
+  header > div{padding-left:12px !important; padding-right:12px !important; gap:8px !important}
+  .logo-img{height:34px !important}              /* 44px → 34px，腾出横向空间 */
+  .tailor-btn{padding:6px 12px; font-size:.75rem; min-height:36px; letter-spacing:0}
+  .lang-btn{padding:6px 4px; font-size:.875rem}
+  .lang-menu{min-width:104px}
+  .hamburger{width:40px; height:40px}
+  .hamburger span{width:20px}
+}
+
+/* ── 页脚背景：#08201A（墨绿黑，与品牌青绿 #094949 同源） ──
+   原 Tailwind .bg-gray-900 不再引用，改自定义类避免误伤其它深灰块
+   白字对比度 15.6:1 ｜ amber-400 标题 8.9:1 ｜ 链接 hover emerald-400 7.2:1
+   ────────────────────────────────────────────────────────── */
+.bg-footer{background-color:#08201A}
+
+/* 页脚分隔线：#F1ECDF @30%；版权文字 #FDF5E5（覆盖 Tailwind border-white/10 与继承 text-white） */
+/* 版权文字：#FDF5E5 @55%（实色太抢眼，压到半透明弱化）；
+   合成色在 #08201A 上实测 5.47:1，仍过 AA（45% 只有 4.15:1，不达标，故取 55%） */
+.footer-copyright{border-top-color:rgba(241,236,223,.3) !important; color:rgba(253,245,229,.55) !important}
+.footer-copyright *{color:rgba(253,245,229,.55) !important}
+/* 页脚 logo：白色版 179×74（深底专用），显示高 56px（宽按 2.42:1 自动跟随） */
+.footer-logo{height:56px; width:auto; display:block}
+
+/* ── 语言切换：无框文字按钮 + 向下弹出的自定义菜单 ──
+   替代原生 <select>：原生 option 列表由系统绘制，位置不可控且会盖住选择区 */
+.lang-switch{position:relative; flex:none}
+.lang-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:44px; padding:6px 10px;
+  background:none; border:0; cursor:pointer;
+  font-size:.9375rem; font-weight:400; color:#666;
+  font-family:inherit;
+  transition:color .2s ease;
+}
+.lang-btn:hover,.lang-btn[aria-expanded="true"]{color:#094949}
+.lang-btn:focus-visible{outline:2px solid #094949; outline-offset:2px; border-radius:4px}
+.lang-caret{
+  width:0; height:0; flex:none;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid currentColor;
+  transition:transform .2s ease;
+}
+.lang-btn[aria-expanded="true"] .lang-caret{transform:rotate(180deg)}
+/* 菜单向下展开：top:100% 定在按钮下方，不遮挡按钮本身 */
+.lang-menu{
+  position:absolute; top:100%; right:0; z-index:60;
+  margin-top:6px; min-width:120px; padding:6px;
+  background:#FFFFFF; border:0; border-radius:12px;
+  box-shadow:0 16px 32px -12px rgba(8,32,26,.32);
+  list-style:none;
+}
+.lang-menu[hidden]{display:none}
+.lang-opt{
+  display:flex; align-items:center; width:100%; min-height:40px;
+  padding:0 10px; border:0; border-radius:6px; background:none;
+  font-size:.9375rem; font-family:inherit; color:#333; text-align:left;
+  cursor:pointer; transition:background-color .15s ease, color .15s ease;
+}
+.lang-opt:hover{background:rgba(9,73,73,.08); color:#094949}
+.lang-opt:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.lang-opt[aria-selected="true"]{color:#094949; font-weight:600}
+.lang-opt[aria-selected="true"]::after{content:'✓'; margin-left:auto; font-size:.8125rem}
+
+/* 小屏下拉菜单（打包 CSS 缺 .md\:hidden，补一道断点保险） */
+.mobile-menu{
+  padding:8px 24px 20px; border-top:0;
+  background-color:#FFFFFF;
+  box-shadow:0 14px 26px -14px rgba(8,32,26,.28);
+}
+@media (min-width:768px){
+  .mobile-menu{display:none !important}
+  /* 打包 CSS 里 col-span-2 只出现在非 md 的作用域，这里自补 md 断点，保证字段能横跨两列 */
+  .md\:col-span-2{grid-column:span 2 / span 2}
+}
+.mobile-menu[hidden]{display:none}
+.nav-link-m{
+  display:block; padding:14px 4px; min-height:48px;
+  font-size:1.0625rem; font-weight:400; color:#666; text-decoration:none;
+  border-bottom:1px solid rgba(8,32,26,.10);
+  transition:color .2s ease;
+}
+.nav-link-m:last-child{border-bottom:0}
+.nav-link-m:hover,.nav-link-m.is-active{color:#094949}
+.nav-link-m.is-active{font-weight:600}
+
+/* ══════════════════════════════════════════════════════════
+   响应式布局：破除线上 PC 站的 1200px 锁定
+   线上 body{min-width:1200px}，移动端必然横向溢出，
+   这是原站「只服务桌面」的产物，响应式必须先解掉它
+   ══════════════════════════════════════════════════════════ */
+html,body{min-width:0 !important; overflow-x:hidden}
+
+/* ══ 首屏视频文案：五级层次，字号全部 clamp 流式缩放 ══
+   白字压在视频上，靠 1px 级轻微暗描边兜底（视频亮帧时仍可读），
+   不依赖大范围投影，保持画面干净 */
+.banner-copy{max-width:56rem; margin:0 auto}
+.bc-en{
+  margin:0 0 clamp(14px,2vw,22px);
+  font-size:clamp(.75rem,1.8vw,1.125rem); font-weight:500;
+  letter-spacing:.18em; margin-right:-.18em;   /* 负边距抵消尾字距，保证真正居中 */
+  color:#fff;
+}
+.bc-main{
+  margin:0 0 clamp(12px,1.8vw,20px);
+  font-size:clamp(1.5625rem,5.2vw,3.75rem); font-weight:700; line-height:1.28;
+  letter-spacing:.02em; color:#fff;
+}
+.bc-sub{
+  margin:0;
+  font-size:clamp(.9375rem,2.1vw,1.375rem); line-height:1.9;
+  color:rgba(255,255,255,.95);
+}
+.bc-tag{
+  margin:clamp(20px,3vw,34px) 0 0;
+  font-size:clamp(.9375rem,2vw,1.25rem); font-weight:500;
+  letter-spacing:.28em; margin-right:-.28em;
+  color:rgba(255,255,255,.92);
+}
+.bc-en,.bc-main,.bc-sub,.bc-tag{ text-shadow:0 1px 10px rgba(0,0,0,.45) }
+
+/* 主色实底按钮：与「了解我们」按钮（.adv-more--solid）同款
+   #094949 底 + 1.5px 同色描边 + 白字，圆角 8px；白字对比度 10.19:1（AAA） */
+.bc-cta{
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:clamp(22px,3vw,36px);
+  min-height:52px; padding:14px 40px;
+  background:#094949; color:#FFFFFF; border:1.5px solid #094949; border-radius:8px;
+  font-size:clamp(.9375rem,1.6vw,1.125rem); font-weight:600; letter-spacing:.12em;
+  margin-right:-.12em; text-decoration:none;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, transform .22s ease,
+             box-shadow .22s ease, padding .26s cubic-bezier(.22,.61,.36,1);
+}
+/* hover 时左右内边距等量回缩，抵消箭头展开的宽度 —— 按钮宽度恒定不跳动，只做"呼吸"
+   底色提亮为 #0E6F6F（与 .adv-more--solid 的触发态一致） */
+.bc-cta:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF; transform:translateY(-2px);
+  padding-left:24px; padding-right:24px;
+  box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.bc-cta:focus-visible{outline:2px solid #fff; outline-offset:3px}
+
+/* ══ 按钮 hover 微交互：箭头淡入右滑 + 落地阴影 ══
+   箭头用内联 SVG（不依赖字体字形，中英文 rendering 一致）；
+   宽度 0 → 1.05em 平滑展开，避免占位导致默认态左右不对称 */
+.bc-cta, .adv-more{position:relative}
+.bc-cta::after, .adv-more::after{
+  content:''; display:inline-block; flex:none;
+  width:0; height:1.05em; margin-left:0; opacity:0;
+  vertical-align:middle; letter-spacing:0; transform:translateX(-6px);
+  background:no-repeat center/1.05em 1.05em
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15'/%3E%3Cpath d='M13 5.5 19.5 12 13 18.5'/%3E%3C/svg%3E");
+  transition:width .26s cubic-bezier(.22,.61,.36,1), margin-left .26s cubic-bezier(.22,.61,.36,1),
+             opacity .22s ease, transform .26s cubic-bezier(.22,.61,.36,1);
+}
+.bc-cta:hover::after, .adv-more:hover::after{
+  width:1.05em; margin-left:.75em; opacity:1; transform:translateX(0);
+}
+@media (max-width:640px){
+  .bc-cta{min-height:48px; padding:12px 30px; width:auto}
+  .bc-cta:hover{padding-left:14px; padding-right:14px}
+  .bc-main{font-size:1.5rem; letter-spacing:0}   /* 375px 下 13 字单行放下，避免孤字折行 */
+}
+/* services 的 h2 已改为小标签样式（.adv-eyebrow），about 的 h2 与优势区同构（.about-title），均不参与区块大标题缩放 */
+/* contact 的标题已改为「小标签 + 金色短线」的 eyebrow 写法，不参与区块大标题缩放 */
+#products h2:not(.adv-eyebrow){
+  font-size:clamp(1.5rem, 4.2vw, 2.25rem)
+}
+/* 产品区标题沿用 .adv-eyebrow（与优势区同款），居中时用负边距抵消尾字距，保证真正居中 */
+#products .adv-eyebrow-en{margin-right:-.2em}
+
+/* ══ 特色产品：四条「左图 + 右文」编辑式横匾 ══
+   参考稿语言：暖白纸卡 + 图角墨绿双语小签 + 宋体大标 + 茶金描边胶囊标签 + 墨绿实心按钮。
+   三色沿用全站：纸卡 #FBF8F1 / 墨绿 #1F4438-#094949 / 茶金 #B08A4F。 */
+#products{
+  background-color:#EFF3EC;
+  /* 上下各压一道极淡内影，把硬边界柔化成"纸的接缝"，省掉分隔线 */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(255,255,255,.55);
+}
+.feat-list{display:grid; gap:28px}
+.feat-row{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  background:#FBF8F1;
+  border:1px solid rgba(9,73,73,.10);
+  border-radius:8px; overflow:hidden;
+  box-shadow:0 1px 2px rgba(9,73,73,.05), 0 20px 44px -36px rgba(9,73,73,.55);
+  transition:box-shadow .3s ease, transform .3s ease;
+}
+.feat-row:hover{
+  box-shadow:0 2px 4px rgba(9,73,73,.06), 0 28px 54px -34px rgba(9,73,73,.55);
+  transform:translateY(-2px);
+}
+@media (min-width:1024px){
+  .feat-row{grid-template-columns:minmax(0,45%) minmax(0,55%); min-height:340px}
+  /* 第 2、4 条左右互换（左文右图）：仅换视觉次序，DOM 仍图在前，
+     <1024 堆叠时保持「图在上」的统一节奏 */
+  .feat-row.is-rev{grid-template-columns:minmax(0,55%) minmax(0,45%)}
+  .feat-row.is-rev .feat-media{order:2}
+  .feat-row.is-rev .feat-body{order:1}
+}
+.feat-media{position:relative; margin:0; min-width:0; overflow:hidden; background:#E4E7DE}
+.feat-media img{
+  display:block; width:100%; max-width:100%; height:100%; object-fit:cover;
+  aspect-ratio:4 / 3;
+  transition:transform .8s cubic-bezier(.22,.61,.36,1);
+}
+@media (min-width:1024px){ .feat-media img{aspect-ratio:auto} }
+.feat-row:hover .feat-media img{transform:scale(1.03)}
+/* 图角双语小签：深色玻璃片 —— 半透墨绿 + 背景模糊 + 上缘微弱冷光，
+   仍保留透视感，但暗底把米色 #F1ECDF 的字托起来，压在最亮的天空上也不发飘 */
+.feat-chip{
+  position:absolute; top:18px; left:18px;
+  display:inline-flex; align-items:baseline; gap:11px;
+  padding:9px 19px 10px; border-radius:999px;
+  background:rgba(18,38,32,.62);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);
+  backdrop-filter:blur(16px) saturate(1.15);
+  border:1px solid rgba(255,255,255,.92);
+  color:#F1ECDF;
+  font-size:.9375rem; font-weight:600; letter-spacing:.05em; line-height:1;
+  box-shadow:0 8px 22px -12px rgba(9,73,73,.55),
+             inset 0 1px 0 rgba(255,255,255,.16);
+}
+.feat-body{
+  padding:40px 44px 42px;
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+  gap:18px;
+}
+@media (max-width:1023px){ .feat-body{padding:26px 24px 30px; gap:14px} }
+/* 产品条目标题（行于山水 / 行商阅山 …）：与全站模块标题同语言，统一走普惠体 700 */
+.feat-title{
+  margin:0; font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(1.375rem,2.1vw,1.75rem); font-weight:700;
+  letter-spacing:.06em; line-height:1.5; color:#333;
+}
+.feat-desc{
+  margin:0; font-size:.9375rem; line-height:2; color:#4C544E; max-width:40em;
+}
+.feat-tags{
+  display:flex; flex-wrap:wrap; gap:10px; margin:2px 0 0; padding:0; list-style:none;
+}
+.feat-tags li{
+  padding:6px 15px 7px; border-radius:999px;
+  border:1px solid rgba(176,138,79,.42); background:#FDF8ED;
+  font-size:.8125rem; line-height:1.4; color:#9A7440; letter-spacing:.02em;
+}
+/* 与「提交需求」完全同色：主色 #094949 实底，hover 提亮 #0E6F6F + 上浮 + 落影 */
+.feat-cta{
+  margin-top:12px; display:inline-flex; align-items:center; justify-content:center;
+  min-height:46px; padding:0 26px; border-radius:5px;
+  background:#094949; border:1.5px solid #094949; color:#FFFFFF; text-decoration:none;
+  font-size:.9375rem; letter-spacing:.04em; cursor:pointer;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             box-shadow .22s ease, transform .22s ease;
+}
+.feat-cta:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.feat-cta:active{transform:translateY(0)}
+.feat-cta:focus-visible{outline:2px solid #7E5812; outline-offset:3px}
+/* 「查看全部产品」：与卡片内 CTA 同为矩形（5px 圆角、46px 高），
+   只靠描边/实心区分主次 —— 次层级按钮，hover 反白 */
+.feat-all{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:46px; padding:0 30px; border-radius:5px;
+  border:1.5px solid #094949; background:#FDFCF7; color:#094949;
+  text-decoration:none; font-size:.9375rem; letter-spacing:.03em;
+  transition:background .25s ease, color .25s ease;
+}
+.feat-all:hover{background:#094949; color:#FDF5E5}
+
+/* ══ 动效系统 ══
+   ① 滚动入场 reveal：进入视口时淡入上浮，同组错峰 80ms（最多 6 档）
+   ② 首屏文案入场：加载即逐行浮起（CTA 只淡入，避免 animation fill 覆盖 hover 位移）
+   ③ 视差：首屏文案随滚动淡出上移；优势区背景图反向缓移
+   全部在 prefers-reduced-motion 下自动关闭 */
+.reveal{
+  opacity:0; transform:translateY(28px);
+  transition:opacity .72s cubic-bezier(.22,.61,.36,1), transform .72s cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--rd,0ms); will-change:opacity,transform;
+}
+.reveal.in{opacity:1; transform:none}
+
+.banner-copy > *:not(.bc-cta){animation:bcIn .9s cubic-bezier(.22,.61,.36,1) both}
+.bc-cta{animation:bcFade .9s cubic-bezier(.22,.61,.36,1) both}
+.banner-copy > *:nth-child(1){animation-delay:.08s}
+.banner-copy > *:nth-child(2){animation-delay:.20s}
+.banner-copy > *:nth-child(3){animation-delay:.32s}
+.banner-copy > *:nth-child(4){animation-delay:.44s}
+.banner-copy > *:nth-child(5){animation-delay:.56s}
+.banner-copy > *:nth-child(6){animation-delay:.68s}
+@keyframes bcIn  {from{opacity:0; transform:translateY(26px)} to{opacity:1; transform:none}}
+@keyframes bcFade{from{opacity:0} to{opacity:1}}
+
+#heroCopy{will-change:opacity,transform}
+
+/* 锚点跳转时留出 fixed header 的高度 */
+#services,#about,#contact,#products{scroll-margin-top:88px}
+
+/* ══ 我们的优势：纸白底 + 沙漠驼队线稿背景 —— 左标题栏 + 米白/墨绿双卡 ══
+   三色即全部：卡米白 #F0EBDF / 卡主色绿 #094949 / 编号棕金 #B08A4F
+   间距统一 48px 栅格：区块与 banner 之间、列间距均为 48px */
+#services{
+  background-color:#F9F7F1;
+  /* 背景铺满一屏；用 min-height 而非 height —— 小屏内容超出时不会被裁切 */
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  /* 上下各 48px 由区块自己承担；容器不再垫底部内边距 —— 这样 flex 居中才是视觉真居中 */
+  padding-bottom:48px;
+}
+/* 插画层：挂在内容容器里（容器的底边＝卡片底边），
+   用 top:100% 把画顶对齐卡片底边，再 translateY(负值) 把沙丘脊线上提到同一水平线 ——
+   百分比位移算的是自身高度，所以换视口不用重算。
+   left 用 min(0, 40rem - 50vw) 反而把容器居中留出的空白抵掉，保持贴着区块左边缘。 */
+#parallaxBg{
+  position:absolute; top:100%; left:min(0px, calc(40rem - 50vw));
+  width:min(1180px, 78vw); aspect-ratio:1921 / 874;
+  /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
+  transform:translateY(-58.5%);
+  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
+  opacity:.8;
+  pointer-events:none; z-index:0;
+}
+/* 内容压在插画层之上（插画层 z-index:0 且绝对定位，会盖住普通流内文字） */
+#services > .max-w-7xl{position:relative; z-index:1}
+.adv-layout{position:relative; z-index:1}
+/* 窄屏双卡竖排：卡片把画的上半截全盖住，只在区块最后 48px 露一条沙带 ——
+   沿用同一个顶点对齐，露出来的正好是驼队所在的沙面 */
+@media (max-width:1023px){
+  #parallaxBg{width:min(100vw,560px)}
+}
+#services > div{width:100%}
+.adv-rule{width:44px; height:2px; margin:0 auto 18px; background:#CD7A36; border-radius:2px}
+.adv-rule--left{margin:0 0 18px 0}
+.adv-layout{display:grid; gap:48px; grid-template-columns:1fr}
+@media (min-width:1024px){
+  /* 左栏 ↔ 右区 48px；右区内部两卡再按 24px 分（见 .adv-grid-wrap） */
+  .adv-layout{grid-template-columns:.95fr 2fr; gap:48px; align-items:stretch}
+}
+/* 左栏：标题中英文 —— 不套微软雅黑，保持独立气质 */
+.adv-eyebrow{
+  font-size:clamp(1.375rem,4.6vw,1.875rem); font-weight:700; color:#22302C;
+  margin:0; line-height:1.3; letter-spacing:.01em;
+}
+.adv-eyebrow-en{
+  font-family:Georgia,'Times New Roman',serif; font-size:clamp(1rem,3.2vw,1.375rem);
+  letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
+}
+/* 除标题中英文外，本板块其余文字统一微软雅黑（跨平台回退链保底） */
+#services .adv-lead, #services .adv-more, #services .adv-card-title,
+#services .adv-item-no, #services .adv-item-title, #services .adv-item-desc{
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.adv-lead{
+  font-size:16px; line-height:1.85; color:#2B2B2B;
+  margin:28px 0 0; max-width:24em;
+}
+.adv-lead + .adv-lead{margin-top:12px}
+.adv-more{
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:36px; padding:12px 34px;
+  border:1.5px solid #094949; border-radius:8px; background:transparent;
+  font-size:16px; font-weight:600; color:#094949; text-decoration:none;
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             transform .22s ease, box-shadow .22s ease;
+}
+.adv-more:hover{
+  background:#094949; border-color:#094949; color:#FDF5E5;
+  transform:translateY(-2px); box-shadow:0 12px 26px -8px rgba(9,73,73,.55);
+}
+/* 双卡：米白 / 墨绿，等高对齐；自成一格，内部两卡间距 24px（与左栏之间是父级的 48px） */
+.adv-grid-wrap{display:grid; grid-template-columns:1fr; gap:24px}
+@media (min-width:1024px){ .adv-grid-wrap{grid-template-columns:1fr 1fr} }
+/* 卡面压在插画上，加一道短距投影把两张卡"托"起来 ——
+   沙米卡 #F0EBDF 与沙丘底色接近，靠投影而不是靠颜色区分 */
+.adv-card{
+  padding:38px 30px 18px; display:flex; flex-direction:column; border-radius:8px; overflow:hidden;
+  box-shadow:0 22px 46px -30px rgba(9,73,73,.42);
+}
+.adv-card--sand{background:#F0EBDF}
+.adv-card--pine{background:#094949}
+.adv-card-title{
+  text-align:center;
+  font-size:1.125rem; font-weight:700; letter-spacing:.05em;
+  color:#22302C; margin:0 0 12px;
+}
+.adv-card--pine .adv-card-title{color:#FDF5E5}
+.adv-list{list-style:none; margin:0; padding:0; flex:1}
+.adv-item{
+  display:grid; grid-template-columns:46px 1fr; gap:16px; align-items:center;
+  padding:15px 0; border-bottom:1px solid rgba(43,43,43,.10);
+}
+.adv-card--pine .adv-item{border-bottom-color:rgba(255,255,255,.16)}
+.adv-item:last-child{border-bottom:0}
+.adv-icon{
+  width:46px; height:46px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:#E3DDCD; color:#9C7A45;
+}
+.adv-card--pine .adv-icon{background:rgba(255,255,255,.12); color:#E5CFA0}
+.adv-icon svg{width:22px; height:22px}
+.adv-item-no{display:block; font-size:.6875rem; font-weight:600; letter-spacing:.16em; color:#B08A4F}
+.adv-card--pine .adv-item-no{color:#D9B87E}
+.adv-item-title{display:block; font-size:16px; font-weight:700; color:#253230; margin-top:3px; line-height:1.5}
+.adv-card--pine .adv-item-title{color:#FDF5E5}
+.adv-item-desc{display:block; font-size:.8438rem; line-height:1.7; color:#8F8B80; margin-top:3px}
+.adv-card--pine .adv-item-desc{color:rgba(253,245,229,.72)}
+@media (max-width:520px){
+  .adv-card{padding:30px 22px 12px}
+  .adv-item{grid-template-columns:40px 1fr; gap:12px}
+  .adv-icon{width:40px; height:40px}
+}
+
+/* ══ 关于丝路之家：左图右文（参考版式）——标题/按钮与优势区同构 ══ */
+#about{
+  background-color:#F9F7F1;
+  /* 与优势区一致：背景铺满一屏（min-height 而非 height，小屏内容超高不会被裁切） */
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  /* 上下各 48px 由区块自己承担，容器不垫内边距 —— flex 居中才是视觉真居中 */
+  padding-bottom:48px;
+}
+#about > div{width:100%}
+.about-layout{display:grid; gap:48px; grid-template-columns:1fr}
+@media (min-width:1024px){
+  .about-layout{grid-template-columns:1fr 1fr; gap:56px; align-items:center}
+}
+/* 左：图 + 左下角文案 + 右上印章 */
+.about-media{position:relative; margin:0}
+/* 裁切框：只包图，印章不进框 */
+.about-media-frame{display:block; overflow:hidden; border-radius:6px}
+.about-media img{
+  display:block; width:100%; aspect-ratio:4/3.1; object-fit:cover; border-radius:6px;
+  /* 缩放动效与产品卡图片同一套语言：0.8s 同一条缓动曲线 */
+  transform:scale(1); transform-origin:54% 44%;
+  transition:transform .8s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
+}
+/* 触发缩放：鼠标悬停整块图（含印章与角标）时画面推近 1.06，
+   溢出部分由 .about-media-frame 裁掉，边缘不会跑出圆角 */
+.about-media:hover #aboutImg{transform:scale(1.06)}
+/* 入场：从下往上"揭幕" 1.15s，与列本身的 .reveal 上浮叠加出层次 */
+#about .about-media.reveal.in .about-media-frame{
+  animation:aboutUnveil 1.15s cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes aboutUnveil{
+  from{clip-path:inset(0 0 100% 0)}
+  to  {clip-path:inset(0 0 0 0)}
+}
+/* 图底暗渐变：保证左下角白色文字可读 */
+.about-media::after{
+  content:''; position:absolute; inset:0; border-radius:6px; pointer-events:none;
+  background:linear-gradient(180deg, rgba(8,20,18,0) 52%, rgba(8,20,18,.60) 100%);
+}
+.about-media-cap{
+  position:absolute; left:26px; bottom:22px; z-index:2;
+  display:flex; flex-direction:column; gap:9px; color:#FFFFFF;
+}
+.about-media-en{font-size:11px; font-weight:500; letter-spacing:.42em; opacity:.85}
+.about-media-cap strong{font-size:clamp(1rem,1.6vw,1.25rem); font-weight:600; letter-spacing:.06em}
+/* 印章：跨图右上角，竖排两列 + 内描边 */
+.about-seal{
+  position:absolute; top:24px; right:-16px; z-index:2;
+  width:64px; height:92px; background:#CD7A36; border-radius:5px;
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  box-shadow:0 8px 18px -8px rgba(8,32,26,.40);
+}
+.about-seal::before{
+  content:''; position:absolute; inset:4px; border:1px solid rgba(253,245,229,.55); border-radius:3px;
+}
+.about-seal span{
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:15px; font-weight:600; letter-spacing:.28em; line-height:1;
+  color:#FDF5E5;
+  /* 竖排末尾会多出一份 letter-spacing 的空白，抵消后文字才能在框内真正垂直居中 */
+  margin-bottom:-.28em;
+}
+/* 右：eyebrow + 大标题 + 英文（与优势区左栏同构） */
+.about-eyebrow{
+  display:flex; align-items:center; gap:14px; margin:0 0 14px;
+  font-size:.8125rem; font-weight:600; letter-spacing:.14em; color:#094949;
+}
+.about-eyebrow-line{width:44px; height:1px; background:#094949; opacity:.5}
+.about-title{
+  font-size:clamp(1.375rem,4.6vw,1.875rem); font-weight:700; line-height:1.3;
+  letter-spacing:.01em; color:#22302C; margin:0;
+}
+.about-title-en{
+  font-family:Georgia,'Times New Roman',serif; font-size:clamp(1rem,3.2vw,1.375rem);
+  letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
+}
+/* 除标题中英文外统一微软雅黑（与优势区一致） */
+#about .about-body, #about .about-tags li, #about .about-media-cap strong,
+#about .about-eyebrow, #about .adv-more{
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.about-body{font-size:16px; line-height:1.9; color:#3D3D3A; margin:24px 0 0}
+.about-body p{margin:0 0 1em}
+.about-body p:last-child{margin-bottom:0}
+/* 业务标签徽章 */
+.about-tags{list-style:none; display:flex; flex-wrap:wrap; gap:12px; padding:0; margin:26px 0 0}
+/* 标签：白底 + 主色描边与字色，在米白底上有清晰的白卡层次 */
+.about-tags li{
+  padding:9px 22px; border:1px solid rgba(9,73,73,.42); border-radius:30px;
+  background:rgba(9,73,73,.06);
+  font-size:13px; font-weight:500; letter-spacing:.06em; color:#094949;
+}
+/* 按钮复用 .adv-more（16px + hover 箭头/阴影），仅调间距；
+   高度对齐产品卡按钮 .feat-cta：改用 min-height:46px + 上下零内边距撑出来 */
+#about .adv-more{margin-top:34px; min-height:46px; padding:0 34px; line-height:1}
+/* 「了解我们」不带动效箭头：去掉伪元素，hover 只保留提亮 + 上浮 + 落影 */
+#about .adv-more::after{display:none !important}
+/* 主色实底变体：默认填充主色 #094949，触发（hover）提亮为 #0E6F6F */
+.adv-more--solid{
+  background:#094949; border-color:#094949; color:#FFFFFF;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+}
+.adv-more--solid:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1 !important; transform:none !important; transition:none !important}
+  .banner-copy > *:not(.bc-cta), .bc-cta{animation:none !important}
+  #aboutImg, .about-media-frame{animation:none !important}
+  .about-media:hover #aboutImg{transform:none !important}
+  .bc-cta::after, .adv-more::after{transition:opacity .15s linear; transform:none !important}
+  .bc-cta:hover, .adv-more:hover{transform:none !important}
+}
+/* ══ CONTACT：左文案 + 右表单卡 ══
+   恒温米 #F3F0E8（相对亮度 .872，与首页特色产品区/联系区同色）：全站最后一块冷绿底
+     #F6F9F5（雾绿、色相约 120°）已并入暖纸体系，定制页与首页同调，两页之间不再跳色 ／
+     纸白卡 #F9F7F1（.930）与底亮度比 1.06（旧冷绿底上是 1.009，几乎只靠色温差），
+     明度不够定界，边界交给 1px 主色描边（.14）+ 明确落地投影 ／
+   青铜 #7E5812（eyebrow）／ 主色绿 #094949（CTA，hover #0E6F6F）
+   对比度核对（底 #F3F0E8，相对亮度 .872）：
+     标题 #1A2A22 ≈ 12.2:1 ✅ 说明 #5B6059 ≈ 5.64:1 ✅ 信息键 #575C55 ≈ 5.7:1 ✅
+     信息值 #28302B ≈ 11.1:1 ✅ 青铜 #7E5812 ≈ 5.60:1 ✅（全部过 AA 4.5）
+   卡内（底 #F9F7F1）：正文 #28302B ≈ 12.7:1 ✅ 字段标签 #5B6059 ≈ 6.0:1 ✅
+     提示灰 #6B6656 ≈ 5.3:1 ✅ 必填星号 #9A6E1C ≈ 4.3:1（符号，非正文）✅ */
+#contact.ct-section{
+  background:#F3F0E8;
+  /* 上缘极淡白线柔化与纸白的接缝；下缘压一道淡绿影，把深墨绿页脚接住 */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), inset 0 -54px 44px -54px rgba(9,73,73,.20);
+  padding:0 !important;            /* 覆盖小屏 `section{padding:56px}` 的通用规则 */
+  scroll-margin-top:0;
+  overflow:hidden;
+}
+.ct-wrap{
+  max-width:1240px; margin:0 auto;
+  padding:clamp(52px,7vw,104px) clamp(20px,4.6vw,60px);
+  display:grid; grid-template-columns:1fr; gap:clamp(30px,4vw,52px);
+  align-items:center;
+}
+@media (min-width:1024px){
+  .ct-wrap{grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr); gap:clamp(44px,5vw,84px)}
+}
+
+/* ── 左：文案 ── */
+.ct-lead{color:#1A2A22; min-width:0}
+.ct-eyebrow{
+  display:inline-flex; align-items:center; gap:9px; margin:0 0 clamp(16px,2vw,24px);
+  font-size:.8125rem; font-weight:600; letter-spacing:.2em; color:#7E5812;
+}
+.ct-eyebrow::before{
+  content:''; width:6px; height:6px; flex:none; border-radius:1px;
+  background:#7E5812; transform:rotate(45deg);
+}
+/* 大标题用宋体，与设计稿的"书卷气"一致；其余文字仍走全站字体 */
+.ct-title{
+  margin:0;
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  /* 定死 30px：与「了解我们」等按钮同级的视觉量级，不再随视口放大 */
+  font-size:30px; font-weight:700; line-height:1.4; letter-spacing:.02em;
+  color:#1A2A22;
+}
+.ct-title > span{display:block}
+/* 标题下的英文一行：沿用全站英文小标语言（Georgia 大写 + 茶金 #CD7A36），
+   字号比优势区/关于我们的略小，压在 30px 定死的大标题下不抢主次 */
+.ct-title-en{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:.9375rem; letter-spacing:.18em; text-transform:uppercase;
+  color:#CD7A36; margin:12px 0 0; line-height:1.4;
+}
+.ct-title-en[hidden]{display:none}   /* 英文模式下由 JS 加 hidden */
+.ct-desc{
+  margin:clamp(18px,2.2vw,28px) 0 0; max-width:21em;
+  font-size:clamp(.9375rem,1.1vw,1.0625rem); line-height:2; color:#5B6059;
+  text-wrap:pretty;               /* 折行时避免末行只剩一两个字（孤字） */
+}
+/* 联系方式：信息只在联系区出现，不能随版式一起丢掉 */
+.ct-info{margin:clamp(30px,3.6vw,46px) 0 0; padding-top:clamp(18px,2.2vw,26px); border-top:1px solid rgba(40,48,43,.14)}
+.ct-info-list{list-style:none; margin:0; padding:0; display:grid; gap:9px}
+.ct-info-list li{
+  display:grid; grid-template-columns:4.4em minmax(0,1fr); gap:14px; align-items:baseline;
+  font-size:.8125rem; line-height:1.7;
+}
+.ct-info-key{color:#575C55; letter-spacing:.08em; white-space:nowrap}
+.ct-info-val{color:#28302B; word-break:break-word}
+
+/* 线描山形：浅底上用主色绿，透明度压到 10%（底越淡，同样透明度的压纹越显绿） */
+.ct-art{
+  display:block; width:min(100%,310px); height:auto; margin:clamp(26px,3.2vw,40px) 0 0;
+  color:#094949; opacity:.10; pointer-events:none;
+}
+
+/* ── 右：表单卡 ── */
+.ct-card{
+  /* 纸白卡 #F9F7F1 对米底 #F3F0E8 亮度比 1.06（旧冷绿底 #F6F9F5 上只有 1.009），
+     明度差仍偏小，边界交给"极淡墨绿细线 + 落地投影"：线从 .10 提到 .14（与首页 .ct-card 对齐），
+     只作定形用，不抢视觉 */
+  background:#F9F7F1; border:1px solid rgba(9,73,73,.14); border-radius:10px;
+  padding:clamp(22px,2.6vw,32px) clamp(18px,2.4vw,30px) clamp(18px,2.2vw,26px);
+  box-shadow:0 26px 50px -26px rgba(8,32,26,.46), 0 2px 6px -2px rgba(8,32,26,.12), 0 1px 0 rgba(255,255,255,.8) inset;
+  color:#28302B; min-width:0;
+}
+.ct-card-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+  margin:0 0 clamp(16px,1.9vw,22px);
+}
+.ct-card-title{
+  margin:0; font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(1rem,1.5vw,1.1875rem); font-weight:700;
+  letter-spacing:.02em; color:#1F2A26;
+}
+.ct-req-note{margin:0; flex:none; font-size:.6875rem; letter-spacing:.02em; color:#6B6656}
+.ct-req-note b{margin-right:2px; font-weight:600; color:#9A6E1C}
+
+/* 表单：两栏网格；邮箱与需求各占整行 */
+.ct-grid{display:grid; grid-template-columns:1fr; gap:14px 18px}
+@media (min-width:560px){ .ct-grid{grid-template-columns:1fr 1fr} }
+.ct-field{display:flex; flex-direction:column; gap:7px; min-width:0}
+.ct-field--full{grid-column:1 / -1}
+.ct-field label{
+  font-size:.75rem; font-weight:500; letter-spacing:.04em; color:#5B6059;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.ct-field label .req{margin-left:3px; color:#9A6E1C}
+
+/* 输入框：浅描边方框（设计稿的"表单格子"），聚焦转主色绿 */
+.ct-box{position:relative; display:flex; align-items:center}
+.ct-box input, .ct-box select, .ct-box textarea{
+  width:100%; height:38px; margin:0; padding:0 12px;
+  background:#FFFFFF; border:1px solid #DCD6C6; border-radius:3px;
+  font-family:inherit; font-size:.875rem; line-height:36px; color:#28302B;
+  box-shadow:none; transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.ct-box input::placeholder, .ct-box textarea::placeholder{color:#B4AEA0}
+.ct-box input:focus, .ct-box select:focus, .ct-box textarea:focus{
+  outline:none; border-color:#094949; box-shadow:0 0 0 3px rgba(9,73,73,.10);
+}
+/* ══ 意向目的地：自定义下拉 ══
+   原生 <select> 展开的 option 列表由操作系统绘制，高亮色取系统强调色（默认蓝），
+   CSS 完全改不动 —— 所以这里和语言切换一样改成自定义组件，配色统一走主色绿。 */
+.ct-select{position:relative}
+.ct-select-btn{
+  display:flex; align-items:center; gap:10px; flex:1 1 auto; width:100%;
+  height:38px; padding:0 12px; margin:0;
+  background:#FFFFFF; border:1px solid #DCD6C6; border-radius:3px;
+  font-family:inherit; font-size:.875rem; line-height:36px; color:#28302B; text-align:left;
+  cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease;
+}
+.ct-select-btn:hover{border-color:rgba(9,73,73,.5)}
+.ct-select-btn.is-empty{color:#B4AEA0}
+.ct-select-btn[aria-expanded="true"]{
+  border-color:#094949; box-shadow:0 0 0 3px rgba(9,73,73,.10);
+}
+.ct-select-btn:focus-visible{outline:2px solid #094949; outline-offset:2px}
+.ct-select-val{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.ct-caret{
+  flex:none; width:11px; height:7px; color:#094949;
+  transition:transform .2s ease;
+}
+.ct-select-btn[aria-expanded="true"] .ct-caret{transform:rotate(180deg)}
+/* 菜单向下弹出，与语言菜单同款阴影 */
+.ct-select-menu{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70;
+  max-height:248px; overflow-y:auto; margin:0; padding:6px;
+  background:#FFFFFF; border:1px solid #EAE6DC; border-radius:10px;
+  box-shadow:0 18px 34px -14px rgba(8,32,26,.34);
+  list-style:none;
+}
+.ct-select-menu[hidden]{display:none}
+.ct-select-opt{
+  display:flex; align-items:center; width:100%; min-height:38px;
+  padding:8px 10px; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.875rem; line-height:1.5; color:#28302B; text-align:left;
+  cursor:pointer; transition:background-color .15s ease, color .15s ease;
+}
+/* hover / 键盘高亮 / 选中：全部主色绿系，与语言菜单一致 */
+.ct-select-opt:hover,
+.ct-select-opt:focus,
+.ct-select-opt.is-active{background:rgba(9,73,73,.08); color:#094949}
+/* 干掉浏览器默认的蓝色焦点环（-webkit-focus-ring-color），换成主色绿 */
+.ct-select-opt:focus{outline:none}
+.ct-select-opt:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-select-opt[aria-selected="true"]{color:#094949; font-weight:600}
+.ct-select-opt[aria-selected="true"]::after{content:'✓'; margin-left:auto; font-size:.8125rem}
+/* 下方空间不足时向上展开 */
+.ct-select-menu.is-up{top:auto; bottom:calc(100% + 6px)}
+
+/* 日历面板内部 */
+.ct-dp[hidden]{display:none}
+.ct-dp.is-up{top:auto; bottom:calc(100% + 6px)}
+.ct-dp-head{display:flex; align-items:center; gap:6px; margin-bottom:8px}
+.ct-dp-title{
+  flex:1 1 auto; text-align:center;
+  font-size:.875rem; font-weight:600; color:#28302B; letter-spacing:.02em;
+}
+.ct-dp-nav{
+  flex:none; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+  border:0; border-radius:6px; background:none; color:#094949; cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+.ct-dp-nav svg{width:8px; height:12px}
+.ct-dp-nav:hover{background:rgba(9,73,73,.08)}
+.ct-dp-nav:focus{outline:none}
+.ct-dp-nav:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-dp-dow, .ct-dp-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px}
+.ct-dp-dow span{
+  height:26px; display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; color:#9A958A;
+}
+.ct-dp-day{
+  height:32px; padding:0; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.8125rem; color:#28302B; cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+.ct-dp-blank{height:32px}
+/* 与 .ct-select-opt 同一套绿：hover 浅底 + 主色字，选中深底 + 白字 */
+.ct-dp-day:hover{background:rgba(9,73,73,.08); color:#094949}
+.ct-dp-day:focus{outline:none}
+.ct-dp-day:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-dp-day.is-today{color:#094949; font-weight:700; box-shadow:inset 0 0 0 1px rgba(9,73,73,.45)}
+.ct-dp-day.is-sel{background:#094949; color:#FFFFFF; font-weight:600}
+.ct-dp-day.is-sel:hover{background:#0E6F6F; color:#FFFFFF}
+.ct-dp-foot{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-top:10px; padding-top:9px; border-top:1px solid #EFEADD;
+}
+.ct-dp-btn{
+  min-height:30px; padding:0 10px; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.8125rem; color:#094949; cursor:pointer;
+  transition:background-color .15s ease;
+}
+.ct-dp-btn:hover{background:rgba(9,73,73,.08)}
+.ct-dp-btn:focus{outline:none}
+.ct-dp-btn:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+/* ══ 预计出行时间：自定义日历 ══
+   原生 <input type="date"> 的弹层同样由浏览器绘制，选中日高亮取系统强调色（蓝），
+   CSS 改不动 —— 与「意向目的地」同处理：自绘日历，配色统一走主色绿。 */
+.ct-cal{flex:none; width:16px; height:16px; color:#094949; transition:color .18s ease}
+.ct-select-btn[aria-expanded="true"] .ct-cal{color:#0E6F6F}
+.ct-dp{
+  position:absolute; left:0; top:calc(100% + 6px); z-index:70;
+  width:max(100%,262px); padding:12px 12px 10px;
+  background:#FFFFFF; border:1px solid #EAE6DC; border-radius:10px;
+  box-shadow:0 18px 34px -14px rgba(8,32,26,.34);
+}
+/* 单位后缀（天 / 人）：贴在框内右侧 */
+.ct-box--suffix input{padding-right:40px}
+.ct-suffix{
+  position:absolute; right:13px; font-size:.8125rem; color:#9A958A; pointer-events:none;
+}
+/* 多行：需求描述 */
+.ct-box--area textarea{
+  height:auto; min-height:76px; padding:9px 12px; line-height:1.7; resize:vertical;
+}
+.ct-field--full .ct-box{width:100%}
+.ct-box--area{width:100%}
+
+/* 浏览器自动填充会把白底刷成浅蓝 */
+.ct-box input:-webkit-autofill{
+  -webkit-box-shadow:0 0 0 1000px #FFFFFF inset;
+  -webkit-text-fill-color:#28302B;
+  transition:background-color 9999s ease-out;
+}
+
+/* 底部：隐私说明（左） + 提交按钮（右） */
+.ct-actions{
+  display:flex; align-items:center; justify-content:space-between; gap:14px 18px;
+  flex-wrap:wrap; margin-top:clamp(18px,2.2vw,26px);
+}
+.ct-privacy{
+  display:inline-flex; align-items:center; gap:7px; margin:0;
+  font-size:.6875rem; line-height:1.5; letter-spacing:.02em; color:#6B6656;
+}
+.ct-privacy svg{flex:none; width:14px; height:14px; color:#6B6656}
+/* 提交按钮＝「了解我们」同款主色实底：#094949 底 + 白字（≈12.9:1），
+   触发（hover）提亮 #0E6F6F 并落地阴影，与 .adv-more--solid 完全一致 */
+.ct-submit{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:0 26px 0 28px; margin-left:auto;  /* 右内边距少 2px，抵掉 letter-spacing 尾隙，视觉居中 */
+  background:#094949; border:1.5px solid #094949; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:.9375rem; font-weight:700; letter-spacing:.12em;
+  color:#FFFFFF;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             box-shadow .22s ease, transform .22s ease;
+}
+.ct-submit:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.ct-submit:active{transform:translateY(0)}
+.ct-submit:focus-visible{outline:2px solid #7E5812; outline-offset:3px}
+
+@media (max-width:1023px){
+  .ct-art{display:none}          /* 小屏空间紧，去掉装饰线稿 */
+}
+@media (max-width:640px){
+  .ct-card{padding:20px 16px 20px; border-radius:8px}
+  .ct-grid{gap:13px 16px}
+  .ct-card-head{flex-direction:column; align-items:flex-start; gap:6px}
+  .ct-actions{flex-direction:column; align-items:stretch}
+  .ct-submit{width:100%; margin-left:0; letter-spacing:.1em}
+  .ct-privacy{justify-content:center}
+  .ct-box input, .ct-box select, .ct-box textarea{font-size:1rem}  /* ≥16px 防 iOS 聚焦缩放 */
+}
+
+/* 大容器左右留白跟随屏幕收窄 */
+@media (max-width:1023px){
+  .max-w-7xl.px-6{padding-left:24px !important; padding-right:24px !important}
+}
+@media (max-width:640px){
+  .max-w-7xl.px-6{padding-left:16px !important; padding-right:16px !important}
+  section{padding-top:56px !important; padding-bottom:56px !important}
+  footer{padding-top:48px !important; padding-bottom:48px !important}
+  .mb-16{margin-bottom:32px !important}
+  .mb-10{margin-bottom:24px !important}
+  .mb-12, .mt-12{margin-bottom:28px !important; margin-top:28px !important}
+  /* 卡片内边距同步收窄 */
+  .rounded-2xl.p-8, .rounded-3xl.p-8{padding:20px !important}
+  .gap-12{gap:32px !important}
+  .gap-8{gap:20px !important}
+  /* 首屏 banner：手机上不再占满一屏，改按 3:4 比例走 —— 高度随宽度变，
+     窄屏更容易一眼看到下方的优势区入口；横屏等矮视口用 max-height 兜底不超屏 */
+  .banner-section{height:auto; aspect-ratio:3 / 4; max-height:88svh}
+  .banner-copy{padding-top:56px}          /* 让文案避开固定导航，视觉居中在安全区 */
+  /* 「FEATURED PRODUCTS」比优势区的「OUR ADVANTAGES」长，窄屏收一点字距免得顶到边距 */
+  #products .adv-eyebrow-en{letter-spacing:.14em; margin-right:-.14em}
+  .bc-sub{line-height:1.7}
+  .mt-8{margin-top:24px !important}
+}
+
+/* 平板竖屏：特色产品仍是「上下堆叠」的单列横匾，900px 以上才左右分栏（见 .feat-row） */
+</style>
+<!-- 线上构建缺失的 Tailwind 类补齐定义。
+     默认不生效（media="not all"）= 线上真实渲染状态；
+     若要还原设计意图，把 media="not all" 改成 media="all" 即可。 -->
+<style id="tw-fix" media="not all">
+/* ── 补齐：Tailwind 未生成的类 ── */
+.bg-brand{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity))}
+.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87/var(--tw-bg-opacity))}
+.text-brand{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity))}
+.bg-brand-soft{--tw-bg-opacity:1;background-color:rgb(209 250 229/var(--tw-bg-opacity))}
+.hover\:text-emerald-400:hover{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity))}
+.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138/var(--tw-text-opacity))}
+.focus\:border-emerald-500:focus{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity))}
+.focus\:ring-emerald-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(16 185 129/var(--tw-ring-opacity))}
+.bg-gradient-to-b{background-image:linear-gradient(to bottom,var(--tw-gradient-stops))}
+.from-black\/40{--tw-gradient-from:rgb(0 0 0/.4);--tw-gradient-to:rgb(0 0 0/0);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}
+.via-black\/30{--tw-gradient-to:rgb(0 0 0/0);--tw-gradient-stops:var(--tw-gradient-from),rgb(0 0 0/.3),var(--tw-gradient-to)}
+.to-black\/40{--tw-gradient-to:rgb(0 0 0/.4)}
+/* typography 插件缺失，手工补核心排版 */
+.prose{color:#374151;max-width:65ch}
+.prose p{margin-top:1.25em;margin-bottom:1.25em}
+.prose-lg{font-size:1.125rem;line-height:1.7778}
+</style>
+
+<!-- ══ 定制服务页专有样式 ══ -->
+<style>
+/* 页头：照片区（阿尔卑斯湖山晨景，冷绿调），上方留出固定导航（实测 header 高 76px）的高度 */
+.tl-hero{
+  position:relative;
+  display:flex; align-items:center;
+  min-height:clamp(340px,34vw,462px);
+  background:#131D17 url('./site-source/images/tailor-hero-lake.jpg') center 58%/cover no-repeat;
+  /* !important 是必需的：≤640px 有一条通用 `section{padding:56px !important}`，
+     同为作者 !important 时类选择器优先级高于类型选择器，故本规则胜出 */
+  padding:calc(76px + clamp(44px,6vw,84px)) 0 clamp(44px,6vw,80px) !important;
+}
+/* 左深右浅的冷墨绿渐层：照片左侧（暗色森林 + 草甸）压下去托住白字，
+   右侧雪山晨光保留亮部，不整张糊成灰片。色调取自照片本身的冷绿，而非旧沙漠图的暖黑 */
+.tl-hero::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(96deg, rgba(13,19,15,.76) 0%, rgba(13,19,15,.58) 36%, rgba(13,19,15,.24) 64%, rgba(13,19,15,.06) 88%),
+    linear-gradient(180deg, rgba(13,19,15,.26) 0%, rgba(13,19,15,0) 38%);
+}
+.tl-hero-inner{
+  position:relative; z-index:1; width:100%;
+  max-width:1240px; margin:0 auto; padding:0 clamp(20px,4.6vw,60px);
+}
+/* 页头小标走全站英文小标语言（Georgia 大写），照片上用暖米金替代深茶金 */
+.tl-eyebrow{
+  margin:0; font-family:Georgia,'Times New Roman',serif;
+  font-size:.8125rem; letter-spacing:.22em; text-transform:uppercase; color:#F2D9A6;
+  text-shadow:0 1px 10px rgba(0,0,0,.45);
+}
+.tl-title{
+  margin:14px 0 0; font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(26px,3.2vw,42px); font-weight:600; line-height:1.35; letter-spacing:.02em; color:#FFFFFF;
+  text-shadow:0 2px 22px rgba(0,0,0,.42);
+}
+.tl-sub{
+  /* 36em ≈ 桌面 600px：这句 27 字中文可一行放下，不留孤字 */
+  margin:16px 0 0; max-width:36em; font-size:clamp(.9375rem,1.1vw,1.0625rem);
+  line-height:2; color:rgba(255,255,255,.9); text-wrap:pretty;
+  text-shadow:0 1px 12px rgba(0,0,0,.4);
+}
+@media (max-width:640px){
+  .tl-sub{max-width:none}
+  /* 窄屏 cover 会把画面裁得很窄，改用纵向渐层整体压暗，保证白字对比度；
+     焦点对到湖面与小屋（画面中带），雪山只露山顶当背景 */
+  .tl-hero{
+    min-height:clamp(320px,74vw,420px);
+    background-position:52% 58%;
+  }
+  .tl-hero::before{
+    background:linear-gradient(180deg, rgba(13,19,15,.58) 0%, rgba(13,19,15,.70) 55%, rgba(13,19,15,.80) 100%);
+  }
+}
+/* 本页就是「定制服务」：按钮呈当前页态（主色实底），与导航描边款区分 */
+.tailor-btn.is-active{
+  background:#094949; color:#fff; border-color:#094949; font-weight:600;
+}
+.tailor-btn.is-active:hover{background:#0E6F6F; border-color:#0E6F6F}
+.nav-link-m.is-active{color:#094949; font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="travel-home bg-gray-50" data-v-9fcfbb94>
+
+  <!-- ══ HEADER：与主站一致（fixed + 白实底），链接改为站内相对地址 ══ -->
+  <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Family">
+        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
+      </a>
+
+      <nav class="hidden items-center gap-8 md:flex">
+        <a href="index.html"        class="nav-link" data-i18n="nav.home">首页</a>
+        <a href="product.html"        class="nav-link" data-i18n="nav.products">产品</a>
+        <a href="about.html"            class="nav-link" data-i18n="nav.about">关于我们</a>
+        <a href="index.html#contact"   class="nav-link" data-i18n="nav.contact">联系我们</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="tailor.html" class="tailor-btn" data-nav="top" aria-current="page" data-i18n="nav.tailor">定制服务</a>
+        <div class="lang-switch">
+          <button id="langBtn" class="lang-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu" aria-label="切换语言">
+            <span id="langLabel">中文</span><span class="lang-caret" aria-hidden="true"></span>
+          </button>
+          <ul id="langMenu" class="lang-menu" role="listbox" aria-label="语言选择" hidden>
+            <li><button type="button" class="lang-opt" role="option" data-lang="zh" aria-selected="true">中文</button></li>
+            <li><button type="button" class="lang-opt" role="option" data-lang="en" aria-selected="false">English</button></li>
+          </ul>
+        </div>
+        <!-- 小屏汉堡按钮：md 以下 nav 整块隐藏，需要替代入口 -->
+        <button id="menuBtn" class="hamburger md:hidden" type="button" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 小屏下拉菜单 -->
+    <div id="mobileMenu" class="mobile-menu md:hidden" hidden>
+      <a href="index.html"          class="nav-link-m" data-i18n="nav.home">首页</a>
+      <a href="product.html"        class="nav-link-m" data-i18n="nav.products">产品</a>
+      <a href="about.html"          class="nav-link-m" data-i18n="nav.about">关于我们</a>
+      <a href="index.html#contact"  class="nav-link-m" data-i18n="nav.contact">联系我们</a>
+      <a href="tailor.html"         class="nav-link-m" data-nav="top" data-i18n="nav.tailor">定制服务</a>
+    </div>
+  </header>
+
+  <!-- ══ 页头：定制服务 ══ -->
+  <section class="tl-hero">
+    <div class="tl-hero-inner">
+      <p class="tl-eyebrow" aria-hidden="true">Tailor-made Journey</p>
+      <h1 class="tl-title" data-i18n="tailor.title">为您量身定制一段旅程</h1>
+      <p class="tl-sub" data-i18n="tailor.sub">告诉我们目的地、同行的人与时间，其余细节由我们接手。</p>
+    </div>
+  </section>
+
+  <section id="contact" class="ct-section">
+    <div class="ct-wrap">
+
+      <!-- 左：主张与联系方式 -->
+      <div class="ct-lead">
+        <p class="ct-eyebrow"><span data-i18n="contact.next">下一站，中国</span></p>
+        <h2 class="ct-title">
+          <span id="ctTitle">开始您的旅程</span>
+        </h2>
+        <!-- 标题下的英文一行：中文版作为装饰性副标存在；英文版大标题已是英文，此行由 JS 隐藏避免重复 -->
+        <p class="ct-title-en" id="ctTitleEn">Where beauty begins</p>
+        <p class="ct-desc" id="ctDesc">分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。</p>
+
+        <div class="ct-info">
+          <ul class="ct-info-list">
+            <li><span class="ct-info-key" data-i18n="contact.addr">公司地址</span><span class="ct-info-val" id="ctAddr">山东省诸城市舜德路159号</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.phone">联系电话</span><span class="ct-info-val" id="ctPhone">+86 (20) 2829 9999</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.email">电子邮箱</span><span class="ct-info-val" id="ctEmail">info@safarark.com</span></li>
+          </ul>
+        </div>
+
+        <svg class="ct-art" viewBox="0 0 340 150" fill="none" aria-hidden="true" focusable="false">
+          <circle cx="272" cy="34" r="15" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M6 128 58 74 84 100 120 44 158 100 186 74 214 108 246 82 290 128"
+                stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M40 128 120 44 158 100 186 74" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5"/>
+          <path d="M2 128H300" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <!-- 右：表单卡 -->
+      <div class="ct-card">
+        <div class="ct-card-head">
+          <h3 class="ct-card-title" data-i18n="form.cardTitle">为您定制，专属于您的旅程</h3>
+          <p class="ct-req-note"><b aria-hidden="true">*</b><span data-i18n="form.reqNote">为必填项</span></p>
+        </div>
+
+        <form id="inquiry" class="ct-form">
+          <div class="ct-grid">
+            <div class="ct-field">
+              <label for="fName"><span data-i18n="form.name">称呼</span><span class="req" aria-hidden="true">*</span></label>
+              <div class="ct-box">
+                <input id="fName" name="name" type="text" required autocomplete="name" data-ph="form.namePh" placeholder="我们该如何称呼您">
+              </div>
+            </div>
+            <div class="ct-field">
+              <label for="fDateBtn" data-i18n="form.date">预计出行时间</label>
+              <div class="ct-box ct-box--select ct-select" id="fDateBox">
+                <button type="button" id="fDateBtn" class="ct-select-btn is-empty"
+                        role="combobox" aria-haspopup="dialog" aria-expanded="false" aria-controls="fDatePanel">
+                  <span class="ct-select-val" id="fDateVal"></span>
+                  <svg class="ct-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/>
+                    <path d="M3.5 9.5h17M8 3.5v3.2M16 3.5v3.2"/>
+                  </svg>
+                </button>
+                <!-- 日历面板：hover / 选中 / 键盘焦点，全部走主色绿，与「意向目的地」一致 -->
+                <div class="ct-dp" id="fDatePanel" role="dialog" aria-modal="false" hidden>
+                  <div class="ct-dp-head">
+                    <button type="button" class="ct-dp-nav" id="fDatePrev" aria-label="上一月">
+                      <svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.7 1 1 5l3.7 4"/></svg>
+                    </button>
+                    <span class="ct-dp-title" id="fDateTitle" aria-live="polite"></span>
+                    <button type="button" class="ct-dp-nav" id="fDateNext" aria-label="下一月">
+                      <svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.3 1 5 5l-3.7 4"/></svg>
+                    </button>
+                  </div>
+                  <div class="ct-dp-dow" id="fDateDow" aria-hidden="true"></div>
+                  <div class="ct-dp-grid" id="fDateGrid" role="grid"></div>
+                  <div class="ct-dp-foot">
+                    <button type="button" class="ct-dp-btn" id="fDateToday">今天</button>
+                    <button type="button" class="ct-dp-btn" id="fDateClear">清除</button>
+                  </div>
+                </div>
+              </div>
+              <!-- 真实值仍走表单字段，方便后端直接取 name="date"（ISO yyyy-mm-dd） -->
+              <input type="hidden" id="fDate" name="date" value="">
+            </div>
+            <div class="ct-field">
+              <label for="fDestBtn" data-i18n="form.dest">意向目的地</label>
+              <div class="ct-box ct-box--select ct-select" id="fDestBox">
+                <button type="button" id="fDestBtn" class="ct-select-btn is-empty"
+                        role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="fDestMenu">
+                  <span class="ct-select-val" id="fDestVal"></span>
+                  <svg class="ct-caret" viewBox="0 0 10 6" aria-hidden="true" focusable="false">
+                    <path d="M1 1.3 5 5.1 9 1.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <ul class="ct-select-menu" id="fDestMenu" role="listbox" hidden></ul>
+              </div>
+              <!-- 真实值仍走表单字段，方便后端直接取 name="dest" -->
+              <input type="hidden" id="fDest" name="dest" value="">
+            </div>
+            <div class="ct-field">
+              <label for="fDays" data-i18n="form.days">计划停留天数</label>
+              <div class="ct-box ct-box--suffix">
+                <input id="fDays" name="days" type="text" inputmode="numeric" data-ph="form.daysPh" placeholder="预计停留天数">
+                <span class="ct-suffix" aria-hidden="true" data-i18n="form.unitDay">天</span>
+              </div>
+            </div>
+            <div class="ct-field">
+              <label for="fSize" data-i18n="form.size">出行人数</label>
+              <div class="ct-box ct-box--suffix">
+                <input id="fSize" name="size" type="text" inputmode="numeric" data-ph="form.sizePh" placeholder="预计出行人数">
+                <span class="ct-suffix" aria-hidden="true" data-i18n="form.unitPerson">人</span>
+              </div>
+            </div>
+            <div class="ct-field">
+              <label for="fWa" data-i18n="form.wa">WhatsApp 账号</label>
+              <div class="ct-box">
+                <input id="fWa" name="whatsapp" type="text" inputmode="tel" data-ph="form.waPh" placeholder="请输入国际区号及账号">
+              </div>
+            </div>
+            <div class="ct-field ct-field--full">
+              <label for="fEmail"><span data-i18n="form.email">电子邮箱</span><span class="req" aria-hidden="true">*</span></label>
+              <div class="ct-box">
+                <input id="fEmail" name="email" type="email" required autocomplete="email" data-ph="form.emailPh" placeholder="您的电子邮箱地址">
+              </div>
+            </div>
+            <div class="ct-field ct-field--full">
+              <label for="fReq" data-i18n="form.req">其他个性化需求</label>
+              <div class="ct-box ct-box--area">
+                <textarea id="fReq" name="req" rows="3" data-ph="form.reqPh" placeholder="旅行偏好、饮食需求、特别安排……我们愿意倾听更多"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="ct-actions">
+            <p class="ct-privacy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M12 3.4 5 6.1v5.3c0 4.2 2.9 7.4 7 9 4.1-1.6 7-4.8 7-9V6.1L12 3.4Z"/><path d="m9.2 11.6 2 2 3.6-3.9"/>
+              </svg>
+              <span data-i18n="form.privacy">当前为需求预览，不会发送或保存您的信息</span>
+            </p>
+            <button type="submit" class="ct-submit" data-i18n="form.submit">提交需求</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="bg-footer py-16 text-white">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+
+        <div>
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
+          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于穆斯林友好旅游服务的国际旅行社</p>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="footer.links">快速链接</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="index.html"          class="transition hover:text-emerald-400" data-i18n="nav.home">首页</a></li>
+            <li><a href="product.html" class="transition hover:text-emerald-400" data-i18n="nav.products">产品</a></li>
+            <li><a href="about.html"          class="transition hover:text-emerald-400" data-i18n="nav.about">关于我们</a></li>
+            <li><a href="index.html#contact"  class="transition hover:text-emerald-400" data-i18n="nav.contact">联系我们</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="footer.services">我们的服务</h4>
+          <ul class="space-y-2 text-sm">
+            <li data-i18n="footer.s1">定制穆斯林友好旅行</li>
+            <li data-i18n="footer.s2">商务考察访问</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
+          <div class="space-y-2 text-sm">
+            <p>info@safarark.com</p>
+            <p>+86 (20) 2829 9999</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="footer-copyright mt-12 border-t border-white/10 pt-8 text-center text-sm">
+        <p> © 2025 丝路之家 Travel. <span data-i18n="footer.rights">版权所有</span></p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   导航 30% 透明：首屏（深色轮播上）保持 30%，
+   滚离首屏后下方变浅色内容区，需切回 95% 保住白字可读性
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  var hdr = document.getElementById('siteHeader');
+  if(!hdr) return;
+  var ticking = false;
+  function sync(){
+    var threshold = window.innerHeight - 80;
+    hdr.classList.toggle('is-solid', window.scrollY > threshold);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(sync); }
+  }, {passive:true});
+  window.addEventListener('resize', sync, {passive:true});
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════════════
+   需求②：导航跳转 + 滚动高亮（scrollspy） + 小屏菜单
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  var hdr = document.getElementById('siteHeader');
+  var menuBtn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  var links = [].slice.call(document.querySelectorAll('[data-nav]'));
+  if(!hdr || !links.length) return;
+
+  function headerH(){ return hdr.offsetHeight; }
+
+  /* 下划线要贴齐导航条背景底边：量出「链接底 → header 底」的实际间距 */
+  function syncUnderline(){
+    var link = document.querySelector('.nav-link');
+    if(!link || !link.getBoundingClientRect().width) return;   // 小屏 nav 隐藏时跳过
+    var gap = hdr.getBoundingClientRect().bottom - link.getBoundingClientRect().bottom;
+    if(gap >= 0) document.documentElement.style.setProperty('--nav-bottom-gap', Math.round(gap)+'px');
+  }
+
+  /* 平滑跳转，落点让开 fixed header */
+  function goTo(target){
+    var y = 0;
+    if(target !== 'top'){
+      var el = document.getElementById(target);
+      if(!el) return;
+      y = el.getBoundingClientRect().top + window.scrollY - headerH() + 2;
+      if(y < 0) y = 0;
+    }
+    window.scrollTo({ top:y, behavior:'smooth' });
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      closeMenu();
+      goTo(this.getAttribute('data-nav'));
+      if(history.replaceState) history.replaceState(null,'','#'+this.getAttribute('data-nav'));
+    });
+  });
+
+  /* 选中态：产品/关于/联系已改为二级页跳转，剩下的「首页」即当前页 → 常亮。
+     （原按区块滚动切换的逻辑已失效：那些区块不再对应本页导航项） */
+  var ticking = false;
+  function spy(){
+    links.forEach(function(a){
+      a.classList.toggle('is-active', a.getAttribute('data-nav') === 'top');
+    });
+    ticking = false;
+  }
+
+  /* 小屏菜单 */
+  function closeMenu(){
+    if(!menu) return;
+    menu.setAttribute('hidden','');
+    if(menuBtn) menuBtn.setAttribute('aria-expanded','false');
+  }
+  if(menuBtn && menu){
+    menuBtn.addEventListener('click', function(){
+      var open = !menu.hasAttribute('hidden');
+      if(open){ closeMenu(); } else { menu.removeAttribute('hidden'); menuBtn.setAttribute('aria-expanded','true'); }
+    });
+    document.addEventListener('click', function(e){
+      if(!menu.hasAttribute('hidden') && !hdr.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMenu(); });
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(spy); }
+  }, {passive:true});
+  window.addEventListener('resize', function(){ spy(); syncUnderline(); }, {passive:true});
+  spy();
+  syncUnderline();
+  window.addEventListener('load', syncUnderline);   // 字体加载完成后高度可能微调
+
+  /* 平滑滚动（对不支持 scrollTo options 的浏览器降级） */
+  if(!('scrollBehavior' in document.documentElement.style)){
+    // 行为降级：默认跳转即可，无需额外处理
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════
+   真实数据（来自 /api/travel/index?lang=zh）
+   ══════════════════════════════════════════════════════════ */
+var DATA = {
+  banners:[
+    {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
+     subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
+     image:"./site-source/images/banner001.png"},
+    {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
+     subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
+     image:"./site-source/images/banner002.png"},
+    {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
+     subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
+     image:"./site-source/images/banner003.png"}
+  ],
+  /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
+     不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
+  featured:[
+    {id:1,
+     tag:"风光度假",tag_en:"Scenic Retreat",tagUpp:"SCENIC RETREAT",
+     title:"行于山水，心有归处",title_en:"Where Mountains Hold the Mind",
+     desc:"山海辽阔，从容行之。择安静居所、享舒缓旅程，每一方天地都是身心的归处。",
+     desc_en:"Vast mountains and open seas, travelled at an easy pace. Quiet lodgings and unhurried days — every corner of the world becomes a place to come home to.",
+     tags:["从容节奏","品质居停","小团慢游"],
+     tags_en:["Easy Pace","Quality Stays","Small Groups"],
+     cta:"开启风光慢旅",cta_en:"Start a Scenic Journey",
+     image:"./site-source/images/featured-scenic.jpg"},
+    {id:2,
+     tag:"商旅考察",tag_en:"Business Journey",tagUpp:"BUSINESS JOURNEY",
+     title:"行商阅山，自有通途",title_en:"Trade Routes, Mountain Views",
+     desc:"商务落点与风光留白交织，深耕行业资源，链接产业一线，让案头有成果，眼底有山河。不虚此行，是我们的底线。",
+     desc_en:"Business calls interwoven with open horizons: deep industry resources and direct links to the front line. Results on the desk, mountains in view — a trip worth taking is our baseline.",
+     tags:["商旅融合","行业资源","发现机遇"],
+     tags_en:["Business & Travel","Industry Access","New Opportunities"],
+     cta:"定制商旅路线",cta_en:"Plan a Business Route",
+     image:"./site-source/images/featured-business.jpg"},
+    {id:3,
+     tag:"文化研修",tag_en:"Cultural Study",tagUpp:"CULTURAL STUDY",
+     title:"探微知著，格物致美",title_en:"Reading Detail, Meeting Beauty",
+     desc:"择一雅居，共赴雅集。于建筑寻踪、茶艺品鉴、器物赏玩、非遗体验之间，往细处看，向深处走。让文化在场域里自然延伸，悄然生长。",
+     desc_en:"A refined residence, a gathering of kindred spirits. Architecture walks, tea tastings, objects and living heritage — look closer, go deeper, and let culture grow quietly where it stands.",
+     tags:["生活美学","养气修心","同好同行"],
+     tags_en:["Living Aesthetics","Cultivation","Kindred Company"],
+     cta:"预约文化之旅",cta_en:"Book a Cultural Journey",
+     image:"./site-source/images/featured-culture.jpg"},
+    {id:4,
+     tag:"亲子研学",tag_en:"Family Study Tour",tagUpp:"FAMILY STUDY TOUR",
+     title:"天地之间，行知相长",title_en:"Learning in the Open",
+     desc:"以行走积见识，以实践长才干。躬身以试，发问以进，试错以明，复盘以固。一程结束，脑中有学问，肩上有韧劲，眼里有底气。",
+     desc_en:"Insight gathered by walking, capability built by doing. Try, ask, adjust, review — and come home with knowledge in mind, resilience in the shoulders, confidence in the eyes.",
+     tags:["实践求知","能力养成","知行合一"],
+     tags_en:["Learning by Doing","Capability","Knowledge in Action"],
+     cta:"开启行走课堂",cta_en:"Open the Outdoor Classroom",
+     image:"./site-source/images/featured-family.jpg"}
+  ],
+  about_us:{
+    title:"关于丝路之家",title_en:"About Silk Road Family",
+    slogan:"从丝路出发，与美好相逢。",slogan_en:"From the Silk Road, meet the beautiful.",
+    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色旅游服务品牌，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
+    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service brand. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
+    tags:["风光旅居","商旅考察","文化交流","亲子研学"],
+    tags_en:["Scenic Holidays","Business Inspection","Cultural Exchange","Family Study Tours"],
+    media_cap:"以旅行为桥，让文化相遇",media_cap_en:"Bridging cultures through travel",
+    more:"了解我们",more_en:"About Us",
+    image:"./site-source/images/about-hill.jpg",
+    advantage_title:"我们的优势",advantage_title_en:"Our Advantages",
+    advantage_sub:"我们不仅是旅行服务商，",
+    advantage_sub_en:"More than a travel service provider —",
+    advantage_sub2:"更是值得托付的在地伙伴",
+    advantage_sub2_en:"your trusted local partner",
+    advantage_sub3:"以专业护航行程，",
+    advantage_sub3_en:"Professional escorting along the way —",
+    advantage_sub4:"用服务传递温度，让旅途安心自在",
+    advantage_sub4_en:"service with warmth, journeys at ease",
+    group1_title:"四大友好体验",group1_title_en:"Four Travel-Friendly Experiences",
+    group2_title:"四大实力保障",group2_title_en:"Four Strengths Behind Us",
+    advantages:[
+      {g:1,title:"文化友好",title_en:"Cultural",desc:"专业多语导览，深谙礼俗规范",desc_en:"Professional multilingual guides, well-versed in etiquette and customs"},
+      {g:1,title:"行程友好",title_en:"Itinerary",desc:"舒缓旅途节奏，周到礼拜安排",desc_en:"Relaxed travel pace with thoughtful prayer arrangements"},
+      {g:1,title:"饮食友好",title_en:"Dining",desc:"严选旅途餐食，兼顾地方风味",desc_en:"Carefully selected meals balancing local flavors"},
+      {g:1,title:"住宿友好",title_en:"Stay",desc:"精选品质居所，保障私密舒心",desc_en:"Quality accommodations ensuring privacy and comfort"},
+      {g:2,title:"本土深耕",title_en:"Local Roots",desc:"丰富在地资源，布局国内市场",desc_en:"Rich local resources with nationwide market presence"},
+      {g:2,title:"专属定制",title_en:"Tailor-Made",desc:"打造个性方案，解锁深度体验",desc_en:"Personalized plans unlocking in-depth experiences"},
+      {g:2,title:"商旅全链",title_en:"Full Chain",desc:"对接商旅资源，产业链路支持",desc_en:"Business travel resources with full industry-chain support"},
+      {g:2,title:"可靠支持",title_en:"Reliable Support",desc:"专业服务团队，守护全程安心",desc_en:"Professional service team safeguarding peace of mind throughout"}
+    ]
+  },
+  contact_us:{
+    title:"开始您的旅程",title_en:"Start Your Journey",
+    desc:"分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。",
+    desc_en:"Share your travel dates, team size and vision, and our professional consultants will help you plan the perfect trip.",
+    address:"山东省诸城市舜德路159号",address_en:"No. 159, Shunde Road, Zhucheng City, Shandong Province",
+    phone:"+86 (20) 2829 9999",email:"info@safarark.com"
+  }
+};
+
+var I18N = {
+  zh:{ "nav.home":"首页","nav.products":"产品","nav.about":"关于我们","nav.contact":"联系我们","nav.tailor":"定制服务",
+       "banner.en":"Muslim-Friendly China Tourism","banner.main":"畅游华夏胜境，悦享舒心旅程",
+       "banner.l3":"从山水到人文，从风光到礼遇","banner.l4":"我们为您悉心安排，从容感受华夏魅力",
+       "banner.tag":"穆斯林友好之旅","banner.cta":"即刻启程",
+       "products.title":"特色产品","products.all":"查看全部产品",
+       "contact.info":"联系方式","contact.addr":"公司地址","contact.phone":"联系电话","contact.email":"电子邮箱",
+       "contact.next":"下一站，中国",
+       "tailor.title":"为您量身定制一段旅程","tailor.sub":"告诉我们目的地、同行的人与时间，其余细节由我们接手。",
+       "form.title":"发送需求","form.cardTitle":"为您定制，专属于您的旅程","form.reqNote":"为必填项",
+       "form.privacy":"当前为需求预览，不会发送或保存您的信息",
+       "form.name":"称呼","form.date":"预计出行时间","form.dest":"意向目的地",
+       "form.days":"计划停留天数","form.size":"出行人数","form.req":"其他个性化需求",
+       "form.wa":"WhatsApp 账号","form.email":"电子邮箱","form.submit":"提交需求",
+       "form.unitDay":"天","form.unitPerson":"人",
+       "form.namePh":"我们该如何称呼您","form.datePh":"请输入预计出行时间","form.destPh":"选择您向往的目的地",
+       "form.daysPh":"预计停留天数","form.sizePh":"预计出行人数","form.reqPh":"旅行偏好、饮食需求、特别安排……我们愿意倾听更多",
+       "form.waPh":"请输入国际区号及账号","form.emailPh":"您的电子邮箱地址",
+       "footer.slogan":"专注于穆斯林友好旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
+       "footer.s1":"定制穆斯林友好旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
+  en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
+       "banner.en":"Muslim-Friendly China Tourism","banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
+       "banner.l3":"From nature to culture, from scenery to warm hospitality",
+       "banner.l4":"Every detail arranged for you, so you can take in China's charm at ease",
+       "banner.tag":"Muslim-Friendly Travel","banner.cta":"Set Off Now",
+       "products.title":"Featured Products","products.all":"View All Products",
+       "contact.info":"Contact Information","contact.addr":"Address","contact.phone":"Phone","contact.email":"Email",
+       "contact.next":"Next Stop, China",
+       "tailor.title":"A journey tailored around you","tailor.sub":"Tell us your destination, companions and timing — we will handle the rest.",
+       "form.title":"Send Inquiry","form.cardTitle":"Tailored to You, a Journey of Your Own","form.reqNote":"Required",
+       "form.privacy":"Preview only — nothing is sent or stored",
+       "form.name":"Name","form.date":"Expected Travel Date","form.dest":"Preferred Destination",
+       "form.days":"Planned Days of Stay","form.size":"Number of Travelers","form.req":"Other Personalized Requests",
+       "form.wa":"WhatsApp","form.email":"Email","form.submit":"Submit Inquiry",
+       "form.unitDay":"days","form.unitPerson":"pax",
+       "form.namePh":"How should we address you","form.datePh":"Enter expected travel date","form.destPh":"Select your destination",
+       "form.daysPh":"Planned days","form.sizePh":"Number of travelers","form.reqPh":"Travel preferences, dietary needs, special arrangements — we'd love to hear more",
+       "form.waPh":"Country code and account","form.emailPh":"Your email address",
+       "footer.slogan":"International travel agency specializing in Muslim-friendly travel services","footer.links":"Quick Links","footer.services":"Our Services",
+       "footer.s1":"Customized Muslim-Friendly Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved." }
+};
+
+/* ══ 首屏视频：静音自动循环；尊重系统「减少动效」偏好 ══ */
+var bannerVideo = document.getElementById('bannerVideo');
+if(bannerVideo){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    bannerVideo.removeAttribute('autoplay');   /* 系统要求减少动效 → 停在首帧 */
+    bannerVideo.pause();
+  }else{
+    var pr = bannerVideo.play();
+    if(pr && pr.catch) pr.catch(function(){});  /* 自动播放被拦截时静默降级为 poste
+r */
+  }
+}
+
+/* ══ 优势：左栏 + 米白/深绿双卡（编辑式版式）══ */
+var ADV_ICONS_FRIENDLY = [
+  /* 文化友好 · 书卷 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.6 5.1 8.6 4.3 5.9 4.3c-.7 0-1.3.6-1.3 1.3v11.5c0 .7.6 1.3 1.3 1.3 2.7 0 4.7.8 6.1 2.2 1.4-1.4 3.4-2.2 6.1-2.2.7 0 1.3-.6 1.3-1.3V5.6c0-.7-.6-1.3-1.3-1.3-2.7 0-4.7.8-6.1 2.2Z"/><path d="M12 6.5v13.7"/></svg>',
+  /* 行程友好 · 路线 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="18.5" r="1.7"/><circle cx="18.5" cy="5.5" r="1.7"/><path d="M7.2 18.5h5.8a3.2 3.2 0 0 0 0-6.4H9.5a3.2 3.2 0 0 1 0-6.4h7" stroke-dasharray="2.4 2.4"/></svg>',
+  /* 饮食友好 · 叉勺 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3v4.5a2 2 0 0 0 4 0V3M9.5 3v18"/><path d="M16.5 3c-1.5 0-2.6 1.9-2.6 4.2s1.1 4.2 2.6 4.2 2.6-1.9 2.6-4.2S18 3 16.5 3ZM16.5 11.4V21"/></svg>',
+  /* 住宿友好 · 床铺 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v11M3 15h18M21 18v-5a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="12.2" r="1.5"/></svg>'
+];
+var ADV_ICONS_ASSURANCE = [
+  /* 本土深耕 · 地图定位钉 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21.2S5.4 15.7 5.4 10.9a6.6 6.6 0 0 1 13.2 0c0 4.8-6.6 10.3-6.6 10.3Z"/><circle cx="12" cy="10.7" r="2.3"/></svg>',
+  /* 专属定制 · 魔棒 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 17.5 17 7"/><path d="M15.6 3.4v2.1M20.6 8.4h-2.1M19.2 4.8l-1.5 1.5"/><path d="M8.6 3.2l.65 1.6 1.6.65-1.6.65-.65 1.6-.65-1.6-1.6-.65 1.6-.65.65-1.6Z"/></svg>',
+  /* 商旅全链 · 公文包 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7.6" width="17" height="11.9" rx="2"/><path d="M9.2 7.6V6.2a2 2 0 0 1 2-2h1.6a2 2 0 0 1 2 2v1.4M3.5 12.2h17M10.7 11.2h2.6v2.2h-2.6z"/></svg>',
+  /* 可靠支持 · 盾牌对勾 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.4 5.2 5.9v5.3c0 4.4 2.9 7.5 6.8 9.2 3.9-1.7 6.8-4.8 6.8-9.2V5.9L12 3.4Z"/><path d="m9.2 11.6 2 2 3.7-3.9"/></svg>'
+];
+function renderAdvantages(){ if(!document.getElementById('advGrid')) return;
+  var zh = LANG === 'zh';
+  var D  = DATA.about_us;
+  document.getElementById('advTitle').textContent = zh ? (D.advantage_title||'我们的优势') : (D.advantage_title_en||'Our Advantages');
+  document.getElementById('advSub1').textContent  = zh ? (D.advantage_sub||'')  : (D.advantage_sub_en||'');
+  document.getElementById('advSub2').textContent  = zh ? (D.advantage_sub2||'') : (D.advantage_sub2_en||'');
+  document.getElementById('advSub3').textContent  = zh ? (D.advantage_sub3||'') : (D.advantage_sub3_en||'');
+  document.getElementById('advSub4').textContent  = zh ? (D.advantage_sub4||'') : (D.advantage_sub4_en||'');
+
+  function card(no, cls, titleZh, titleEn, icons){
+    var items = D.advantages.filter(function(a){ return a.g === no; });
+    return '<article class="adv-card ' + cls + '">' +
+             '<h3 class="adv-card-title">' + (zh ? titleZh : titleEn) + '</h3>' +
+             '<ul class="adv-list">' +
+               items.map(function(a, i){
+                 return '<li class="adv-item">' +
+                          '<span class="adv-icon" aria-hidden="true">' + icons[i % icons.length] + '</span>' +
+                          '<div class="adv-item-body">' +
+                            '<span class="adv-item-no">0' + (i + 1) + '</span>' +
+                            '<span class="adv-item-title">' + (zh ? a.title : a.title_en) + '</span>' +
+                            '<span class="adv-item-desc">'  + (zh ? a.desc  : a.desc_en ) + '</span>' +
+                          '</div>' +
+                        '</li>';
+               }).join('') +
+             '</ul>' +
+           '</article>';
+  }
+  document.getElementById('advGrid').innerHTML =
+    card(1, 'adv-card--sand', D.group1_title||'四大友好体验', D.group1_title_en||'Four Travel-Friendly Experiences', ADV_ICONS_FRIENDLY) +
+    card(2, 'adv-card--pine', D.group2_title||'四大实力保障', D.group2_title_en||'Four Strengths Behind Us', ADV_ICONS_ASSURANCE);
+}
+
+/* ══ 特色产品：四条编辑式横匾（左图 + 右文）══ */
+function renderFeatured(){ if(!document.getElementById('featList')) return;
+  var zh = LANG === 'zh';
+  document.getElementById('featList').innerHTML = DATA.featured.map(function(f, i){
+    /* 图上小签只留一行：中文模式下显示中文，英文模式下显示英文 */
+    var chip = '<span class="feat-chip">' + (zh ? f.tag : f.tag_en) + '</span>';
+    return '<article class="feat-row' + (i === 1 || i === 3 ? ' is-rev' : '') + '">' +
+             '<figure class="feat-media">' +
+               '<img src="' + f.image + '" alt="' + (zh ? f.tag + '：' + f.title : f.tag_en + ': ' + f.title_en) + '"' +
+                    (i === 0 ? '' : ' loading="lazy"') + ' decoding="async">' +
+               chip +
+             '</figure>' +
+             '<div class="feat-body">' +
+               '<h3 class="feat-title">' + (zh ? f.title : f.title_en) + '</h3>' +
+               '<p class="feat-desc">' + (zh ? f.desc : f.desc_en) + '</p>' +
+               '<ul class="feat-tags">' +
+                 (zh ? f.tags : f.tags_en).map(function(t){ return '<li>' + t + '</li>'; }).join('') +
+               '</ul>' +
+               '<a class="feat-cta" href="product.html">' + (zh ? f.cta : f.cta_en) + '</a>' +
+             '</div>' +
+           '</article>';
+  }).join('');
+}
+
+/* ══ 意向目的地：中英双语选项，随语言切换重建并保留已选值 ══ */
+var DESTS = [
+  {zh:'北京', en:'Beijing'},
+  {zh:'上海', en:'Shanghai'},
+  {zh:'西安', en:"Xi'an"},
+  {zh:'山东（曲阜 · 泰山 · 青岛）', en:'Shandong (Qufu · Taishan · Qingdao)'},
+  {zh:'云南', en:'Yunnan'},
+  {zh:'新疆', en:'Xinjiang'},
+  {zh:'广州 · 深圳', en:'Guangzhou · Shenzhen'},
+  {zh:'暂未确定', en:'Not decided yet'}
+];
+var destOpen = false;
+/* 把当前值画到触发按钮上：未选时显示 placeholder 灰字 */
+function paintDest(){
+  var btn = document.getElementById('fDestBtn'),
+      val = document.getElementById('fDestVal'),
+      nat = document.getElementById('fDest'),
+      t   = I18N[LANG === 'zh' ? 'zh' : 'en'];
+  if(!btn || !val) return;
+  var v = nat ? nat.value : '';
+  val.textContent = v ? v : (t['form.destPh'] || '');
+  btn.classList.toggle('is-empty', !v);
+}
+function setDest(v){
+  var nat = document.getElementById('fDest');
+  if(nat) nat.value = v || '';
+  paintDest();
+  [].slice.call(document.querySelectorAll('#fDestMenu .ct-select-opt')).forEach(function(o){
+    if(o.dataset.val === v) o.setAttribute('aria-selected','true');
+    else o.removeAttribute('aria-selected');
+  });
+}
+function openDest(){
+  var menu = document.getElementById('fDestMenu'), btn = document.getElementById('fDestBtn');
+  if(!menu || !btn) return;
+  menu.hidden = false; btn.setAttribute('aria-expanded','true'); destOpen = true;
+  /* 向下放不下就翻到上方（移动端表单位置靠下时很有用） */
+  menu.classList.remove('is-up');
+  if(menu.getBoundingClientRect().bottom > window.innerHeight - 12) menu.classList.add('is-up');
+  var cur = document.getElementById('fDest').value, act = null;
+  [].slice.call(menu.querySelectorAll('.ct-select-opt')).forEach(function(o){
+    o.classList.remove('is-active');
+    if(o.dataset.val === cur){ o.classList.add('is-active'); act = o; }
+  });
+  (act || menu.querySelector('.ct-select-opt')).focus();
+}
+function closeDest(focusBtn){
+  var menu = document.getElementById('fDestMenu'), btn = document.getElementById('fDestBtn');
+  if(!menu || !btn) return;
+  menu.hidden = true; btn.setAttribute('aria-expanded','false'); destOpen = false;
+  if(focusBtn) btn.focus();
+}
+function renderDests(){
+  var menu = document.getElementById('fDestMenu'), btn = document.getElementById('fDestBtn');
+  if(!menu || !btn) return;
+  var zh = LANG === 'zh', keep = (document.getElementById('fDest').value || '');
+  /* 切语言时把已选值映射到另一种语言的同义项（DESTS 中英按顺序一一对应） */
+  if(keep){
+    for(var i=0;i<DESTS.length;i++){
+      if(DESTS[i].zh === keep || DESTS[i].en === keep){
+        document.getElementById('fDest').value = zh ? DESTS[i].zh : DESTS[i].en; break;
+      }
+    }
+  }
+  menu.innerHTML = DESTS.map(function(d){
+    var v = zh ? d.zh : d.en;
+    return '<li role="presentation"><button type="button" class="ct-select-opt" role="option"' +
+           ' aria-selected="false" data-val="' + v + '">' + v + '</button></li>';
+  }).join('');
+  [].slice.call(menu.querySelectorAll('.ct-select-opt')).forEach(function(o){
+    o.addEventListener('click', function(){ setDest(o.dataset.val); closeDest(true); });
+    o.addEventListener('mouseenter', function(){
+      [].slice.call(menu.querySelectorAll('.ct-select-opt')).forEach(function(x){ x.classList.remove('is-active'); });
+      o.classList.add('is-active');
+    });
+    o.addEventListener('keydown', function(e){
+      var li = o.parentNode, nx = null;
+      if(e.key === 'Escape'){ closeDest(true); return; }
+      if(e.key === 'ArrowDown'){ nx = li.nextElementSibling; }
+      else if(e.key === 'ArrowUp'){ nx = li.previousElementSibling; }
+      else if(e.key === 'Tab'){ closeDest(false); return; }
+      if(nx){ var b = nx.querySelector('.ct-select-opt'); if(b){ b.focus(); e.preventDefault(); } }
+    });
+  });
+  paintDest();
+  var cur = document.getElementById('fDest').value;
+  [].slice.call(menu.querySelectorAll('.ct-select-opt')).forEach(function(o){
+    if(o.dataset.val === cur) o.setAttribute('aria-selected','true');
+  });
+  bindDest();
+}
+/* 触发按钮：点击开合 + 键盘操作；点外部 / Esc 关闭（只绑定一次） */
+function bindDest(){
+  var btn = document.getElementById('fDestBtn');
+  if(!btn || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
+  btn.addEventListener('click', function(){
+    var menu = document.getElementById('fDestMenu');
+    if(menu.hidden) openDest(); else closeDest(false);
+  });
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' '){ openDest(); e.preventDefault(); }
+  });
+  document.addEventListener('click', function(e){
+    var box = document.getElementById('fDestBox');
+    /* 点 label 会被浏览器转发成 button 的 click，这里一并豁免，避免开了又立刻关 */
+    var lab = e.target.closest && e.target.closest('label[for="fDestBtn"]');
+    if(destOpen && box && !box.contains(e.target) && !lab) closeDest(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && destOpen) closeDest(true);
+  });
+}
+
+/* ══ 预计出行时间：自定义日历 ══
+   结构、配色、键盘交互都照抄 .ct-select-* 那一套：hover 浅绿底 + 主色字，选中深绿底 + 白字。
+   值存在隐藏 input#fDate（ISO yyyy-mm-dd），后端仍按 name="date" 取值。 */
+var DOW_ZH = ['日','一','二','三','四','五','六'];
+var DOW_EN = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+var MON_EN = ['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
+var dateOpen = false, dpY = 0, dpM = 0;
+
+function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+function todayISO(){ var d = new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+function fmtDate(iso){
+  if(!iso) return '';
+  var p = iso.split('-'), y = +p[0], m = +p[1], d = +p[2];
+  return LANG === 'zh' ? (y+'年'+m+'月'+d+'日') : (MON_EN[m-1].slice(0,3)+' '+d+', '+y);
+}
+function fmtMonth(y, m){ return LANG === 'zh' ? (y+'年'+(m+1)+'月') : (MON_EN[m]+' '+y); }
+function paintDate(){
+  var btn = document.getElementById('fDateBtn'), val = document.getElementById('fDateVal'),
+      nat = document.getElementById('fDate'), t = I18N[LANG === 'zh' ? 'zh' : 'en'];
+  if(!btn || !val) return;
+  var v = nat ? nat.value : '';
+  val.textContent = v ? fmtDate(v) : (t['form.datePh'] || '');
+  btn.classList.toggle('is-empty', !v);
+}
+/* 画某一年的某一月：前补空格 + 当月日期，末尾补到整行 */
+function renderGrid(){
+  var grid = document.getElementById('fDateGrid'), dow = document.getElementById('fDateDow'),
+      title = document.getElementById('fDatePanel') && document.getElementById('fDateTitle');
+  if(!grid) return;
+  var zh = LANG === 'zh', sel = (document.getElementById('fDate').value || ''), td = todayISO();
+  dow.innerHTML = (zh ? DOW_ZH : DOW_EN).map(function(d){ return '<span>'+d+'</span>'; }).join('');
+  if(title) title.textContent = fmtMonth(dpY, dpM);
+  var lead = new Date(dpY, dpM, 1).getDay(), days = new Date(dpY, dpM+1, 0).getDate(), i, html = '';
+  for(i = 0; i < lead; i++) html += '<span class="ct-dp-blank"></span>';
+  for(i = 1; i <= days; i++){
+    var iso = dpY+'-'+pad2(dpM+1)+'-'+pad2(i), cls = 'ct-dp-day';
+    if(iso === sel) cls += ' is-sel';
+    else if(iso === td) cls += ' is-today';
+    html += '<button type="button" class="'+cls+'" data-iso="'+iso+'" role="gridcell"'+
+            ' aria-selected="'+(iso === sel ? 'true' : 'false')+'">'+i+'</button>';
+  }
+  while((lead + days) % 7){ html += '<span class="ct-dp-blank"></span>'; lead++; }
+  grid.innerHTML = html;
+  [].slice.call(grid.querySelectorAll('.ct-dp-day')).forEach(function(b){
+    b.addEventListener('click', function(){ setDate(b.dataset.iso, true); });
+    b.addEventListener('keydown', function(e){
+      var map = {ArrowLeft:-1, ArrowRight:1, ArrowUp:-7, ArrowDown:7};
+      if(e.key === 'Escape'){ closeDate(true); return; }
+      if(e.key === 'Tab'){ closeDate(false); return; }
+      if(map[e.key] !== undefined){
+        var cur = new Date(b.dataset.iso + 'T00:00:00');
+        cur.setDate(cur.getDate() + map[e.key]);
+        var ny = cur.getFullYear(), nm = cur.getMonth(), iso = ny+'-'+pad2(nm+1)+'-'+pad2(cur.getDate());
+        if(ny !== dpY || nm !== dpM){ dpY = ny; dpM = nm; renderGrid(); }
+        var nx = grid.querySelector('.ct-dp-day[data-iso="'+iso+'"]');
+        if(nx) nx.focus();
+        e.preventDefault();
+      }
+    });
+  });
+}
+function setDate(iso, closePanel){
+  var nat = document.getElementById('fDate');
+  if(nat) nat.value = iso || '';
+  paintDate(); renderGrid();
+  if(closePanel) closeDate(true);
+}
+function openDate(){
+  var panel = document.getElementById('fDatePanel'), btn = document.getElementById('fDateBtn');
+  if(!panel || !btn) return;
+  /* 打开时定位到已选日期那月，没选就落到今天 */
+  var base = document.getElementById('fDate').value || todayISO(), p = base.split('-');
+  dpY = +p[0]; dpM = (+p[1]) - 1;
+  renderGrid();
+  panel.hidden = false; btn.setAttribute('aria-expanded','true'); dateOpen = true;
+  panel.classList.remove('is-up');
+  if(panel.getBoundingClientRect().bottom > window.innerHeight - 12) panel.classList.add('is-up');
+  var f = panel.querySelector('.ct-dp-day.is-sel') || panel.querySelector('.ct-dp-day[data-iso="'+todayISO()+'"]') ||
+          panel.querySelector('.ct-dp-day');
+  if(f) f.focus();
+}
+function closeDate(focusBtn){
+  var panel = document.getElementById('fDatePanel'), btn = document.getElementById('fDateBtn');
+  if(!panel || !btn) return;
+  panel.hidden = true; btn.setAttribute('aria-expanded','false'); dateOpen = false;
+  if(focusBtn) btn.focus();
+}
+function renderDate(){
+  paintDate(); renderGrid();
+  var tdy = document.getElementById('fDateToday'), clr = document.getElementById('fDateClear');
+  if(tdy) tdy.textContent = LANG === 'zh' ? '今天' : 'Today';
+  if(clr) clr.textContent = LANG === 'zh' ? '清除' : 'Clear';
+}
+function bindDate(){
+  var btn = document.getElementById('fDateBtn');
+  if(!btn || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
+  btn.addEventListener('click', function(){
+    var panel = document.getElementById('fDatePanel');
+    if(panel.hidden) openDate(); else closeDate(false);
+  });
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' '){ openDate(); e.preventDefault(); }
+  });
+  document.getElementById('fDatePrev').addEventListener('click', function(){
+    dpM--; if(dpM < 0){ dpM = 11; dpY--; } renderGrid();
+  });
+  document.getElementById('fDateNext').addEventListener('click', function(){
+    dpM++; if(dpM > 11){ dpM = 0; dpY++; } renderGrid();
+  });
+  document.getElementById('fDateToday').addEventListener('click', function(){
+    setDate(todayISO(), false);
+  });
+  document.getElementById('fDateClear').addEventListener('click', function(){ setDate('', true); });
+  renderDate();          /* 面板内的「今天 / 清除」文案随语言走 */
+  document.addEventListener('click', function(e){
+    var box = document.getElementById('fDateBox');
+    var lab = e.target.closest && e.target.closest('label[for="fDateBtn"]');
+    if(dateOpen && box && !box.contains(e.target) && !lab) closeDate(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && dateOpen) closeDate(true);
+  });
+}
+
+/* ══ 语言切换 ══ */
+function applyLocale(){
+  var zh = LANG === 'zh';
+  var t = I18N[zh ? 'zh' : 'en'];
+  [].slice.call(document.querySelectorAll('[data-i18n]')).forEach(function(el){
+    var k = el.dataset.i18n; if(t[k]) el.textContent = t[k];
+  });
+  [].slice.call(document.querySelectorAll('[data-ph]')).forEach(function(el){
+    var k = el.dataset.ph; if(t[k]) el.placeholder = t[k];
+  });
+  var A = DATA.about_us;
+  if(document.getElementById('aboutEyebrow')){       /* 关于我们区块在本页不存在 → 整段跳过 */
+    document.getElementById('aboutEyebrow').textContent  = zh ? A.title : A.title_en;
+    document.getElementById('aboutTitle').textContent    = zh ? A.slogan : A.slogan_en;
+    document.getElementById('aboutBody').innerHTML       = zh ? A.content : A.content_en;
+    document.getElementById('aboutMediaCap').textContent = zh ? A.media_cap : A.media_cap_en;
+    document.getElementById('aboutMore').textContent     = zh ? A.more : A.more_en;
+    document.getElementById('aboutTags').innerHTML = (zh ? A.tags : A.tags_en).map(function(t){
+      return '<li>' + t + '</li>';
+    }).join('');
+  }
+  var C = DATA.contact_us;
+  document.getElementById('ctTitle').textContent  = zh ? C.title  : C.title_en;
+  /* 中文版保留英文一行作副标；英文版大标题已是英文，隐藏避免重复 */
+  document.getElementById('ctTitleEn').hidden      = !zh;
+  document.getElementById('ctDesc').textContent   = zh ? C.desc   : C.desc_en;
+  document.getElementById('ctAddr').textContent   = zh ? C.address : C.address_en;
+  renderDests(); bindDate(); renderDate();
+  renderAdvantages(); renderFeatured();
+}
+/* ══ 语言切换：自定义下拉（替代原生 select） ══ */
+var LANG = 'zh';
+var langBtn  = document.getElementById('langBtn');
+var langMenu = document.getElementById('langMenu');
+var langLabel= document.getElementById('langLabel');
+function closeLang(){
+  langMenu.hidden = true;
+  langBtn.setAttribute('aria-expanded','false');
+}
+function openLang(){
+  langMenu.hidden = false;
+  langBtn.setAttribute('aria-expanded','true');
+}
+langBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  langMenu.hidden ? openLang() : closeLang();
+});
+[].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(opt){
+  opt.addEventListener('click', function(e){
+    e.stopPropagation();
+    var lg = opt.dataset.lang;
+    if(lg === LANG){ closeLang(); return; }
+    LANG = lg;
+    langLabel.textContent = lg === 'zh' ? '中文' : 'EN';
+    [].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(o){
+      o.setAttribute('aria-selected', String(o.dataset.lang === lg));
+    });
+    applyLocale();
+    closeLang();
+  });
+});
+/* 点击外部 / Esc 关闭；菜单展开时按 Tab 移出则自动收起 */
+document.addEventListener('click', function(e){
+  if(!langMenu.hidden && !e.target.closest('.lang-switch')) closeLang();
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && !langMenu.hidden){ closeLang(); langBtn.focus(); }
+});
+
+/* ══ 表单 ══ */
+document.getElementById('inquiry').addEventListener('submit', function(e){
+  e.preventDefault();
+  var zh = LANG === 'zh';
+  alert(zh ? '感谢您的需求，我们将尽快与您联系！' : 'Thank you for your inquiry, we will contact you soon!');
+  this.reset();
+  /* 自定义下拉 / 日历不走 reset()，手动清回 placeholder 状态 */
+  closeDest(false); setDest('');
+  closeDate(false); setDate('');
+});
+
+
+/* ══ 滚动入场动效：IntersectionObserver + 视差 ══ */
+var REVEAL_SEL = [
+  '#services .adv-intro', '#advGrid > *',
+  '#products .mb-16', '#featList > *', '#products .mt-14',
+  '#about .about-layout > *',
+  '#contact .ct-lead > *', '#contact .ct-card',
+  'footer .grid > *'
+];
+function setupReveal(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = [];
+  REVEAL_SEL.forEach(function(s){
+    [].slice.call(document.querySelectorAll(s)).forEach(function(el){
+      if(els.indexOf(el) < 0 && !el.classList.contains('reveal')) els.push(el);
+    });
+  });
+  if(reduce || !els.length) return;                 /* 减少动效：保持原样，不加隐藏态 */
+  els.forEach(function(el){ el.classList.add('reveal'); });
+
+  function markIn(el, delay){
+    var idx = el.parentElement ? [].slice.call(el.parentElement.children).indexOf(el) : 0;
+    el.style.setProperty('--rd', (delay ? Math.min(idx, 6) * 80 : 0) + 'ms');  /* 同组错峰，封顶 6 档 */
+    el.classList.add('in');
+  }
+
+  var hasIO = 'IntersectionObserver' in window;
+  var pending = els.slice();
+  var io = hasIO ? new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      markIn(e.target, true); io.unobserve(e.target);
+      var k = pending.indexOf(e.target); if(k >= 0) pending.splice(k, 1);
+    });
+  }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' }) : null;
+  if(io) pending.forEach(function(el){ io.observe(el); });
+
+  /* 兜底：快速甩动/拖拽滚动条可能一次性跨过元素，IO 不来回调。
+     按几何位置直接判定——进入视口或已滚过头的都立刻显示，杜绝内容永久隐形。 */
+  var ticking = false;
+  function sweep(){
+    ticking = false;
+    var vh = window.innerHeight;
+    for(var i = pending.length - 1; i >= 0; i--){
+      var el = pending[i], r = el.getBoundingClientRect();
+      if(r.top < vh * 0.92){
+        markIn(el, true); if(io) io.unobserve(el); pending.splice(i, 1);
+      }
+    }
+    if(!pending.length){
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(sweep); } }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll, { passive:true });
+  if(!hasIO) sweep(); else onScroll();
+}
+
+/* 视差：首屏文案随滚动淡出上移（rAF 节流） */
+function setupParallax(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var hero = document.getElementById('heroCopy');
+  var ticking = false;
+  function frame(){
+    ticking = false;
+    var vh = window.innerHeight, sy = window.pageYOffset;
+    if(hero){
+      var p = Math.min(Math.max(sy / (vh * 0.85), 0), 1);          /* 0→1，首屏滚完即全隐 */
+      hero.style.opacity    = Math.max(0, 1 - p * 1.15).toFixed(3);   /* 必须 clamp：负值会被 CSSOM 忽略 */
+      hero.style.transform  = 'translate3d(0,' + (-p * 60).toFixed(1) + 'px,0)';
+      hero.style.pointerEvents = p > 0.85 ? 'none' : '';
+    }
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(frame); }
+  }, { passive:true });
+  window.addEventListener('resize', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(frame); }
+  }, { passive:true });
+  frame();
+}
+
+/* ══ 初始化 ══ */
+applyLocale();
+setupReveal();
+setupParallax();
+</script>
+</body>
+</html>

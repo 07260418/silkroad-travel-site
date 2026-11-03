@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>关于我们 | 丝路之家</title>
+<link rel="stylesheet" href="./site-source/css/entry.89d5752e.css">
+<link rel="stylesheet" href="./site-source/css/index.449605d2.css">
+<style>
+/* ══ 阿里巴巴普惠体 3.0（自托管 woff2，仅标题字族）：65-Medium→500/600，85-Bold→700 ══ */
+@font-face{
+  font-family:'Alibaba PuHuiTi 3.0';
+  src:url('./site-source/fonts/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+  font-weight:500 600; font-display:swap;
+}
+@font-face{
+  font-family:'Alibaba PuHuiTi 3.0';
+  src:url('./site-source/fonts/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+  font-weight:700; font-display:swap;
+}
+/* 模块标题统一规范（对齐「品牌简介」参考样式）：联系区大标题加橙色短线 */
+.ct-title::before{
+  content:''; display:block; width:44px; height:2px; border-radius:2px;
+  background:#CD7A36; margin-bottom:14px;
+}
+/* ══════════════════════════════════════════════════════════
+   线上缺失的 Tailwind 类（entry.89d5752e.css 中 emerald / amber /
+   prose / from-black 出现次数均为 0，说明构建时未生成）
+   默认关闭 = 还原线上真实渲染；开启 = 还原设计意图
+   ══════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════
+   导航配色：纯白 #FFFFFF 底 + #666 常规字重（未触发）+ #094949 600（选中）
+   对比度（底 #FFFFFF，相对亮度 1.0000）：
+     未触发文字 #666       5.36:1 ✅ AA
+     触发/选中/下划线 #094949  9.51:1 ✅（与未触发拉开 1.77:1 明度差）
+     logo #CD7A36（大字号，门槛 3:1） 3.05:1 ⚠️ 仅够大字
+   ══════════════════════════════════════════════════════════ */
+.bg-nav-light{background-color:#FFFFFF}
+/* 导航只用投影分层，不再描边：底部线条全部去掉，靠柔和投影浮起 */
+#siteHeader{
+  border-bottom:0 !important;
+  box-shadow:0 6px 22px -8px rgba(8,32,26,.22);
+}
+#siteHeader.is-solid{box-shadow:0 10px 30px -10px rgba(8,32,26,.30)}
+
+/* 导航项：未触发=常规字重 + 中灰；选中态才加粗上墨绿
+   #666 在 #FFFFFF 上 5.74:1（AA 正文达标），与选中 #094949（10.19:1）拉开两级明度 */
+.nav-link{
+  position:relative; display:inline-flex; align-items:center;
+  min-height:44px;                 /* WCAG 触控目标 ≥44px */
+  padding:0 4px;
+  font-size:1.125rem; font-weight:400; line-height:1.5;
+  color:#666; text-decoration:none; white-space:nowrap;
+  transition:color .22s ease;
+}
+.nav-link::after{                  /* 下划线：居中短横线，仅选中态显示 */
+  content:''; position:absolute;
+  left:50%; width:22px; margin-left:-11px;
+  bottom:calc(-1 * var(--nav-bottom-gap, 16px));  /* 贴齐导航条背景底边 */
+  height:2px; border-radius:2px; background:#094949;
+  transform:scaleX(0); transform-origin:center center;
+  transition:transform .26s cubic-bezier(.4,0,.2,1);
+}
+.nav-link:hover,.nav-link:focus-visible{color:#094949}
+.nav-link.is-active{color:#094949; font-weight:600}
+.nav-link.is-active::after{transform:scaleX(1)}
+.nav-link:focus-visible{outline:2px solid #094949; outline-offset:4px; border-radius:3px}
+
+/* 定制服务按钮：#094949 描边/文字，全尺寸显示 */
+.tailor-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:40px; padding:8px 20px;
+  border:2px solid #094949; border-radius:9999px;
+  font-size:.875rem; font-weight:600; line-height:1.2;
+  color:#094949; text-decoration:none; white-space:nowrap;
+  background:transparent;
+  transition:background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+/* 两个 CTA 按钮触发态统一：主色 #094949 提亮版 #094949 + 白字（对比度实测） */
+.tailor-btn:hover{background:#094949; color:#fff; transform:translateY(-1px)}
+.tailor-btn:focus-visible{outline:2px solid #094949; outline-offset:3px}
+
+/* 小屏汉堡入口（md 以下 nav 整块隐藏，原本无替代入口） */
+.hamburger{
+  display:none; width:44px; height:44px; flex:none;
+  align-items:center; justify-content:center; flex-direction:column; gap:5px;
+  padding:0; border:0; border-radius:8px; background:transparent; cursor:pointer;
+}
+.hamburger span{display:block; width:22px; height:2px; border-radius:2px; background:#666; transition:transform .26s ease, opacity .2s ease}
+.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hamburger:focus-visible{outline:2px solid #094949; outline-offset:2px}
+
+/* 需求①：小屏用「整体缩放」保住按钮，而不是隐藏它 */
+@media (max-width:767px){
+  .hamburger{display:flex}
+  .tailor-btn{padding:7px 14px; font-size:.8125rem; min-height:38px}
+}
+/* ── 品牌 Logo：图片版（179×64 透明 PNG，宽高比 2.8:1）──
+   显示高 44px（与原文字 logo 视觉量级一致），≤520px 缩到 34px 防挤压 */
+.logo-link{display:inline-flex; align-items:center; flex:none}
+.logo-img{height:44px; width:auto; display:block}
+/* 全部文字/线条均不加投影（需求） */
+header .nav-link, header .lang-btn,
+header .logo-img, header .tailor-btn{ text-shadow:none }
+.hamburger span{box-shadow:none}
+
+@media (max-width:520px){
+  header > div{padding-left:12px !important; padding-right:12px !important; gap:8px !important}
+  .logo-img{height:34px !important}              /* 44px → 34px，腾出横向空间 */
+  .tailor-btn{padding:6px 12px; font-size:.75rem; min-height:36px; letter-spacing:0}
+  .lang-btn{padding:6px 4px; font-size:.875rem}
+  .lang-menu{min-width:104px}
+  .hamburger{width:40px; height:40px}
+  .hamburger span{width:20px}
+}
+
+/* ── 页脚背景：#08201A（墨绿黑，与品牌青绿 #094949 同源） ──
+   原 Tailwind .bg-gray-900 不再引用，改自定义类避免误伤其它深灰块
+   白字对比度 15.6:1 ｜ amber-400 标题 8.9:1 ｜ 链接 hover emerald-400 7.2:1
+   ────────────────────────────────────────────────────────── */
+.bg-footer{background-color:#08201A}
+
+/* 页脚分隔线：#F1ECDF @30%；版权文字 #FDF5E5（覆盖 Tailwind border-white/10 与继承 text-white） */
+/* 版权文字：#FDF5E5 @55%（实色太抢眼，压到半透明弱化）；
+   合成色在 #08201A 上实测 5.47:1，仍过 AA（45% 只有 4.15:1，不达标，故取 55%） */
+.footer-copyright{border-top-color:rgba(241,236,223,.3) !important; color:rgba(253,245,229,.55) !important}
+.footer-copyright *{color:rgba(253,245,229,.55) !important}
+/* 页脚 logo：白色版 179×74（深底专用），显示高 56px（宽按 2.42:1 自动跟随） */
+.footer-logo{height:56px; width:auto; display:block}
+
+/* ── 语言切换：无框文字按钮 + 向下弹出的自定义菜单 ──
+   替代原生 <select>：原生 option 列表由系统绘制，位置不可控且会盖住选择区 */
+.lang-switch{position:relative; flex:none}
+.lang-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:44px; padding:6px 10px;
+  background:none; border:0; cursor:pointer;
+  font-size:.9375rem; font-weight:400; color:#666;
+  font-family:inherit;
+  transition:color .2s ease;
+}
+.lang-btn:hover,.lang-btn[aria-expanded="true"]{color:#094949}
+.lang-btn:focus-visible{outline:2px solid #094949; outline-offset:2px; border-radius:4px}
+.lang-caret{
+  width:0; height:0; flex:none;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid currentColor;
+  transition:transform .2s ease;
+}
+.lang-btn[aria-expanded="true"] .lang-caret{transform:rotate(180deg)}
+/* 菜单向下展开：top:100% 定在按钮下方，不遮挡按钮本身 */
+.lang-menu{
+  position:absolute; top:100%; right:0; z-index:60;
+  margin-top:6px; min-width:120px; padding:6px;
+  background:#FFFFFF; border:0; border-radius:12px;
+  box-shadow:0 16px 32px -12px rgba(8,32,26,.32);
+  list-style:none;
+}
+.lang-menu[hidden]{display:none}
+.lang-opt{
+  display:flex; align-items:center; width:100%; min-height:40px;
+  padding:0 10px; border:0; border-radius:6px; background:none;
+  font-size:.9375rem; font-family:inherit; color:#333; text-align:left;
+  cursor:pointer; transition:background-color .15s ease, color .15s ease;
+}
+.lang-opt:hover{background:rgba(9,73,73,.08); color:#094949}
+.lang-opt:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.lang-opt[aria-selected="true"]{color:#094949; font-weight:600}
+.lang-opt[aria-selected="true"]::after{content:'✓'; margin-left:auto; font-size:.8125rem}
+
+/* 小屏下拉菜单（打包 CSS 缺 .md\:hidden，补一道断点保险） */
+.mobile-menu{
+  padding:8px 24px 20px; border-top:0;
+  background-color:#FFFFFF;
+  box-shadow:0 14px 26px -14px rgba(8,32,26,.28);
+}
+@media (min-width:768px){
+  .mobile-menu{display:none !important}
+  /* 打包 CSS 里 col-span-2 只出现在非 md 的作用域，这里自补 md 断点，保证字段能横跨两列 */
+  .md\:col-span-2{grid-column:span 2 / span 2}
+}
+.mobile-menu[hidden]{display:none}
+.nav-link-m{
+  display:block; padding:14px 4px; min-height:48px;
+  font-size:1.0625rem; font-weight:400; color:#666; text-decoration:none;
+  border-bottom:1px solid rgba(8,32,26,.10);
+  transition:color .2s ease;
+}
+.nav-link-m:last-child{border-bottom:0}
+.nav-link-m:hover,.nav-link-m.is-active{color:#094949}
+.nav-link-m.is-active{font-weight:600}
+
+/* ══════════════════════════════════════════════════════════
+   响应式布局：破除线上 PC 站的 1200px 锁定
+   线上 body{min-width:1200px}，移动端必然横向溢出，
+   这是原站「只服务桌面」的产物，响应式必须先解掉它
+   ══════════════════════════════════════════════════════════ */
+html,body{min-width:0 !important; overflow-x:hidden}
+
+/* ══ 首屏视频文案：五级层次，字号全部 clamp 流式缩放 ══
+   白字压在视频上，靠 1px 级轻微暗描边兜底（视频亮帧时仍可读），
+   不依赖大范围投影，保持画面干净 */
+.banner-copy{max-width:56rem; margin:0 auto}
+.bc-en{
+  margin:0 0 clamp(14px,2vw,22px);
+  font-size:clamp(.75rem,1.8vw,1.125rem); font-weight:500;
+  letter-spacing:.18em; margin-right:-.18em;   /* 负边距抵消尾字距，保证真正居中 */
+  color:#fff;
+}
+.bc-main{
+  margin:0 0 clamp(12px,1.8vw,20px);
+  font-size:clamp(1.5625rem,5.2vw,3.75rem); font-weight:700; line-height:1.28;
+  letter-spacing:.02em; color:#fff;
+}
+.bc-sub{
+  margin:0;
+  font-size:clamp(.9375rem,2.1vw,1.375rem); line-height:1.9;
+  color:rgba(255,255,255,.95);
+}
+.bc-tag{
+  margin:clamp(20px,3vw,34px) 0 0;
+  font-size:clamp(.9375rem,2vw,1.25rem); font-weight:500;
+  letter-spacing:.28em; margin-right:-.28em;
+  color:rgba(255,255,255,.92);
+}
+.bc-en,.bc-main,.bc-sub,.bc-tag{ text-shadow:0 1px 10px rgba(0,0,0,.45) }
+
+/* 主色实底按钮：与「了解我们」按钮（.adv-more--solid）同款
+   #094949 底 + 1.5px 同色描边 + 白字，圆角 8px；白字对比度 10.19:1（AAA） */
+.bc-cta{
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:clamp(22px,3vw,36px);
+  min-height:52px; padding:14px 40px;
+  background:#094949; color:#FFFFFF; border:1.5px solid #094949; border-radius:8px;
+  font-size:clamp(.9375rem,1.6vw,1.125rem); font-weight:600; letter-spacing:.12em;
+  margin-right:-.12em; text-decoration:none;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, transform .22s ease,
+             box-shadow .22s ease, padding .26s cubic-bezier(.22,.61,.36,1);
+}
+/* hover 时左右内边距等量回缩，抵消箭头展开的宽度 —— 按钮宽度恒定不跳动，只做"呼吸"
+   底色提亮为 #0E6F6F（与 .adv-more--solid 的触发态一致） */
+.bc-cta:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF; transform:translateY(-2px);
+  padding-left:24px; padding-right:24px;
+  box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.bc-cta:focus-visible{outline:2px solid #fff; outline-offset:3px}
+
+/* ══ 按钮 hover 微交互：箭头淡入右滑 + 落地阴影 ══
+   箭头用内联 SVG（不依赖字体字形，中英文 rendering 一致）；
+   宽度 0 → 1.05em 平滑展开，避免占位导致默认态左右不对称 */
+.bc-cta, .adv-more{position:relative}
+.bc-cta::after, .adv-more::after{
+  content:''; display:inline-block; flex:none;
+  width:0; height:1.05em; margin-left:0; opacity:0;
+  vertical-align:middle; letter-spacing:0; transform:translateX(-6px);
+  background:no-repeat center/1.05em 1.05em
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15'/%3E%3Cpath d='M13 5.5 19.5 12 13 18.5'/%3E%3C/svg%3E");
+  transition:width .26s cubic-bezier(.22,.61,.36,1), margin-left .26s cubic-bezier(.22,.61,.36,1),
+             opacity .22s ease, transform .26s cubic-bezier(.22,.61,.36,1);
+}
+.bc-cta:hover::after, .adv-more:hover::after{
+  width:1.05em; margin-left:.75em; opacity:1; transform:translateX(0);
+}
+@media (max-width:640px){
+  .bc-cta{min-height:48px; padding:12px 30px; width:auto}
+  .bc-cta:hover{padding-left:14px; padding-right:14px}
+  .bc-main{font-size:1.5rem; letter-spacing:0}   /* 375px 下 13 字单行放下，避免孤字折行 */
+}
+/* services 的 h2 已改为小标签样式（.adv-eyebrow），about 的 h2 与优势区同构（.about-title），均不参与区块大标题缩放 */
+/* contact 的标题已改为「小标签 + 金色短线」的 eyebrow 写法，不参与区块大标题缩放 */
+#products h2:not(.adv-eyebrow){
+  font-size:clamp(1.5rem, 4.2vw, 2.25rem)
+}
+/* 产品区标题沿用 .adv-eyebrow（与优势区同款），居中时用负边距抵消尾字距，保证真正居中 */
+#products .adv-eyebrow-en{margin-right:-.2em}
+
+/* ══ 特色产品：四条「左图 + 右文」编辑式横匾 ══
+   参考稿语言：暖白纸卡 + 图角墨绿双语小签 + 宋体大标 + 茶金描边胶囊标签 + 墨绿实心按钮。
+   三色沿用全站：纸卡 #F9F7F1 / 墨绿 #1F4438-#094949 / 茶金 #B08A4F。 */
+#products{
+  /* 雾绿底 #E4E7DE（相对亮度 .789）：比上一版 #F6F9F5（.939）压暗约 16%。
+     关键收益——纸白卡 #F9F7F1（.930）与底的亮度比从 1.009 提到 1.168，
+     横匾的边界终于由明度撑住，不再只靠「冷绿 vs 暖白」的色温差硬分；
+     同时与优势区/关于区的 #F9F7F1 形成真实的明暗交替（此前 .939 与 .930 肉眼几乎无差）。
+     色值沿用文件里已有的 .feat-media 占位色，不引入新色。 */
+  background-color:#E4E7DE;
+  /* 暗一档的带子夹在两段米白之间，读感像"凹进去"：上缘收暗影、下缘留高光 */
+  box-shadow:inset 0 2px 3px -2px rgba(9,73,73,.10), inset 0 -1px 0 rgba(255,255,255,.42);
+}
+.feat-list{display:grid; gap:28px}
+.feat-row{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  /* 卡片纸白 #F9F7F1（.930）对雾绿底 #E4E7DE（.789）亮度比 1.168，明度已能定边界；
+     描边从 .12 收回 .10 —— 只作定形，不让线抢过卡片本身的明暗关系 */
+  background:#F9F7F1;
+  border:1px solid rgba(9,73,73,.10);
+  border-radius:8px; overflow:hidden;
+  box-shadow:0 1px 2px rgba(9,73,73,.06), 0 22px 46px -34px rgba(9,73,73,.50);
+  transition:box-shadow .3s ease, transform .3s ease;
+}
+.feat-row:hover{
+  box-shadow:0 2px 4px rgba(9,73,73,.06), 0 28px 54px -34px rgba(9,73,73,.55);
+  transform:translateY(-2px);
+}
+@media (min-width:1024px){
+  .feat-row{grid-template-columns:minmax(0,45%) minmax(0,55%); min-height:340px}
+  /* 第 2、4 条左右互换（左文右图）：仅换视觉次序，DOM 仍图在前，
+     <1024 堆叠时保持「图在上」的统一节奏 */
+  .feat-row.is-rev{grid-template-columns:minmax(0,55%) minmax(0,45%)}
+  .feat-row.is-rev .feat-media{order:2}
+  .feat-row.is-rev .feat-body{order:1}
+}
+.feat-media{position:relative; margin:0; min-width:0; overflow:hidden; background:#E4E7DE}
+.feat-media img{
+  display:block; width:100%; max-width:100%; height:100%; object-fit:cover;
+  aspect-ratio:4 / 3;
+  transition:transform .8s cubic-bezier(.22,.61,.36,1);
+}
+@media (min-width:1024px){ .feat-media img{aspect-ratio:auto} }
+.feat-row:hover .feat-media img{transform:scale(1.03)}
+/* 图角双语小签：深色玻璃片 —— 半透墨绿 + 背景模糊 + 上缘微弱冷光，
+   仍保留透视感，但暗底把 #CD7A36 的字托起来，压在最亮的天空上也不发飘 */
+.feat-chip{
+  position:absolute; top:18px; left:18px;
+  display:inline-flex; align-items:baseline; gap:11px;
+  padding:9px 19px 10px; border-radius:999px;
+  background:rgba(18,38,32,.62);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);
+  backdrop-filter:blur(16px) saturate(1.15);
+  border:1px solid rgba(255,255,255,.92);
+  color:#CD7A36;
+  font-size:.9375rem; font-weight:600; letter-spacing:.05em; line-height:1;
+  box-shadow:0 8px 22px -12px rgba(9,73,73,.55),
+             inset 0 1px 0 rgba(255,255,255,.16);
+}
+.feat-body{
+  padding:40px 44px 42px;
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+  gap:18px;
+}
+@media (max-width:1023px){ .feat-body{padding:26px 24px 30px; gap:14px} }
+/* 产品条目标题（行于山水 / 行商阅山 …）：与全站模块标题同语言，统一走普惠体 700 */
+.feat-title{
+  margin:0; font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(1.375rem,2.1vw,1.75rem); font-weight:700;
+  letter-spacing:.06em; line-height:1.5; color:#333;
+}
+.feat-desc{
+  margin:0; font-size:.9375rem; line-height:2; color:#4C544E; max-width:40em;
+}
+.feat-tags{
+  display:flex; flex-wrap:wrap; gap:10px; margin:2px 0 0; padding:0; list-style:none;
+}
+.feat-tags li{
+  padding:6px 15px 7px; border-radius:999px;
+  border:1px solid rgba(176,138,79,.42); background:#FDF8ED;
+  font-size:.8125rem; line-height:1.4; color:#9A7440; letter-spacing:.02em;
+}
+/* 与「提交需求」完全同色：主色 #094949 实底，hover 提亮 #0E6F6F + 上浮 + 落影 */
+.feat-cta{
+  margin-top:12px; display:inline-flex; align-items:center; justify-content:center;
+  min-height:46px; padding:0 26px; border-radius:5px;
+  background:#094949; border:1.5px solid #094949; color:#FFFFFF; text-decoration:none;
+  font-size:.9375rem; letter-spacing:.04em; cursor:pointer;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             box-shadow .22s ease, transform .22s ease;
+}
+.feat-cta:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.feat-cta:active{transform:translateY(0)}
+.feat-cta:focus-visible{outline:2px solid #7E5812; outline-offset:3px}
+/* 「查看全部产品」：与卡片内 CTA 同为矩形（5px 圆角、46px 高），
+   只靠描边/实心区分主次 —— 次层级按钮，hover 反白 */
+.feat-all{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:46px; padding:0 30px; border-radius:5px;
+  border:1.5px solid #094949; background:#FDFCF7; color:#094949;
+  text-decoration:none; font-size:.9375rem; letter-spacing:.03em;
+  transition:background .25s ease, color .25s ease;
+}
+.feat-all:hover{background:#094949; color:#FDF5E5}
+
+/* ══ 动效系统 ══
+   ① 滚动入场 reveal：进入视口时淡入上浮，同组错峰 80ms（最多 6 档）
+   ② 首屏文案入场：加载即逐行浮起（CTA 只淡入，避免 animation fill 覆盖 hover 位移）
+   ③ 视差：首屏文案随滚动淡出上移；优势区背景图反向缓移
+   全部在 prefers-reduced-motion 下自动关闭 */
+/* 手感调优：位移按体量分档（--ry 默认 22px），时长 .62s。
+   触发点在 setupReveal：统一按"元素顶部越过视口 86% 线"判定，与元素高矮无关 ——
+   旧写法用 threshold:.15（按元素自身可见比例），结果高元素更早播、矮元素更晚播
+   （实测触发点 0.78~0.85 漂移），一组元素节奏不齐。
+   错峰不再走 CSS transition-delay：卡片自带 transition 会把它整个覆盖掉，
+   实测四张卡 delay 全为 0s、同时冒出。改由 JS 按组内序号 setTimeout 调度。
+   去掉 will-change —— 动效只播一次，长期挂图层提升反而吃内存 */
+.reveal{
+  opacity:0; transform:translateY(var(--ry,22px));
+  transition:opacity .62s cubic-bezier(.22,.61,.36,1), transform .62s cubic-bezier(.22,.61,.36,1);
+}
+.reveal.in{opacity:1; transform:none}
+/* 位移分档：栏目头 / 卡片这类小体量少挪一点，避免"跳得太远"显得轻浮；
+   大块图文走 22px 默认值，幅度够看见又不拖沓 */
+#commit .ab-cards-head{--ry:14px}
+#abGrid1 .ab-fcard, #abGrid2 .ab-scard{--ry:18px}
+#intro .ab-intro-media, #intro .ab-intro-body{--ry:26px}
+
+.banner-copy > *:not(.bc-cta){animation:bcIn .9s cubic-bezier(.22,.61,.36,1) both}
+.bc-cta{animation:bcFade .9s cubic-bezier(.22,.61,.36,1) both}
+.banner-copy > *:nth-child(1){animation-delay:.08s}
+.banner-copy > *:nth-child(2){animation-delay:.20s}
+.banner-copy > *:nth-child(3){animation-delay:.32s}
+.banner-copy > *:nth-child(4){animation-delay:.44s}
+.banner-copy > *:nth-child(5){animation-delay:.56s}
+.banner-copy > *:nth-child(6){animation-delay:.68s}
+@keyframes bcIn  {from{opacity:0; transform:translateY(26px)} to{opacity:1; transform:none}}
+@keyframes bcFade{from{opacity:0} to{opacity:1}}
+
+#heroCopy{will-change:opacity,transform}
+
+/* 锚点跳转时留出 fixed header 的高度 */
+#services,#about,#contact,#products{scroll-margin-top:88px}
+
+/* ══ 我们的优势：纸白底 + 沙漠驼队线稿背景 —— 左标题栏 + 米白/墨绿双卡 ══
+   三色即全部：卡米白 #F0EBDF / 卡主色绿 #094949 / 编号棕金 #B08A4F
+   间距统一 48px 栅格：区块与 banner 之间、列间距均为 48px */
+#services{
+  background-color:#F9F7F1;
+  /* 背景铺满一屏；用 min-height 而非 height —— 小屏内容超出时不会被裁切 */
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  /* 上下各 48px 由区块自己承担；容器不再垫底部内边距 —— 这样 flex 居中才是视觉真居中 */
+  padding-bottom:48px;
+}
+/* 插画层：挂在内容容器里（容器的底边＝卡片底边），
+   用 top:100% 把画顶对齐卡片底边，再 translateY(负值) 把沙丘脊线上提到同一水平线 ——
+   百分比位移算的是自身高度，所以换视口不用重算。
+   left 用 min(0, 40rem - 50vw) 反而把容器居中留出的空白抵掉，保持贴着区块左边缘。 */
+#parallaxBg{
+  position:absolute; top:100%; left:min(0px, calc(40rem - 50vw));
+  width:min(1180px, 78vw); aspect-ratio:1921 / 874;
+  /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
+  transform:translateY(-58.5%);
+  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
+  opacity:.8;
+  pointer-events:none; z-index:0;
+}
+/* 内容压在插画层之上（插画层 z-index:0 且绝对定位，会盖住普通流内文字） */
+#services > .max-w-7xl{position:relative; z-index:1}
+.adv-layout{position:relative; z-index:1}
+/* 窄屏双卡竖排：卡片把画的上半截全盖住，只在区块最后 48px 露一条沙带 ——
+   沿用同一个顶点对齐，露出来的正好是驼队所在的沙面 */
+@media (max-width:1023px){
+  #parallaxBg{width:min(100vw,560px)}
+}
+#services > div{width:100%}
+.adv-rule{width:44px; height:2px; margin:0 auto 18px; background:#CD7A36; border-radius:2px}
+.adv-rule--left{margin:0 0 18px 0}
+.adv-layout{display:grid; gap:48px; grid-template-columns:1fr}
+@media (min-width:1024px){
+  /* 左栏 ↔ 右区 48px；右区内部两卡再按 24px 分（见 .adv-grid-wrap） */
+  .adv-layout{grid-template-columns:.95fr 2fr; gap:48px; align-items:stretch}
+}
+/* 左栏是 stretch 到卡高的，内容原本顶在上沿、下方空掉一大截。
+   改成在卡高范围内垂直居中：标题组的视觉重心正对卡片中心，与右侧双卡形成平衡 */
+.adv-intro{display:flex; flex-direction:column; justify-content:center}
+/* 左栏：标题中英文 —— 不套微软雅黑，保持独立气质 */
+.adv-eyebrow{
+  font-size:clamp(1.375rem,4.6vw,1.875rem); font-weight:700; color:#22302C;
+  margin:0; line-height:1.3; letter-spacing:.01em;
+}
+.adv-eyebrow-en{
+  font-family:Georgia,'Times New Roman',serif; font-size:clamp(1rem,3.2vw,1.375rem);
+  letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
+}
+/* 除标题中英文外，本板块其余文字统一微软雅黑（跨平台回退链保底） */
+#services .adv-lead, #services .adv-more, #services .adv-card-title,
+#services .adv-item-no, #services .adv-item-title, #services .adv-item-desc{
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.adv-lead{
+  font-size:16px; line-height:1.85; color:#2B2B2B;
+  margin:28px 0 0; max-width:24em;
+}
+.adv-lead + .adv-lead{margin-top:12px}
+.adv-more{
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-top:36px; padding:12px 34px;
+  border:1.5px solid #094949; border-radius:8px; background:transparent;
+  font-size:16px; font-weight:600; color:#094949; text-decoration:none;
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             transform .22s ease, box-shadow .22s ease;
+}
+.adv-more:hover{
+  background:#094949; border-color:#094949; color:#FDF5E5;
+  transform:translateY(-2px); box-shadow:0 12px 26px -8px rgba(9,73,73,.55);
+}
+/* 双卡：米白 / 墨绿；内部两卡间距 24px（与左栏之间是父级的 48px） */
+.adv-grid-wrap{display:grid; grid-template-columns:1fr; gap:24px}
+@media (min-width:1024px){
+  .adv-grid-wrap{grid-template-columns:1fr 1fr}
+  /* 错落：第二张（墨绿「实力保障」）下沉 36px。
+     用 margin-top 而不是 transform —— .reveal 也在用 transform，两者会互相覆盖。
+     stretch 仍在，所以两张卡底边齐平、上沿差 36px，读感是阶梯而不是"两条等高矩形" */
+  .adv-grid-wrap > .adv-card + .adv-card{margin-top:36px}
+}
+/* 卡面压在插画上，加一道短距投影把两张卡"托"起来 ——
+   沙米卡 #F0EBDF 与沙丘底色接近，靠投影而不是靠颜色区分 */
+.adv-card{
+  padding:38px 30px 18px; display:flex; flex-direction:column; border-radius:8px; overflow:hidden;
+  box-shadow:0 22px 46px -30px rgba(9,73,73,.42);
+  transition:box-shadow .32s ease;
+}
+/* hover：加深投影（任何环境都生效，含 reduced-motion） */
+.adv-card:hover{box-shadow:0 30px 58px -30px rgba(9,73,73,.50)}
+/* 上浮只在有动效时加入。选择器带上 .reveal.in 是为了压过 .reveal 自身的 transform 优先级，
+   顺带把卡片自己的过渡在这里重新声明（transform 走 .34s，比入场快一档，手感更利落） */
+.adv-card.reveal.in{
+  transition:opacity .72s cubic-bezier(.22,.61,.36,1),
+             transform .34s cubic-bezier(.22,.61,.36,1),
+             box-shadow .32s ease;
+}
+.adv-card.reveal.in:hover{transform:translateY(-4px)}
+.adv-card--sand{background:#F0EBDF}
+.adv-card--pine{background:#094949}
+.adv-card-title{
+  text-align:center;
+  font-size:1.125rem; font-weight:700; letter-spacing:.05em;
+  color:#22302C; margin:0 0 12px;
+}
+.adv-card--pine .adv-card-title{color:#FDF5E5}
+.adv-list{list-style:none; margin:0; padding:0; flex:1}
+.adv-item{
+  display:grid; grid-template-columns:46px 1fr; gap:16px; align-items:center;
+  padding:15px 0; border-bottom:1px solid rgba(43,43,43,.10);
+}
+.adv-card--pine .adv-item{border-bottom-color:rgba(255,255,255,.16)}
+.adv-item:last-child{border-bottom:0}
+.adv-icon{
+  width:46px; height:46px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:#E3DDCD; color:#9C7A45;
+  transition:background-color .28s ease, color .28s ease;
+}
+.adv-card--pine .adv-icon{background:rgba(255,255,255,.12); color:#E5CFA0}
+.adv-icon svg{
+  width:22px; height:22px;
+  /* hover 的放大挂在 svg 上，不挂 .adv-icon —— 后者被入场动画的 fill:both 占着 transform，
+     写在 .adv-icon 上会被动画静默覆盖（老坑：animation fill 优先级高于普通声明） */
+  transition:transform .3s cubic-bezier(.22,.61,.36,1);
+}
+/* 逐条 hover：图标底色提亮、图形放大一点，给静态列表一个可探的反馈 */
+.adv-card--sand .adv-item:hover .adv-icon{background:#D7CDAB; color:#8A6A33}
+.adv-card--pine .adv-item:hover .adv-icon{background:rgba(255,255,255,.20); color:#F2E2BE}
+.adv-item:hover .adv-icon svg{transform:scale(1.12)}
+
+/* 卡内节奏：卡片本体已有 .reveal 的整块淡入，这里再叠一层内部递进 ——
+   条目按序浮起、图标弹入，避免"整块一起亮"的呆板。--i 由 renderAdvantages() 写在 li 上 */
+.adv-card.in .adv-item{
+  animation:advItemIn .58s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay:calc(150ms + var(--i, 0) * 62ms);
+}
+@keyframes advItemIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+.adv-card.in .adv-icon{
+  animation:advIconPop .5s cubic-bezier(.34,1.56,.64,1) both;
+  animation-delay:calc(210ms + var(--i, 0) * 62ms);
+}
+@keyframes advIconPop{from{opacity:0; transform:scale(.55)} to{opacity:1; transform:scale(1)}}
+.adv-item-no{display:block; font-size:.6875rem; font-weight:600; letter-spacing:.16em; color:#B08A4F}
+.adv-card--pine .adv-item-no{color:#D9B87E}
+.adv-item-title{display:block; font-size:16px; font-weight:700; color:#253230; margin-top:3px; line-height:1.5}
+.adv-card--pine .adv-item-title{color:#FDF5E5}
+.adv-item-desc{display:block; font-size:.8438rem; line-height:1.7; color:#8F8B80; margin-top:3px}
+.adv-card--pine .adv-item-desc{color:rgba(253,245,229,.72)}
+@media (max-width:520px){
+  .adv-card{padding:30px 22px 12px}
+  .adv-item{grid-template-columns:40px 1fr; gap:12px}
+  .adv-icon{width:40px; height:40px}
+}
+
+/* ══ 关于丝路之家：左图右文（参考版式）——标题/按钮与优势区同构 ══ */
+#about{
+  background-color:#F9F7F1;
+  /* 与优势区一致：背景铺满一屏（min-height 而非 height，小屏内容超高不会被裁切） */
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  /* 上下各 48px 由区块自己承担，容器不垫内边距 —— flex 居中才是视觉真居中 */
+  padding-bottom:48px;
+}
+#about > div{width:100%}
+.about-layout{display:grid; gap:48px; grid-template-columns:1fr}
+@media (min-width:1024px){
+  .about-layout{grid-template-columns:1fr 1fr; gap:56px; align-items:center}
+}
+/* 左：图 + 左下角文案 + 右上印章 */
+.about-media{position:relative; margin:0}
+/* 裁切框：只包图，印章不进框 */
+.about-media-frame{display:block; overflow:hidden; border-radius:6px}
+.about-media img{
+  display:block; width:100%; aspect-ratio:4/3.1; object-fit:cover; border-radius:6px;
+  /* 缩放动效与产品卡图片同一套语言：0.8s 同一条缓动曲线 */
+  transform:scale(1); transform-origin:54% 44%;
+  transition:transform .8s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
+}
+/* 触发缩放：鼠标悬停整块图（含印章与角标）时画面推近 1.06，
+   溢出部分由 .about-media-frame 裁掉，边缘不会跑出圆角 */
+.about-media:hover #aboutImg{transform:scale(1.06)}
+/* 入场：图片不做"揭幕"（clip-path 由下往上刷开）了 ——
+   揭幕会把图切成上下两截再拼回来，静态呈现时反而像是没加载完。
+   现在图片直接随整列 .reveal 的上浮一起进场，节奏统一、没有二次加工 */
+/* 图底暗渐变：保证左下角白色文字可读 */
+.about-media::after{
+  content:''; position:absolute; inset:0; border-radius:6px; pointer-events:none;
+  background:linear-gradient(180deg, rgba(8,20,18,0) 52%, rgba(8,20,18,.60) 100%);
+}
+.about-media-cap{
+  position:absolute; left:26px; bottom:22px; z-index:2;
+  display:flex; flex-direction:column; gap:9px; color:#FFFFFF;
+}
+/* 图注：等图落位、印章盖完再浮起 —— 读感是"画面先立住，字再落上去"，
+   避免字和图同时冒出来打架。延迟按 .reveal 上浮（.72s）的后段取 .52s（去掉揭幕后从 .78s 提前） */
+#about .about-media.reveal.in .about-media-cap{
+  animation:capIn .55s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay:.52s;
+}
+@keyframes capIn{
+  from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none}
+}
+.about-media-en{font-size:11px; font-weight:500; letter-spacing:.42em; opacity:.85}
+.about-media-cap strong{font-size:clamp(1rem,1.6vw,1.25rem); font-weight:600; letter-spacing:.06em}
+/* 印章：跨图右上角，竖排两列 + 内描边 */
+.about-seal{
+  position:absolute; top:24px; right:-16px; z-index:2;
+  width:64px; height:92px; background:#CD7A36; border-radius:5px;
+  display:flex; align-items:center; justify-content:center; gap:3px;
+  box-shadow:0 8px 18px -8px rgba(8,32,26,.40);
+}
+.about-seal::before{
+  content:''; position:absolute; inset:4px; border:1px solid rgba(253,245,229,.55); border-radius:3px;
+}
+.about-seal span{
+  writing-mode:vertical-rl; text-orientation:upright;
+  font-size:15px; font-weight:600; letter-spacing:.28em; line-height:1;
+  color:#FDF5E5;
+  /* 竖排末尾会多出一份 letter-spacing 的空白，抵消后文字才能在框内真正垂直居中 */
+  margin-bottom:-.28em;
+}
+/* 落印：图的上浮（.72s）走到后半段时印章"盖"下来，尾段带一点回弹 ——
+   静态的方印章因此有了来处，也不抢图本身的主角位。
+   延迟 .34s + 时长 .62s，收尾正落在图落定处（去掉揭幕后从 .5s 提前） */
+#about .about-media.reveal.in .about-seal{
+  animation:sealDrop .62s cubic-bezier(.3,1.5,.6,1) both;
+  animation-delay:.34s;
+}
+@keyframes sealDrop{
+  from{opacity:0; transform:translateY(-16px) scale(1.42) rotate(-9deg)}
+  to  {opacity:1; transform:none}
+}
+/* 右：eyebrow + 大标题 + 英文（与优势区左栏同构） */
+.about-eyebrow{
+  display:flex; align-items:center; gap:14px; margin:0 0 14px;
+  font-size:.8125rem; font-weight:600; letter-spacing:.14em; color:#094949;
+}
+.about-eyebrow-line{width:44px; height:1px; background:#094949; opacity:.5}
+/* 横线随右栏入场从左展开：给静态的 eyebrow 一个"起笔"的方向感 */
+#about .about-side.in .about-eyebrow-line{
+  transform-origin:left center;
+  animation:lineGrow .66s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay:.14s;
+}
+@keyframes lineGrow{
+  from{transform:scaleX(0)} to{transform:scaleX(1)}
+}
+.about-title{
+  font-size:clamp(1.375rem,4.6vw,1.875rem); font-weight:700; line-height:1.3;
+  letter-spacing:.01em; color:#22302C; margin:0;
+}
+.about-title-en{
+  font-family:Georgia,'Times New Roman',serif; font-size:clamp(1rem,3.2vw,1.375rem);
+  letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
+}
+/* 除标题中英文外统一微软雅黑（与优势区一致） */
+#about .about-body, #about .about-tags li, #about .about-media-cap strong,
+#about .about-eyebrow, #about .adv-more{
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.about-body{font-size:16px; line-height:1.9; color:#3D3D3A; margin:24px 0 0}
+.about-body p{margin:0 0 1em}
+.about-body p:last-child{margin-bottom:0}
+/* 业务标签徽章 */
+.about-tags{list-style:none; display:flex; flex-wrap:wrap; gap:12px; padding:0; margin:26px 0 0}
+/* 标签：白底 + 主色描边与字色，在米白底上有清晰的白卡层次 */
+.about-tags li{
+  padding:9px 22px; border:1px solid rgba(9,73,73,.42); border-radius:30px;
+  background:rgba(9,73,73,.06);
+  font-size:13px; font-weight:500; letter-spacing:.06em; color:#094949;
+}
+/* 徽章依次落位（--i 由 applyLocale() 写在 li 上），把"一排标签"变成有先后的呈现 */
+#about .about-side.in .about-tags li{
+  animation:tagIn .5s cubic-bezier(.22,.61,.36,1) both;
+  animation-delay:calc(var(--i, 0) * 70ms + 260ms);
+}
+@keyframes tagIn{
+  from{opacity:0; transform:translateY(9px) scale(.96)}
+  to  {opacity:1; transform:none}
+}
+/* 按钮复用 .adv-more（16px + hover 箭头/阴影），仅调间距；
+   高度对齐产品卡按钮 .feat-cta：改用 min-height:46px + 上下零内边距撑出来 */
+#about .adv-more{margin-top:34px; min-height:46px; padding:0 34px; line-height:1}
+/* 「了解我们」不带动效箭头：去掉伪元素，hover 只保留提亮 + 上浮 + 落影 */
+#about .adv-more::after{display:none !important}
+/* 主色实底变体：默认填充主色 #094949，触发（hover）提亮为 #0E6F6F */
+.adv-more--solid{
+  background:#094949; border-color:#094949; color:#FFFFFF;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+}
+.adv-more--solid:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1 !important; transform:none !important; transition:none !important}
+  .banner-copy > *:not(.bc-cta), .bc-cta{animation:none !important}
+  #aboutImg{animation:none !important}
+  .about-media:hover #aboutImg{transform:none !important}
+  .bc-cta::after, .adv-more::after{transition:opacity .15s linear; transform:none !important}
+  .bc-cta:hover, .adv-more:hover{transform:none !important}
+  /* 本轮新增：卡内条目/图标递进、印章落印、徽章弹出、横线展开，全部关掉；
+     顺带把卡片 hover 的上浮与图标放大也一并去掉（只留投影加深） */
+  .adv-item, .adv-icon, .adv-icon svg, .about-media-cap,
+  .about-seal, .about-tags li, .about-eyebrow-line{animation:none !important}
+  .adv-card, .adv-icon, .adv-icon svg{transition:none !important}
+  .adv-card:hover, .adv-card.reveal.in:hover{transform:none !important}
+  .adv-item:hover .adv-icon svg{transform:none !important}
+}
+/* ══ CONTACT：左文案 + 右表单卡 ══
+   雾绿底 #E4E7DE（相对亮度 .789，与产品区同色；两区之间隔着纸白的「关于我们」，不会连成一片）／
+     底压暗后纸白卡 #F9F7F1 与底的亮度比从 1.011 提到 1.168，卡片直接浮出来，
+     边界交给极淡墨绿细线 + 落地投影（冷绿底 vs 暖白卡，色温差再补一道）／
+   青铜 #7E5812（eyebrow）／ 主色绿 #094949（CTA，hover #0E6F6F）
+   对比度核对（底 #E4E7DE，相对亮度 .789 —— 上一版 .939 压暗后全部复算）：
+     标题 #1A2A22 ≈ 12.0:1 ✅ 说明 #5B6059 ≈ 5.04:1 ✅ 信息键 #575C55 ≈ 5.39:1 ✅
+     信息值 #28302B ≈ 10.84:1 ✅ 青铜 #7E5812 ≈ 5.10:1 ✅（全部仍过 AA 4.5）
+     ⚠️ 唯一不达标：英文副标 .ct-title-en 的 #CD7A36 ≈ 2.61:1（上一版 3.05:1 本就不达标，
+        压暗后更差）。这是既有问题，非本次引入；修法见文件内 .ct-title-en 处注释。
+   卡内（底 #F9F7F1）：正文 #28302B ≈ 12.66:1 ✅ 字段标签 #5B6059 ≈ 5.88:1 ✅
+     提示灰 #6B6656 ≈ 5.35:1 ✅ 必填星号 #9A6E1C ≈ 4.24:1（符号，非正文）✅ */
+#contact.ct-section{
+  background:#E4E7DE;
+  /* 上缘：与纸白的「关于我们」接壤，凹带收一道暗影；下缘：大范围淡绿影把深墨绿页脚托住 */
+  box-shadow:inset 0 2px 3px -2px rgba(9,73,73,.10), inset 0 -54px 44px -54px rgba(9,73,73,.20);
+  padding:0 !important;            /* 覆盖小屏 `section{padding:56px}` 的通用规则 */
+  scroll-margin-top:0;
+  overflow:hidden;
+}
+.ct-wrap{
+  max-width:1240px; margin:0 auto;
+  padding:clamp(52px,7vw,104px) clamp(20px,4.6vw,60px);
+  display:grid; grid-template-columns:1fr; gap:clamp(30px,4vw,52px);
+  align-items:center;
+}
+@media (min-width:1024px){
+  .ct-wrap{grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr); gap:clamp(44px,5vw,84px)}
+}
+
+/* ── 左：文案 ── */
+.ct-lead{color:#1A2A22; min-width:0}
+.ct-eyebrow{
+  display:inline-flex; align-items:center; gap:9px; margin:0 0 clamp(16px,2vw,24px);
+  font-size:.8125rem; font-weight:600; letter-spacing:.2em; color:#7E5812;
+}
+.ct-eyebrow::before{
+  content:''; width:6px; height:6px; flex:none; border-radius:1px;
+  background:#7E5812; transform:rotate(45deg);
+}
+/* 大标题用宋体，与设计稿的"书卷气"一致；其余文字仍走全站字体 */
+.ct-title{
+  margin:0;
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  /* 定死 30px：与「了解我们」等按钮同级的视觉量级，不再随视口放大 */
+  font-size:30px; font-weight:700; line-height:1.4; letter-spacing:.02em;
+  color:#1A2A22;
+}
+.ct-title > span{display:block}
+/* 标题下的英文一行：沿用全站英文小标语言（Georgia 大写 + 茶金 #CD7A36），
+   字号比优势区/关于我们的略小，压在 30px 定死的大标题下不抢主次。
+   ⚠️ 待确认：#CD7A36 在 #E4E7DE 上只有 2.61:1，15px 小字不达 AA 4.5（在旧底 #F6F9F5 上也只有 2.76:1，
+   本就是既有缺陷）。因品牌橙的深浅你还在定，此处不动；若要修，改这一个值为
+   #8F4E14 即得 5.13:1，其余区块的橙色（.adv-eyebrow-en / .about-title-en 22px、印章图形）不受影响。 */
+.ct-title-en{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:.9375rem; letter-spacing:.18em; text-transform:uppercase;
+  color:#CD7A36; margin:12px 0 0; line-height:1.4;
+}
+.ct-title-en[hidden]{display:none}   /* 英文模式下由 JS 加 hidden */
+.ct-desc{
+  margin:clamp(18px,2.2vw,28px) 0 0; max-width:21em;
+  font-size:clamp(.9375rem,1.1vw,1.0625rem); line-height:2; color:#5B6059;
+  text-wrap:pretty;               /* 折行时避免末行只剩一两个字（孤字） */
+}
+/* 联系方式：信息只在联系区出现，不能随版式一起丢掉 */
+.ct-info{margin:clamp(30px,3.6vw,46px) 0 0; padding-top:clamp(18px,2.2vw,26px); border-top:1px solid rgba(40,48,43,.14)}
+.ct-info-list{list-style:none; margin:0; padding:0; display:grid; gap:9px}
+.ct-info-list li{
+  display:grid; grid-template-columns:4.4em minmax(0,1fr); gap:14px; align-items:baseline;
+  font-size:.8125rem; line-height:1.7;
+}
+.ct-info-key{color:#575C55; letter-spacing:.08em; white-space:nowrap}
+.ct-info-val{color:#28302B; word-break:break-word}
+
+/* 线描山形：浅底上用主色绿，透明度压到 10%（底越淡，同样透明度的压纹越显绿） */
+.ct-art{
+  display:block; width:min(100%,310px); height:auto; margin:clamp(26px,3.2vw,40px) 0 0;
+  color:#094949; opacity:.10; pointer-events:none;
+}
+
+/* ── 右：表单卡 ── */
+.ct-card{
+  /* 纸白 #F9F7F1（.930）对雾绿底 #E4E7DE（.789）亮度比 1.168，卡片自己就能浮起来；
+     "极淡墨绿细线 + 落地投影"退居定形用（线 .10，不是早先那条偏黑的 .16），不抢视觉 */
+  background:#F9F7F1; border:1px solid rgba(9,73,73,.10); border-radius:10px;
+  padding:clamp(22px,2.6vw,32px) clamp(18px,2.4vw,30px) clamp(18px,2.2vw,26px);
+  box-shadow:0 26px 50px -26px rgba(8,32,26,.46), 0 2px 6px -2px rgba(8,32,26,.12), 0 1px 0 rgba(255,255,255,.8) inset;
+  color:#28302B; min-width:0;
+}
+.ct-card-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+  margin:0 0 clamp(16px,1.9vw,22px);
+}
+.ct-card-title{
+  margin:0; font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(1rem,1.5vw,1.1875rem); font-weight:700;
+  letter-spacing:.02em; color:#1F2A26;
+}
+.ct-req-note{margin:0; flex:none; font-size:.6875rem; letter-spacing:.02em; color:#6B6656}
+.ct-req-note b{margin-right:2px; font-weight:600; color:#9A6E1C}
+
+/* 表单：两栏网格；邮箱与需求各占整行 */
+.ct-grid{display:grid; grid-template-columns:1fr; gap:14px 18px}
+@media (min-width:560px){ .ct-grid{grid-template-columns:1fr 1fr} }
+.ct-field{display:flex; flex-direction:column; gap:7px; min-width:0}
+.ct-field--full{grid-column:1 / -1}
+.ct-field label{
+  font-size:.75rem; font-weight:500; letter-spacing:.04em; color:#5B6059;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.ct-field label .req{margin-left:3px; color:#9A6E1C}
+
+/* 输入框：浅描边方框（设计稿的"表单格子"），聚焦转主色绿 */
+.ct-box{position:relative; display:flex; align-items:center}
+.ct-box input, .ct-box select, .ct-box textarea{
+  width:100%; height:38px; margin:0; padding:0 12px;
+  background:#FFFFFF; border:1px solid #DCD6C6; border-radius:3px;
+  font-family:inherit; font-size:.875rem; line-height:36px; color:#28302B;
+  box-shadow:none; transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.ct-box input::placeholder, .ct-box textarea::placeholder{color:#B4AEA0}
+.ct-box input:focus, .ct-box select:focus, .ct-box textarea:focus{
+  outline:none; border-color:#094949; box-shadow:0 0 0 3px rgba(9,73,73,.10);
+}
+/* ══ 意向目的地：自定义下拉 ══
+   原生 <select> 展开的 option 列表由操作系统绘制，高亮色取系统强调色（默认蓝），
+   CSS 完全改不动 —— 所以这里和语言切换一样改成自定义组件，配色统一走主色绿。 */
+.ct-select{position:relative}
+.ct-select-btn{
+  display:flex; align-items:center; gap:10px; flex:1 1 auto; width:100%;
+  height:38px; padding:0 12px; margin:0;
+  background:#FFFFFF; border:1px solid #DCD6C6; border-radius:3px;
+  font-family:inherit; font-size:.875rem; line-height:36px; color:#28302B; text-align:left;
+  cursor:pointer; transition:border-color .18s ease, box-shadow .18s ease;
+}
+.ct-select-btn:hover{border-color:rgba(9,73,73,.5)}
+.ct-select-btn.is-empty{color:#B4AEA0}
+.ct-select-btn[aria-expanded="true"]{
+  border-color:#094949; box-shadow:0 0 0 3px rgba(9,73,73,.10);
+}
+.ct-select-btn:focus-visible{outline:2px solid #094949; outline-offset:2px}
+.ct-select-val{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.ct-caret{
+  flex:none; width:11px; height:7px; color:#094949;
+  transition:transform .2s ease;
+}
+.ct-select-btn[aria-expanded="true"] .ct-caret{transform:rotate(180deg)}
+/* 菜单向下弹出，与语言菜单同款阴影 */
+.ct-select-menu{
+  position:absolute; left:0; right:0; top:calc(100% + 6px); z-index:70;
+  max-height:248px; overflow-y:auto; margin:0; padding:6px;
+  background:#FFFFFF; border:1px solid #EAE6DC; border-radius:10px;
+  box-shadow:0 18px 34px -14px rgba(8,32,26,.34);
+  list-style:none;
+}
+.ct-select-menu[hidden]{display:none}
+.ct-select-opt{
+  display:flex; align-items:center; width:100%; min-height:38px;
+  padding:8px 10px; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.875rem; line-height:1.5; color:#28302B; text-align:left;
+  cursor:pointer; transition:background-color .15s ease, color .15s ease;
+}
+/* hover / 键盘高亮 / 选中：全部主色绿系，与语言菜单一致 */
+.ct-select-opt:hover,
+.ct-select-opt:focus,
+.ct-select-opt.is-active{background:rgba(9,73,73,.08); color:#094949}
+/* 干掉浏览器默认的蓝色焦点环（-webkit-focus-ring-color），换成主色绿 */
+.ct-select-opt:focus{outline:none}
+.ct-select-opt:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-select-opt[aria-selected="true"]{color:#094949; font-weight:600}
+.ct-select-opt[aria-selected="true"]::after{content:'✓'; margin-left:auto; font-size:.8125rem}
+/* 下方空间不足时向上展开 */
+.ct-select-menu.is-up{top:auto; bottom:calc(100% + 6px)}
+
+/* 日历面板内部 */
+.ct-dp[hidden]{display:none}
+.ct-dp.is-up{top:auto; bottom:calc(100% + 6px)}
+.ct-dp-head{display:flex; align-items:center; gap:6px; margin-bottom:8px}
+.ct-dp-title{
+  flex:1 1 auto; text-align:center;
+  font-size:.875rem; font-weight:600; color:#28302B; letter-spacing:.02em;
+}
+.ct-dp-nav{
+  flex:none; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+  border:0; border-radius:6px; background:none; color:#094949; cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+.ct-dp-nav svg{width:8px; height:12px}
+.ct-dp-nav:hover{background:rgba(9,73,73,.08)}
+.ct-dp-nav:focus{outline:none}
+.ct-dp-nav:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-dp-dow, .ct-dp-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px}
+.ct-dp-dow span{
+  height:26px; display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; color:#9A958A;
+}
+.ct-dp-day{
+  height:32px; padding:0; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.8125rem; color:#28302B; cursor:pointer;
+  transition:background-color .15s ease, color .15s ease;
+}
+.ct-dp-blank{height:32px}
+/* 与 .ct-select-opt 同一套绿：hover 浅底 + 主色字，选中深底 + 白字 */
+.ct-dp-day:hover{background:rgba(9,73,73,.08); color:#094949}
+.ct-dp-day:focus{outline:none}
+.ct-dp-day:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+.ct-dp-day.is-today{color:#094949; font-weight:700; box-shadow:inset 0 0 0 1px rgba(9,73,73,.45)}
+.ct-dp-day.is-sel{background:#094949; color:#FFFFFF; font-weight:600}
+.ct-dp-day.is-sel:hover{background:#0E6F6F; color:#FFFFFF}
+.ct-dp-foot{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-top:10px; padding-top:9px; border-top:1px solid #EFEADD;
+}
+.ct-dp-btn{
+  min-height:30px; padding:0 10px; border:0; border-radius:6px; background:none;
+  font-family:inherit; font-size:.8125rem; color:#094949; cursor:pointer;
+  transition:background-color .15s ease;
+}
+.ct-dp-btn:hover{background:rgba(9,73,73,.08)}
+.ct-dp-btn:focus{outline:none}
+.ct-dp-btn:focus-visible{outline:2px solid #094949; outline-offset:-2px}
+/* ══ 预计出行时间：自定义日历 ══
+   原生 <input type="date"> 的弹层同样由浏览器绘制，选中日高亮取系统强调色（蓝），
+   CSS 改不动 —— 与「意向目的地」同处理：自绘日历，配色统一走主色绿。 */
+.ct-cal{flex:none; width:16px; height:16px; color:#094949; transition:color .18s ease}
+.ct-select-btn[aria-expanded="true"] .ct-cal{color:#0E6F6F}
+.ct-dp{
+  position:absolute; left:0; top:calc(100% + 6px); z-index:70;
+  width:max(100%,262px); padding:12px 12px 10px;
+  background:#FFFFFF; border:1px solid #EAE6DC; border-radius:10px;
+  box-shadow:0 18px 34px -14px rgba(8,32,26,.34);
+}
+/* 单位后缀（天 / 人）：贴在框内右侧 */
+.ct-box--suffix input{padding-right:40px}
+.ct-suffix{
+  position:absolute; right:13px; font-size:.8125rem; color:#9A958A; pointer-events:none;
+}
+/* 多行：需求描述 */
+.ct-box--area textarea{
+  height:auto; min-height:76px; padding:9px 12px; line-height:1.7; resize:vertical;
+}
+.ct-field--full .ct-box{width:100%}
+.ct-box--area{width:100%}
+
+/* 浏览器自动填充会把白底刷成浅蓝 */
+.ct-box input:-webkit-autofill{
+  -webkit-box-shadow:0 0 0 1000px #FFFFFF inset;
+  -webkit-text-fill-color:#28302B;
+  transition:background-color 9999s ease-out;
+}
+
+/* 底部：隐私说明（左） + 提交按钮（右） */
+.ct-actions{
+  display:flex; align-items:center; justify-content:space-between; gap:14px 18px;
+  flex-wrap:wrap; margin-top:clamp(18px,2.2vw,26px);
+}
+.ct-privacy{
+  display:inline-flex; align-items:center; gap:7px; margin:0;
+  font-size:.6875rem; line-height:1.5; letter-spacing:.02em; color:#6B6656;
+}
+.ct-privacy svg{flex:none; width:14px; height:14px; color:#6B6656}
+/* 提交按钮＝「了解我们」同款主色实底：#094949 底 + 白字（≈12.9:1），
+   触发（hover）提亮 #0E6F6F 并落地阴影，与 .adv-more--solid 完全一致 */
+.ct-submit{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:0 26px 0 28px; margin-left:auto;  /* 右内边距少 2px，抵掉 letter-spacing 尾隙，视觉居中 */
+  background:#094949; border:1.5px solid #094949; border-radius:8px; cursor:pointer;
+  font-family:inherit; font-size:.9375rem; font-weight:700; letter-spacing:.12em;
+  color:#FFFFFF;
+  box-shadow:0 6px 18px -10px rgba(9,73,73,.5);
+  transition:background-color .22s ease, border-color .22s ease, color .22s ease,
+             box-shadow .22s ease, transform .22s ease;
+}
+.ct-submit:hover{
+  background:#0E6F6F; border-color:#0E6F6F; color:#FFFFFF;
+  transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(14,111,111,.55);
+}
+.ct-submit:active{transform:translateY(0)}
+.ct-submit:focus-visible{outline:2px solid #7E5812; outline-offset:3px}
+
+@media (max-width:1023px){
+  .ct-art{display:none}          /* 小屏空间紧，去掉装饰线稿 */
+}
+@media (max-width:640px){
+  .ct-card{padding:20px 16px 20px; border-radius:8px}
+  .ct-grid{gap:13px 16px}
+  .ct-card-head{flex-direction:column; align-items:flex-start; gap:6px}
+  .ct-actions{flex-direction:column; align-items:stretch}
+  .ct-submit{width:100%; margin-left:0; letter-spacing:.1em}
+  .ct-privacy{justify-content:center}
+  .ct-box input, .ct-box select, .ct-box textarea{font-size:1rem}  /* ≥16px 防 iOS 聚焦缩放 */
+}
+
+/* 大容器左右留白跟随屏幕收窄 */
+@media (max-width:1023px){
+  .max-w-7xl.px-6{padding-left:24px !important; padding-right:24px !important}
+}
+@media (max-width:640px){
+  .max-w-7xl.px-6{padding-left:16px !important; padding-right:16px !important}
+  section{padding-top:56px !important; padding-bottom:56px !important}
+  footer{padding-top:48px !important; padding-bottom:48px !important}
+  .mb-16{margin-bottom:32px !important}
+  .mb-10{margin-bottom:24px !important}
+  .mb-12, .mt-12{margin-bottom:28px !important; margin-top:28px !important}
+  /* 卡片内边距同步收窄 */
+  .rounded-2xl.p-8, .rounded-3xl.p-8{padding:20px !important}
+  .gap-12{gap:32px !important}
+  .gap-8{gap:20px !important}
+  /* 首屏 banner：手机上不再占满一屏，改按 3:4 比例走 —— 高度随宽度变，
+     窄屏更容易一眼看到下方的优势区入口；横屏等矮视口用 max-height 兜底不超屏 */
+  .banner-section{height:auto; aspect-ratio:3 / 4; max-height:88svh}
+  .banner-copy{padding-top:56px}          /* 让文案避开固定导航，视觉居中在安全区 */
+  /* 「FEATURED PRODUCTS」比优势区的「OUR ADVANTAGES」长，窄屏收一点字距免得顶到边距 */
+  #products .adv-eyebrow-en{letter-spacing:.14em; margin-right:-.14em}
+  .bc-sub{line-height:1.7}
+  .mt-8{margin-top:24px !important}
+}
+
+/* 平板竖屏：特色产品仍是「上下堆叠」的单列横匾，900px 以上才左右分栏（见 .feat-row） */
+</style>
+<!-- 线上构建缺失的 Tailwind 类补齐定义。
+     默认不生效（media="not all"）= 线上真实渲染状态；
+     若要还原设计意图，把 media="not all" 改成 media="all" 即可。 -->
+<style id="tw-fix" media="not all">
+/* ── 补齐：Tailwind 未生成的类 ── */
+.bg-brand{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity))}
+.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87/var(--tw-bg-opacity))}
+.text-brand{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity))}
+.bg-brand-soft{--tw-bg-opacity:1;background-color:rgb(209 250 229/var(--tw-bg-opacity))}
+.hover\:text-emerald-400:hover{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity))}
+.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138/var(--tw-text-opacity))}
+.focus\:border-emerald-500:focus{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity))}
+.focus\:ring-emerald-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(16 185 129/var(--tw-ring-opacity))}
+.bg-gradient-to-b{background-image:linear-gradient(to bottom,var(--tw-gradient-stops))}
+.from-black\/40{--tw-gradient-from:rgb(0 0 0/.4);--tw-gradient-to:rgb(0 0 0/0);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}
+.via-black\/30{--tw-gradient-to:rgb(0 0 0/0);--tw-gradient-stops:var(--tw-gradient-from),rgb(0 0 0/.3),var(--tw-gradient-to)}
+.to-black\/40{--tw-gradient-to:rgb(0 0 0/.4)}
+/* typography 插件缺失，手工补核心排版 */
+.prose{color:#374151;max-width:65ch}
+.prose p{margin-top:1.25em;margin-bottom:1.25em}
+.prose-lg{font-size:1.125rem;line-height:1.7778}
+</style>
+<!-- ══ 关于我们页专有样式 ══ -->
+<style>
+/* 页头：照片区（云雾青山，冷绿与品牌同调），上方留出固定导航（实测 header 高 76px） */
+.ab-hero{
+  position:relative; display:flex; align-items:center;
+  min-height:clamp(320px,32vw,440px);
+  background:#0C1C18 url('./site-source/images/mist.jpg') center 62%/cover no-repeat;
+  /* !important 覆盖 ≤640px 的通用 section{padding:56px !important}（类选择器优先级更高） */
+  padding:calc(76px + clamp(40px,5.6vw,78px)) 0 clamp(40px,5.6vw,74px) !important;
+}
+/* 左深右浅的墨绿渐层：压住左侧山体暗部托住白字，右侧雾光保留亮部 */
+.ab-hero::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(96deg, rgba(8,28,24,.78) 0%, rgba(8,28,24,.58) 36%, rgba(8,28,24,.22) 64%, rgba(8,28,24,.05) 88%),
+    linear-gradient(180deg, rgba(8,28,24,.28) 0%, rgba(8,28,24,0) 40%);
+}
+.ab-hero-inner{
+  position:relative; z-index:1; width:100%;
+  max-width:1240px; margin:0 auto; padding:0 clamp(20px,4.6vw,60px);
+}
+/* 页头文字入场：加载即逐行浮起（与首页 banner-copy 同一语言） */
+.ab-hero-inner > *{animation:abHeroIn .8s cubic-bezier(.22,.61,.36,1) both}
+.ab-hero-inner > *:nth-child(1){animation-delay:.10s}
+.ab-hero-inner > *:nth-child(2){animation-delay:.22s}
+.ab-hero-inner > *:nth-child(3){animation-delay:.34s}
+@keyframes abHeroIn{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
+/* 小标：Georgia 大写，照片上用暖米金（与定制页同一套页头语言） */
+.ab-eyebrow{
+  margin:0; font-family:Georgia,'Times New Roman',serif;
+  font-size:.8125rem; letter-spacing:.22em; text-transform:uppercase; color:#F2D9A6;
+  text-shadow:0 1px 10px rgba(0,0,0,.45);
+}
+.ab-hero-title{
+  margin:14px 0 0; font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(26px,3.2vw,42px); font-weight:600; line-height:1.35; letter-spacing:.02em; color:#FFFFFF;
+  text-shadow:0 2px 22px rgba(0,0,0,.42);
+}
+.ab-hero-sub{
+  margin:16px 0 0; max-width:36em; font-size:clamp(.9375rem,1.1vw,1.0625rem);
+  line-height:2; color:rgba(255,255,255,.9); text-wrap:pretty;
+  text-shadow:0 1px 12px rgba(0,0,0,.4);
+}
+@media (max-width:640px){
+  .ab-hero{min-height:clamp(300px,64vw,400px); background-position:60% 62%}
+  .ab-hero::before{background:linear-gradient(180deg, rgba(8,28,24,.55) 0%, rgba(8,28,24,.68) 55%, rgba(8,28,24,.80) 100%)}
+}
+
+/* ── 品牌简介：纸白底，左双图叠放 + 右全部文字（标题栏并入右栏）── */
+.ab-intro{background:#F9F7F1; padding:clamp(56px,8vw,104px) 0 !important}
+.ab-intro-grid{display:grid; gap:44px; grid-template-columns:1fr}
+@media (min-width:1024px){ .ab-intro-grid{grid-template-columns:1fr 1.06fr; gap:clamp(48px,5vw,72px); align-items:center} }
+/* 左：双图错落叠放 —— 大图左后（山水），小图右前（人文），白描边把叠压关系挑出来。
+   容器用 padding 给小图让出右下空间，绝对定位的小图永远不出容器，不产生溢出 */
+.ab-intro-media{position:relative; padding:0 13% 11% 0}
+/* 圆角统一：卡片与图片共用同一档 8px（与站内 .adv-card/.ct-card 一致），
+   不再各用各的（原卡片 2px/0、图片 18px） */
+.ab-ph{margin:0; border-radius:8px; overflow:hidden; background:#E4E7DE}
+.ab-ph img{display:block; width:100%; height:100%; object-fit:cover; transition:transform .7s cubic-bezier(.22,.61,.36,1)}
+.ab-ph:hover img{transform:scale(1.045)}
+.ab-ph--main{
+  width:85%; aspect-ratio:4/5;
+  box-shadow:0 26px 52px -30px rgba(9,73,73,.38);
+}
+.ab-ph--sub{
+  position:absolute; right:0; bottom:0; width:54%; aspect-ratio:4/5;
+  border:6px solid #F9F7F1;                     /* 描边取区块底色，视觉是"两图间留白"，不是画框 */
+  box-shadow:0 30px 58px -28px rgba(9,73,73,.46);
+}
+/* 小图入场：容器上浮的同时从右下轻推进位，主图先落、小图后到 */
+#intro .ab-intro-media.reveal.in .ab-ph--sub{
+  animation:abSubIn .66s cubic-bezier(.22,.61,.36,1) .16s both;
+}
+@keyframes abSubIn{
+  from{opacity:0; transform:translate(9%,11%)}
+  to  {opacity:1; transform:none}
+}
+/* 小屏：描边随比例收一档（圆角已全站统一为 8px，不再单独缩小） */
+@media (max-width:640px){
+  .ab-ph--sub{border-width:4px}
+}
+.ab-rule{width:44px; height:2px; margin:6px 0 18px; background:#CD7A36; border-radius:2px}
+.ab-h2{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(1.375rem,3vw,1.75rem); font-weight:700; color:#22302C;
+  line-height:1.3; letter-spacing:.01em; margin:0;
+}
+.ab-h2-en{
+  font-family:Georgia,'Times New Roman',serif; font-size:clamp(1rem,2.4vw,1.25rem);
+  letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
+}
+.ab-intro-body{font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif}
+.ab-lead{
+  font-size:clamp(1rem,1.35vw,1.125rem); line-height:2.1; color:#3D3D3A;
+  margin:8px 0 0; max-width:38em; text-wrap:pretty;
+}
+.ab-lead strong{color:#22302C; font-weight:700}
+/* 业务标签：白底胶囊 + 主色描边（与首页关于区标签同一套） */
+.ab-tags{list-style:none; display:flex; flex-wrap:wrap; gap:12px; padding:0; margin:30px 0 0}
+.ab-tags li{
+  padding:9px 22px; border:1px solid rgba(9,73,73,.42); border-radius:30px;
+  background:rgba(9,73,73,.06);
+  font-size:13px; font-weight:500; letter-spacing:.06em; color:#094949;
+}
+
+/* ── 主张 + 四大友好体验：左照片右卡片的深绿组合块 ──
+   #072B25 全区打底（比全站 #094949 更深一档：照片左侧暗部、卡片投影都沉得住，
+   也让 #CD7A36 橘标达到 4.66:1 对比度 ✅ AA）；左栏照片自右向左渐入深绿托住白字，
+   右栏 2×2 深墨绿卡片 #13453D（比底亮一档，亮度比 1.41，靠明度 + 亮边定形） */
+/* 外层深绿块（主张文字已移到上方独立浅底区块，本区只剩「照片 + 竖卡」） */
+.ab-duo{background:#072B25; display:grid; grid-template-columns:1fr; overflow:hidden}
+/* 41% / 59%：右栏多给 1 个点，配合下方两栏内边距收窄，四张卡每张约 +10~16px 宽。
+   照片栏收窄后文案列仍有 350–440px（30px 主张语最长行 11 字 ≈ 330px，留有余量） */
+@media (min-width:1024px){ .ab-duo{grid-template-columns:41% 59%} }
+.ab-duo-photo{
+  /* justify-content:flex-start —— 文案组放照片栏左上；align-items:flex-start 保持左对齐 */
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; min-height:380px;
+  /* 照片栏本身只负责深绿底与内边距，图片改由内部 .ab-duo-media 这个「矩形」承载。
+     纵向 padding 由 40–60 提到 56–84：整块深绿按需求加高；
+     右侧内边距由 36–80 收到 24–44，让文案列更宽以容纳三行主张语 */
+  background:#072B25;
+  padding:clamp(56px,6vw,84px) clamp(24px,3vw,44px);
+}
+/* 左侧照片矩形：绝对铺满整栏（inset:0 相对 padding box，故四边顶到区块边缘、不留白），
+   图片 object-fit:cover 裁进矩形里 —— 即"加一个矩形、把图剪切进去"；
+   右缘是硬边，横向不再渐隐进右侧深绿（原来那条 90deg 渐变已整条删除）。
+   object-position 取 50% 45%：这张图主体建筑略偏下，稍微上提一点让建筑落进可视区 */
+.ab-duo-media{
+  position:absolute; inset:0; z-index:0; margin:0; overflow:hidden;
+  /* 图片源 593×468，需放大到约 605×640（1.37×）；声明为照片，缩放时用平滑插值 */
+  background:#072B25;
+}
+.ab-duo-media img{
+  display:block; width:100%; height:100%;
+  object-fit:cover; object-position:50% 45%;
+}
+/* ── 全幅遮罩：整块照片「一视同仁」，不再有底部那条越往下越亮的渐隐带 ──
+   旧版是 180deg 渐层（.86 → .78 → .38 → 0），92% 以下完全没罩，
+   手机上照片下三分之一（树冠）是裸图，和上方的深绿形成一道亮带，观感上像"没罩全"。
+   现改为单一 rgba(.42) 平铺：四边、四个高度都同一层，图片整体提亮（.86 → .42 等于
+   遮罩薄了一半），同时不再出现"下面没罩上"的割裂。
+   压暗只剩这一层平铺，文字的对比度交给 .ab-photo-copy::before 的局部托底（见下）。
+   z-index 置 1：压在 .ab-duo-media（0）之上、文字层（2）之下 */
+.ab-duo-photo::before{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:rgba(7,43,37,.42);
+}
+/* ── 文字区局部托底（scrim）──
+   全幅遮罩降到 .42 后，照片上半的雾天天空（实测最亮 #C5D0D4）会让纸白只剩 2:1、
+   亮橙 1.4:1，文字读不出。故在文案组背后再压一层"柔光暗罩"：矩形纯色 .62
+   与外层 .42 合成约 .78，与旧版文字带的密度持平。
+   ★ 必须用 blur 而不是 radial-gradient：渐变椭圆的半径一旦小于矩形对角，
+     四角的 alpha 还没衰减到 0 就被元素边界切断，会在照片上留下一块**直角矩形暗斑**
+     （桌面 630×690 的文案框尤其明显）。这里是纯色矩形 + 34px 高斯模糊，
+     边缘自然晕开、与平铺遮罩无缝衔接。
+   inset 负向外扩 44/32px 且大于模糊半径，保证文字像素落在"未被模糊削薄"的核心区。
+   实配（390/430/768/1440/1920）：纸白 8.0–11.7:1、亮橙 4.85–5.6:1、浅灰绿 7.1–7.6:1，全部过 AA */
+.ab-photo-copy::before{
+  content:''; position:absolute; z-index:-1; inset:-32px -44px; pointer-events:none;
+  background:rgba(7,43,37,.62);
+  filter:blur(34px);
+}
+/* ── 「我们的优势」文案组：由上方独立的米色区块移入照片栏，压在图片上 ──
+   栏目头「四大友好体验」已按需求移到右栏卡片上方，照片上只留这一组文案；
+   底色由恒温米 #F3F0E8 换成「照片 + 深绿遮罩」，文字整体反相为暗底浅字：
+   「我们的优势」纸白 #F9F7F1（10.2:1）、英文行亮橙 #E0A46A（5.06:1，品牌橙 #CD7A36 在暗底仅 3.4:1）、
+   主张语纸白、副标题浅灰绿 #DCE2DC（8.6:1），均过 AA。
+   栏宽由核心区约 1184px 收窄到照片栏约 430px，故栏目层级字号整体下调一档以免撑破窄栏：
+   「我们的优势」28px → 18px、英文 20px → 12px；
+   主张语 30px 与副标题 16px 是需求指定值，保留 —— 30px 在 430px 宽下自然折为两行，
+   恰成为照片上的视觉重心，也让「大标语 + 小栏目头」的主次不倒置 */
+.ab-photo-copy{position:relative; z-index:2; width:100%; text-align:left; text-shadow:0 1px 14px rgba(7,43,37,.65)}
+/* 栏目头移走后本组成为照片上唯一的文字块，不再需要上方那段让位间距 */
+.ab-claim-block{margin-top:0}
+/* ── 整组下移，与右栏首排卡片上沿齐平（≥1024 两栏并排时才成立）──
+   右栏内容顶部 = 右栏上内边距 clamp(52,5.8vw,88) + 组头高 19px（14px × 1.35）+ 纵向间距 clamp(20,2.2vw,30)；
+   左栏上内边距是 clamp(56,6vw,84)，比右栏多 2–8px，故用两者之差补偿。
+   公式随视口连续变化：1024 → 40px、1280 → 45px、1440 → 49px、1920 → 53px，
+   整组落在照片中段，照片上下留白接近相等（原先文字贴顶、留白全堆在下方）。
+   ≥2000px 时右栏 justify-content:center 会再产生一段居中偏移，CSS 跨栏推不出来，
+   由 alignCommitCopy() 按实测值覆盖，这条 calc 仍是脚本失效时的兜底 */
+@media (min-width:1024px){
+  #commit .ab-photo-copy{
+    margin-top:calc(clamp(52px,5.8vw,88px) + 19px + clamp(20px,2.2vw,30px) - clamp(56px,6vw,84px));
+  }
+}
+#commit .ab-claim-block .ab-rule{background:#E0A46A; margin:0 0 14px}
+.ab-claim-title{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:18px; font-weight:700; line-height:1.35; letter-spacing:.02em; color:#F9F7F1; margin:0;
+}
+#commit .ab-claim-block .ab-h2-en{font-size:12px; letter-spacing:.2em; color:#E0A46A; margin:8px 0 0}
+/* 主张语：字号按需求固定 30px，不再随视口缩放；移入窄栏后去掉居中限宽，改左对齐自然折行。
+   white-space:pre-line —— 断点由文案里的 \n 指定（「我们不仅是旅行 / 服务商，更是值得托付的 / 在地伙伴」），
+   不再靠容器宽度自然折行，保证任何视口下都是这三行；同时去掉 text-wrap:balance，
+   否则浏览器会把 \n 分出的片段再各自重排 */
+.ab-claim-lead{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:30px; font-weight:500; line-height:1.65; white-space:pre-line;
+  color:#F9F7F1; margin:clamp(18px,2.2vw,24px) 0 0; max-width:none;
+}
+.ab-claim-sub{
+  /* 16px（需求指定）；行距与上方间距已在上轮收紧，这里只把颜色翻为暗底浅灰绿 */
+  font-size:16px; line-height:1.75; color:#DCE2DC;
+  margin:8px 0 0; max-width:none;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+@media (max-width:640px){
+  .ab-claim-lead{font-size:clamp(1.05rem,4.4vw,1.375rem)}
+  .ab-claim-title{font-size:16px}
+}
+.ab-duo-copy{position:relative; z-index:1; max-width:30em; margin-inline:auto; text-align:center}
+/* 小标签行：橙线 + 中文小字（参考稿：线在左、字米白、大字距）；整块居中后线字居中成组 */
+.ab-duo-tag{
+  display:flex; align-items:center; justify-content:center; gap:12px; margin:0;
+  font-size:.8125rem; letter-spacing:.32em; color:#F9F7F1;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+/* 英文行独立一行：橘色 #CD7A36（参考稿第二行的既有样式，从 eyebrow 拆出） */
+.ab-duo-en{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:.8125rem; letter-spacing:.22em; text-transform:uppercase; color:#CD7A36;
+  margin:clamp(8px,1vw,12px) 0 0;
+}
+.ab-duo-title{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(1.6rem,2.9vw,2.25rem); font-weight:700; line-height:1.7;
+  color:#F9F7F1; margin:clamp(18px,2.2vw,28px) 0 0; text-wrap:balance;
+  /* 主张语按需求改为整句一行（i18n 里不再用 \n 断行）：桌面 nowrap 强制单行，
+     小屏空间不足时允许自然折行，避免 22 字在 375 宽度下溢出 */
+  white-space:pre-line;
+}
+.ab-duo-sub{
+  font-size:.9375rem; line-height:1.9; color:#C9D2CC; margin:clamp(14px,1.8vw,20px) 0 0;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+/* 右栏：栏目头 + 卡片网格纵向居中排布（≥1024 时满铺右栏，<1024 单列铺底）。
+   纵向 padding 由 36–64 提到 52–88（整块深绿按需求加高）；
+   左侧内边距由 36–80 收到 24–44 —— 这是照片与卡片之间的「沟」，收窄后直接让给卡片宽度 */
+.ab-duo-cards{
+  padding:clamp(52px,5.8vw,88px) clamp(24px,2.6vw,44px);
+  display:flex; flex-direction:column; justify-content:center;
+  gap:clamp(20px,2.2vw,30px);
+}
+/* ── 核心区对齐：与全站 mx-auto max-w-7xl px-6 同一条竖线 ──
+   深绿底与左栏照片仍全宽铺底（保留参考稿两栏的视觉张力），只把内容收进核心区：
+   组头的左边缘、卡片网格的右边缘分别落在核心区左右边界上，
+   与「我们的优势」「四大实力保障」「品牌简介」完全同线。
+   核心宽 = max-w-7xl(1280) − px-6(24×2) = 1232px，故两侧留白 = (100vw − 1232px)/2；
+   视口不足 1232px 时退化为 24px（≤640px 再退到 16px），与上面两条全站留白规则一致，
+   保证任何宽度下都不会出现负边距或错位。改核心宽只需改 --core */
+#commit{--core:1232px}
+#commit .ab-duo-photo{padding-left:max(24px, calc((100vw - var(--core)) / 2))}
+#commit .ab-duo-cards{padding-right:max(24px, calc((100vw - var(--core)) / 2))}
+@media (max-width:640px){
+  #commit .ab-duo-photo{padding-left:16px}
+  #commit .ab-duo-cards{padding-right:16px}
+}
+/* ── 手机端（≤640px）：照片铺满、整块不留边距 ──
+   ① 绿边的来源：≤640px 有全站通用规则 section{padding-top/bottom:56px !important}，
+      加在本区块上会让照片上下各露出 56px 深绿，看上去就像图片带了一圈边距、没铺满。
+      这里用 #commit 的 ID 选择器 + !important 覆盖掉（与 .ab-feat 区同一手法），
+      照片随即顶到区块上下边缘，左右本就是满宽，四边都不留白。
+   ② 高度：手机端定 470px（曾为 600px）。600px 高的竖长容器里，cover 必须「按高度撑满」，
+      源图 593×468 被放大到 1.28 倍、横向只取中间 51% —— 观感上就是一张糊掉的树冠特写，
+      用户反馈「背景图为什么不缩小」即指此。改成 470px 后缩放比 1.00×，
+      图片回到原始尺寸显示，横向可见 65%，山林与白楼整组都进画面（不放大也就不发虚）。
+      ③ 上内边距 56 → 84：区块顶到固定导航下沿（手机导航高 78px），56px 会被导航吃掉整条橙线，
+      84px 让开导航。④ 文字整组居中：手机窄栏左对齐时右边缘参差不齐，居中后与上下居中的
+      栏目头、卡片同一条中轴线（托底是纯色矩形 + blur，与对齐方式无关，不必跟着挪）。
+      实配（390/430）：纸白 8.5:1、亮橙 5.0–5.1:1、浅灰绿 7.7–7.8:1，均过 AA */
+@media (max-width:640px){
+  #commit{padding-top:0 !important; padding-bottom:0 !important}
+  #commit .ab-duo-photo{min-height:470px; padding-top:84px}
+  #commit .ab-photo-copy{text-align:center}
+  /* 托底是纯色矩形 + blur，与文字对齐方式无关，无需按断点改位置 */
+  #commit .ab-claim-block .ab-rule{margin:0 auto 14px}
+  /* letter-spacing 会在末字右侧留出字距、视觉重心右偏，用同值 text-indent 补回来 */
+  #commit .ab-claim-block .ab-h2-en{text-indent:.2em; margin:8px auto 0}
+}
+/* ── 主张语四行后，平板与超宽屏这两档把照片栏垫高 ──
+   这两档照片栏的内容列相对更窄（平板单栏全宽、≥2000px 被核心区推大 padding），
+   四行主张语的整组高度占容器比例偏高，文字几乎顶到照片上下边缘、构图发紧。
+   垫高后文字占比回落到 ~70%，照片上下留白更均衡。
+   注：遮罩已改为全幅平铺 + 文字区局部托底，对比度不再依赖"高度带"，
+   垫高纯粹是构图需要（对比度实测见 .ab-photo-copy::before 注释） */
+@media (min-width:641px) and (max-width:1023px){
+  /* padding-top 84 与手机同款：平板也是固定导航（高 78px），56px 的内边距会被导航吃掉橙线与标题上缘 */
+  #commit .ab-duo-photo{min-height:540px; padding-top:84px}
+}
+@media (min-width:2000px){
+  #commit .ab-duo-photo{min-height:640px}
+}
+/* ── 「四大友好体验」：按参考稿保持「左照片 + 右竖卡」两栏（.ab-duo 系列）──
+   组头（.ab-cards-head）按需求移到右栏四张卡片上方、左对齐，不再压在照片上；
+   卡片仍为 4 张窄竖卡居中排版（≥1024 四列）。上几轮的单栏样式已整段移除，
+   避免与新结构的选择器打架。照片栏的遮罩见 .ab-duo-photo::before ── */
+/* ── 栏目头：按需求从照片栏移到右栏四张卡片上方，左对齐、不压在图片上 ──
+   按需求去掉标题前的装饰橙线，栏目头只剩中文标题本身（左对齐、14px）；
+   英文行上几轮已整条删除；不再压照片，故无 text-shadow 与 z-index */
+.ab-cards-head{position:relative; margin:0; text-align:left}
+/* 中文标题按用户要求定死 14px（上一轮 16px，更早为 clamp(22px,2.6vw,32px)）：
+   标题缩小后不与下方卡片标题抢层级，整组更收 */
+.ab-fgrid-title{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:14px; font-weight:700; letter-spacing:.06em;
+  line-height:1.35; color:#F9F7F1; margin:0;
+}
+/* 竖版卡（参考稿式）：桌面上四张窄长竖卡并排一行，平板 2×2，手机单列纵排；
+   不再限宽 600px——四列本身就窄，限宽反而把卡片压得过窄 */
+.ab-fgrid{display:grid; gap:14px; grid-template-columns:1fr; width:100%; margin-inline:auto}
+@media (min-width:640px){ .ab-fgrid{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:1024px){
+  /* 1024–1199px：右栏只有约 554px，四列每列 128px 塞不下中文副题
+     （实测 grid 内容宽 613 > 容器 554，第 4 张卡直接被挤出右栏）；
+     这一档改回 2×2，每张约 270px，一屏仍能看全四张，宽度也更从容。
+     四列从 1200px 起启用（1200 时每张 153px、1400 起 167px 稳定） */
+  .ab-fgrid{grid-template-columns:repeat(2,1fr); gap:14px}
+  /* 四列窄卡改左对齐（原为居中）：
+     每行只能放 4–5 个汉字，居中会让每行末尾参差、中文字词被拆开
+     （「深 / 谙礼俗规范」「出 / 行氛围」），左对齐后四张卡的序号—标题—副题—正文
+     共用一条左轴，断行位置与 640–1023px 两列态一致，整组读起来是一个节奏。
+     min-width:0 防止 keep-all 的副题把 grid 列撑宽 */
+  .ab-fcard{padding:24px 14px 22px; text-align:left; min-width:0}
+  .ab-fcard-top{justify-content:flex-start; margin-bottom:16px}
+  .ab-fcard-line{display:none}
+}
+@media (min-width:1200px){
+  .ab-fgrid{grid-template-columns:repeat(4,1fr)}
+}
+/* ── 四大友好体验卡：半透明毛玻璃（glassmorphism）──
+   ① 半透明底取代实色 #13453D：左上→右下 14%→5% 斜向米白渐变，模拟光从左上打过来；
+   ② backdrop-filter blur(14px) saturate(140%)：把身后的深绿（和照片栏透出的部分）模糊并提饱和，
+      这是"玻璃"与"半透明色块"的分界；-webkit- 前缀给 Safari；
+   ③ 1px 亮边 + inset 顶部高光：玻璃的厚度靠这两道棱，深底上投影几乎不可见，只作衬底；
+   ④ 合成底最亮角约 rgb(42,72,67)（相对亮度 .055），最暗角约 rgb(32,64,59)（.043）——
+      按最亮角复算对比度：标题 #F6F3EA ≈ 9.3:1 ✅ 副题 米色 #E4DAC2 ≈ 7.5:1 ✅ 正文 #C4D0C8 ≈ 6.9:1 ✅，
+      全部仍过 WCAG AA；
+   ⑤ 不支持 backdrop-filter 时退回实色 #13453D（见下方 @supports 兜底）。
+   历史：此卡曾为浅米实色 #F1ECDF（深底浅卡），后改暗色系，卡内强调色由橙 → 米 */
+.ab-fcard{
+  position:relative;
+  background:linear-gradient(145deg, rgba(241,236,223,.14) 0%, rgba(241,236,223,.05) 100%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  backdrop-filter:blur(14px) saturate(140%);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;
+  padding:26px 24px 24px;
+  display:flex; flex-direction:column;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 34px -30px rgba(0,0,0,.9);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease, border-color .3s ease, background .3s ease;
+}
+/* 兜底：不支持毛玻璃的浏览器退回上一版实色，保证文字对比度不被半透明削弱 */
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+  .ab-fcard{background:#13453D}
+}
+.ab-fcard:hover{
+  transform:translateY(-4px);
+  border-color:rgba(241,236,223,.34);
+  background:linear-gradient(145deg, rgba(241,236,223,.20) 0%, rgba(241,236,223,.08) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 26px 46px -30px rgba(0,0,0,.95);
+}
+.ab-fcard-top{display:flex; align-items:center; gap:14px; margin-bottom:20px}
+/* 序号圆徽：暗底上的空心环，柔橙 #D5A77B —— 与副题同系同值，卡内暖色强调只有这一支。
+   颜色沿革：米色 #E4DAC2 → 品牌橙 #CD7A36 → 亮橙 #E0A46A → 柔橙 #D5A77B（本版，去艳不去亮）。
+   （中间试过把副题提亮成浅黄 #F2D08A，读数更清楚但偏黄、跳出卡片节奏，已撤回）
+   hover 仍转实心米 + 深墨绿数字（12.2:1 ✅）作反相反馈 */
+.ab-fnum{
+  width:44px; height:44px; border-radius:50%; flex:none; box-sizing:border-box;
+  display:flex; align-items:center; justify-content:center;
+  /* 环降到 30% 不透明，让整枚徽章退成装饰，卡内橙色只在副题一处发力。
+     ⚠️ 数字本身不达标：圆徽在卡片顶部，而卡片顶部有一层 20% 米色渐变（rgba(241,236,223,.20)），
+        该处实测底色 (61,87,73)，比副题所在的 (31,71,62) 亮不少 —— #D5A77B 在此只有
+        3.46:1(1200) / 3.57:1(1440) / 4.02:1(1024)，15px/600 未达 AA 4.5:1。
+        （旧色 #E0A46A 在同处也只有 3.47:1，属历史遗留，非本次改动引入；早期注释记的 4.5:1 是按
+          卡片平均底算的，位置取错了。）
+        暂保空心环外观未加底色。若要既保橙又达标，最小侵入的做法是给圆内垫 38% 深绿
+        rgba(7,43,37,.38)，实测可回到 4.58:1 ✅；另一条路是数字改纸白 #F6F3EA（6.86:1 ✅） */
+  background:transparent; color:#D5A77B;
+  border:1px solid rgba(213,167,123,.30);
+  font-family:Georgia,'Times New Roman',serif; font-size:.9375rem; font-weight:600;
+  transition:background .3s ease, color .3s ease, border-color .3s ease;
+}
+.ab-fcard:hover .ab-fnum{background:#F1ECDF; border-color:#F1ECDF; color:#072B25}
+.ab-fcard-line{flex:1; height:1px; background:linear-gradient(90deg, rgba(241,236,223,.45), rgba(241,236,223,0))}
+/* 暗底上的三级明度（层级不靠色相，靠亮度落差）：
+   标题 纸白 #F6F3EA（9.3:1 ✅）→ 副题 米色 #E4DAC2（7.5:1 ✅，比标题暗一档、仍明显亮于正文）
+   → 正文 浅灰绿 #C4D0C8（6.9:1 ✅，由 #B9C6BF 提亮一档）
+   正文提亮的原因：四列窄卡里每行只有 4–5 个字、行数多，暖灰绿在毛玻璃上偏"雾"，
+   加 6% 亮度后长段落的字面更实，同时仍明显低于标题，层级不被抹平 */
+.ab-fcard-title{
+  font-size:1.125rem; font-weight:700; color:#F6F3EA; margin:0; line-height:1.5; letter-spacing:.02em;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.ab-fcard-lead{
+  /* 米色 #E4DAC2（2026-11-03 按需求由柔橙 #D5A77B 改来）：本卡颜色沿革里的第一版强调色，
+     暖调但非橙，与纸白标题、浅灰绿正文构成"白 → 米 → 灰绿"的亮度阶梯。
+     对比度 7.5:1（卡底 #1F473E），远超 AA 4.5:1；字重保持 700——13px 中文在深底上
+     笔画细，靠加粗立住字形，米色比橙亮，光渗问题也一并缓解 */
+  font-size:.8125rem; font-weight:700; color:#E4DAC2; margin:8px 0 0; line-height:1.7; letter-spacing:.02em;
+  /* keep-all：中文默认可以在任意字间断行，会把「深谙」「周到」「兼顾」这类词拦腰劈开
+     （「专业多语导览，深 / 谙礼俗规范」）；keep-all 只允许在标点后断，
+     这四句副题都是「7 字，+ 6 字」结构，于是稳定断在逗号处，两行 7/6 字、
+     91px 宽 < 卡内可用 100px，1024px 窄卡也不会溢出 */
+  word-break:keep-all;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.ab-fcard-desc{
+  font-size:.8438rem; line-height:1.85; color:#C4D0C8; margin:10px 0 0; text-wrap:pretty;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+/* 徽章随卡片入场弹入（与全站弹入同曲线）；--i 供错峰 */
+.ab-fcard.in .ab-fnum{animation:advIconPop .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay:.12s}
+/* ── 四大实力保障：纸白底（背景图已按需求移至上方主张块的照片栏）──
+   组头沿用品牌简介同一套样式（橙线 + 普惠体中文 + Georgia 英文），浅底无需覆盖颜色 */
+.ab-strength{position:relative; background:#F9F7F1; padding:clamp(56px,8vw,104px) 0 !important; overflow:hidden}
+.ab-strength-in{position:relative; z-index:1}
+.ab-strength-head{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:16px 40px; margin:0 0 34px}
+/* 「四大实力保障」组头居中：橙线 / 主标题 / 英文行整体居中。
+   原来右侧还有一句说明小字（justify-content:space-between 是给它留的），现已删除，
+   因此这里单独把 #adv 的组头改为居中，不影响页面其它保持左对齐的组头。 */
+#adv .ab-strength-head{justify-content:center; text-align:center}
+#adv .ab-strength-head .ab-rule{margin:6px auto 18px}
+/* 卡片网格：≥1200px 四列 / ≥640px 两列 / 其下单列 */
+.ab-sgrid{display:grid; gap:20px; grid-template-columns:1fr}
+@media (min-width:640px){ .ab-sgrid{grid-template-columns:1fr 1fr} }
+@media (min-width:1200px){ .ab-sgrid{grid-template-columns:repeat(4,1fr)} }
+.ab-scard{
+  position:relative; background:#F0EBDF; border:1px solid rgba(9,73,73,.08);
+  border-bottom:3px solid transparent; border-radius:8px; padding:30px 26px 28px;
+  display:flex; flex-direction:column;
+  /* 浅底上的轻投影：只需抬起一点点，过重会像贴纸浮在纸面上 */
+  box-shadow:0 18px 40px -30px rgba(9,73,73,.42);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1), border-color .3s ease, box-shadow .3s ease;
+}
+/* hover：底边点亮（参考稿第二张卡的高亮态）+ 微抬升。
+   底边改用与副题同值的浅底档 #8F4E14：原亮版 #E0A46A 在米底上仅 1.82:1，
+   连 3:1 的非文本门槛都不到，hover 时几乎看不出变化；压深后实测 5.40:1，点亮动作才成立 */
+.ab-scard:hover{transform:translateY(-4px); border-bottom-color:#8F4E14; box-shadow:0 26px 52px -28px rgba(9,73,73,.42)}
+.ab-scard-top{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px}
+.ab-shanzi{
+  width:42px; height:42px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:#094949; color:#F9F7F1;
+  font-size:1.125rem; font-weight:600; letter-spacing:0;
+}
+.ab-scard.in .ab-shanzi{animation:advIconPop .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay:.12s}
+.ab-sno{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1.75rem; font-weight:700; line-height:1; color:#D9D2C0;
+}
+.ab-scard-title{
+  font-size:1.125rem; font-weight:700; color:#253230; margin:0; line-height:1.5; letter-spacing:.02em;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+.ab-scard-lead{
+  /* 浅底档 #8F4E14（H28 S75 L32）—— 与深底卡副题 #D5A77B（H29 S52 L66）是同一支暖橙的
+     深/浅两档，色相差 1°、只动明度与艳度，所以两组卡片放在一起仍是同系，不会看成两种颜色。
+     必要性：#E0A46A 在米底 #F0EBDF 上实测仅 1.82:1（品牌橙 #CD7A36 也只有 2.74:1），
+     亮橙在亮底上根本立不住；压深后实测 5.40:1 ✅（平均底 5.35:1），13px/600 达到 AA。
+     层级：标题 #253230（11.19:1）→ 副题 #8F4E14（5.40:1）→ 正文 #5C635D（5.20:1），
+     副题靠色相（橙 vs 灰绿）而非对比度与正文区分，读数不虚 */
+  font-size:.8125rem; font-weight:600; color:#8F4E14; margin:8px 0 0; line-height:1.7; letter-spacing:.02em;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+/* 淡分割线：落在橘色副题（如「丰富在地资源，布局国内市场」）下面、正文上面。
+   1px + 12% 墨绿足够轻；用 border-top 实现，语言切换重渲染不丢 */
+.ab-scard-desc{
+  font-size:.8438rem; line-height:1.85; color:#5C635D; text-wrap:pretty;
+  margin:14px 0 0; padding-top:14px; border-top:1px solid rgba(9,73,73,.12);
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+}
+@media (max-width:520px){
+  .ab-fcard{padding:24px 20px 22px}
+  .ab-scard{padding:26px 20px 24px}
+}
+/* 模块高度：按内容走。各区块自己的 padding（简介/保障 clamp(56px,8vw,104px)、
+   组合块 clamp(36px,4.6vw,64px)）已经给出足够呼吸，不做强行拉满一屏——
+   内容少的模块不必撑满，卡片换行后超高的模块也不会被裁切。
+   hero 沿用原尺寸 clamp(320px,32vw,440px)（≤640px 为 clamp(300px,64vw,400px)），不加高。 */
+
+/* 锚点跳转留出 fixed header 高度 */
+#intro,#adv{scroll-margin-top:88px}
+
+/* 减少动效：本页新增动效全部关闭，内容直接可见 */
+@media (prefers-reduced-motion:reduce){
+  .ab-hero-inner > *{animation:none !important}
+  .ab-fcard .ab-fnum, .ab-scard .ab-shanzi{animation:none !important}
+  .ab-fcard:hover, .ab-scard:hover{transform:none !important}
+  #intro .ab-intro-media.reveal.in .ab-ph--sub{animation:none !important; opacity:1; transform:none}
+  .ab-ph:hover img{transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="travel-home bg-gray-50" data-v-9fcfbb94>
+
+  <!-- ══ HEADER：与主站一致（fixed + 白实底），本页高亮「关于我们」══ -->
+  <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Family">
+        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
+      </a>
+
+      <nav class="hidden items-center gap-8 md:flex">
+        <a href="index.html"            class="nav-link" data-i18n="nav.home">首页</a>
+        <a href="product.html"          class="nav-link" data-i18n="nav.products">产品</a>
+        <a href="about.html"            class="nav-link is-active" aria-current="page" data-i18n="nav.about">关于我们</a>
+        <a href="index.html#contact"    class="nav-link" data-i18n="nav.contact">联系我们</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="tailor.html" class="tailor-btn" data-i18n="nav.tailor">定制服务</a>
+        <div class="lang-switch">
+          <button id="langBtn" class="lang-btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu" aria-label="切换语言">
+            <span id="langLabel">中文</span><span class="lang-caret" aria-hidden="true"></span>
+          </button>
+          <ul id="langMenu" class="lang-menu" role="listbox" aria-label="语言选择" hidden>
+            <li><button type="button" class="lang-opt" role="option" data-lang="zh" aria-selected="true">中文</button></li>
+            <li><button type="button" class="lang-opt" role="option" data-lang="en" aria-selected="false">English</button></li>
+          </ul>
+        </div>
+        <!-- 小屏汉堡按钮：md 以下 nav 整块隐藏，需要替代入口 -->
+        <button id="menuBtn" class="hamburger md:hidden" type="button" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 小屏下拉菜单 -->
+    <div id="mobileMenu" class="mobile-menu md:hidden" hidden>
+      <a href="index.html"          class="nav-link-m" data-i18n="nav.home">首页</a>
+      <a href="product.html"        class="nav-link-m" data-i18n="nav.products">产品</a>
+      <a href="about.html"          class="nav-link-m is-active" aria-current="page" data-i18n="nav.about">关于我们</a>
+      <a href="index.html#contact"  class="nav-link-m" data-i18n="nav.contact">联系我们</a>
+      <a href="tailor.html"         class="nav-link-m" data-i18n="nav.tailor">定制服务</a>
+    </div>
+  </header>
+
+  <!-- ══ 页头：关于丝路之家 ══ -->
+  <section class="ab-hero">
+    <div class="ab-hero-inner">
+      <p class="ab-eyebrow" id="abEyebrow" aria-hidden="true">About Silk Road Family</p>
+      <h1 class="ab-hero-title" id="abHeroTitle">关于丝路之家</h1>
+      <p class="ab-hero-sub" id="abHeroSub">从丝路出发，与美好相逢。</p>
+    </div>
+  </section>
+
+  <!-- ══ 品牌简介：左双图叠放 + 右文字（纸白底）══ -->
+  <section id="intro" class="ab-intro">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="ab-intro-grid">
+        <div class="ab-intro-media">
+          <figure class="ab-ph ab-ph--main">
+            <img src="./site-source/images/featured-scenic.jpg" alt="丝路山水风光" loading="lazy">
+          </figure>
+          <figure class="ab-ph ab-ph--sub">
+            <img src="./site-source/images/featured-family.jpg" alt="一家同行走访村落" loading="lazy">
+          </figure>
+        </div>
+        <div class="ab-intro-body">
+          <p class="ab-rule" aria-hidden="true"></p>
+          <h2 class="ab-h2" id="introTitle">品牌简介</h2>
+          <p class="ab-h2-en" id="introTitleEn" aria-hidden="true">About Silk Road Family</p>
+          <p class="ab-lead" id="introText"></p>
+          <ul class="ab-tags" id="introTags"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 四大友好体验：左照片 + 右竖卡的两栏深绿块 ══
+       ① 左照片上只压「我们的优势」整组文案（组头 + 主张语 + 副标题），
+          文字反相为暗底浅字，遮罩见 .ab-duo-photo::before；
+       ② 栏目头「四大友好体验」按需求移到右栏四张卡片上方、左对齐，英文行整条删除。
+       照片仍是一个「矩形」承载：figure 绝对铺满左栏，图片用 object-fit:cover 裁进矩形里，
+       右缘是硬边、不再向左渐隐进深绿（原来的横向渐变已去掉） -->
+  <section id="commit" class="ab-duo">
+    <div class="ab-duo-photo">
+      <figure class="ab-duo-media">
+        <img src="./site-source/images/partner-villa.jpg" alt="山林间的白色建筑" loading="lazy">
+      </figure>
+      <div class="ab-photo-copy">
+        <!-- 「我们的优势」文案组：橙线 → 中文标题 → Georgia 英文 → 主张语 → 副标题 -->
+        <div class="ab-claim-block">
+          <p class="ab-rule" aria-hidden="true"></p>
+          <h3 class="ab-claim-title" id="claimTag">我们的优势</h3>
+          <p class="ab-h2-en" id="claimEn" aria-hidden="true">Our Trusted Local Partner</p>
+          <p class="ab-claim-lead" id="claimTitle"></p>
+          <p class="ab-claim-sub" id="claimSub"></p>
+        </div>
+      </div>
+    </div>
+    <div class="ab-duo-cards">
+      <!-- 栏目头：由照片栏移入，放在四张卡片上方、左对齐；英文行按需求删除 -->
+      <header class="ab-cards-head">
+        <h2 class="ab-fgrid-title" id="g1Title">四大友好体验</h2>
+      </header>
+      <div class="ab-fgrid" id="abGrid1"></div>
+    </div>
+  </section>
+
+  <!-- ══ 四大实力保障：山林实景底 + 深绿渐层（组头与品牌简介同一套样式）══ -->
+  <section id="adv" class="ab-strength">
+    <div class="mx-auto max-w-7xl px-6 ab-strength-in">
+      <header class="ab-strength-head">
+        <div>
+          <p class="ab-rule" aria-hidden="true"></p>
+          <h2 class="ab-h2" id="g2Title">四大实力保障</h2>
+          <p class="ab-h2-en" id="g2En" aria-hidden="true">Our Strength</p>
+        </div>
+      </header>
+      <div class="ab-sgrid" id="abGrid2"></div>
+    </div>
+  </section>
+
+  <footer class="bg-footer py-16 text-white">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+
+        <div>
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
+          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于穆斯林友好旅游服务的国际旅行社</p>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="footer.links">快速链接</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="index.html"         class="transition hover:text-emerald-400" data-i18n="nav.home">首页</a></li>
+            <li><a href="product.html" class="transition hover:text-emerald-400" data-i18n="nav.products">产品</a></li>
+            <li><a href="about.html"    class="transition hover:text-emerald-400" data-i18n="nav.about">关于我们</a></li>
+            <li><a href="index.html#contact"  class="transition hover:text-emerald-400" data-i18n="nav.contact">联系我们</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="footer.services">我们的服务</h4>
+          <ul class="space-y-2 text-sm">
+            <li data-i18n="footer.s1">定制穆斯林友好旅行</li>
+            <li data-i18n="footer.s2">商务考察访问</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
+          <div class="space-y-2 text-sm">
+            <p>info@safarark.com</p>
+            <p>+86 (20) 2829 9999</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="footer-copyright mt-12 border-t border-white/10 pt-8 text-center text-sm">
+        <p> © 2025 丝路之家 Travel. <span data-i18n="footer.rights">版权所有</span></p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   导航 30% 透明：首屏（深色轮播上）保持 30%，
+   滚离首屏后下方变浅色内容区，需切回 95% 保住白字可读性
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  var hdr = document.getElementById('siteHeader');
+  if(!hdr) return;
+  var ticking = false;
+  function sync(){
+    var threshold = window.innerHeight - 80;
+    hdr.classList.toggle('is-solid', window.scrollY > threshold);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(sync); }
+  }, {passive:true});
+  window.addEventListener('resize', sync, {passive:true});
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════════════
+   需求②：导航跳转 + 滚动高亮（scrollspy） + 小屏菜单
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  var hdr = document.getElementById('siteHeader');
+  var menuBtn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  var links = [].slice.call(document.querySelectorAll('[data-nav]'));
+  if(!hdr) return;   /* 二级页：导航为普通跳页链接，data-nav 可为空 */
+
+  function headerH(){ return hdr.offsetHeight; }
+
+  /* 下划线要贴齐导航条背景底边：量出「链接底 → header 底」的实际间距 */
+  function syncUnderline(){
+    var link = document.querySelector('.nav-link');
+    if(!link || !link.getBoundingClientRect().width) return;   // 小屏 nav 隐藏时跳过
+    var gap = hdr.getBoundingClientRect().bottom - link.getBoundingClientRect().bottom;
+    if(gap >= 0) document.documentElement.style.setProperty('--nav-bottom-gap', Math.round(gap)+'px');
+  }
+
+  /* 平滑跳转，落点让开 fixed header */
+  function goTo(target){
+    var y = 0;
+    if(target !== 'top'){
+      var el = document.getElementById(target);
+      if(!el) return;
+      y = el.getBoundingClientRect().top + window.scrollY - headerH() + 2;
+      if(y < 0) y = 0;
+    }
+    window.scrollTo({ top:y, behavior:'smooth' });
+  }
+
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      closeMenu();
+      goTo(this.getAttribute('data-nav'));
+      if(history.replaceState) history.replaceState(null,'','#'+this.getAttribute('data-nav'));
+    });
+  });
+
+  /* 二级页：导航项直接跳页，当前页高亮由 HTML 上的 .is-active 静态给出，
+     不做滚动切换（spy 保留为空操作，滚动监听与 --nav-bottom-gap 逻辑照常工作） */
+  var ticking = false;
+  function spy(){ ticking = false; }
+
+  /* 小屏菜单 */
+  function closeMenu(){
+    if(!menu) return;
+    menu.setAttribute('hidden','');
+    if(menuBtn) menuBtn.setAttribute('aria-expanded','false');
+  }
+  if(menuBtn && menu){
+    menuBtn.addEventListener('click', function(){
+      var open = !menu.hasAttribute('hidden');
+      if(open){ closeMenu(); } else { menu.removeAttribute('hidden'); menuBtn.setAttribute('aria-expanded','true'); }
+    });
+    document.addEventListener('click', function(e){
+      if(!menu.hasAttribute('hidden') && !hdr.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMenu(); });
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(spy); }
+  }, {passive:true});
+  window.addEventListener('resize', function(){ spy(); syncUnderline(); }, {passive:true});
+  spy();
+  syncUnderline();
+  window.addEventListener('load', syncUnderline);   // 字体加载完成后高度可能微调
+
+  /* 平滑滚动（对不支持 scrollTo options 的浏览器降级） */
+  if(!('scrollBehavior' in document.documentElement.style)){
+    // 行为降级：默认跳转即可，无需额外处理
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════
+   真实数据（来自 /api/travel/index?lang=zh）
+   ══════════════════════════════════════════════════════════ */
+var DATA = {
+  banners:[
+    {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
+     subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
+     image:"./site-source/images/banner001.png"},
+    {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
+     subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
+     image:"./site-source/images/banner002.png"},
+    {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
+     subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
+     image:"./site-source/images/banner003.png"}
+  ],
+  /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
+     不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
+  featured:[
+    {id:1,
+     tag:"风光度假",tag_en:"Scenic Retreat",tagUpp:"SCENIC RETREAT",
+     title:"行于山水，心有归处",title_en:"Where Mountains Hold the Mind",
+     desc:"山海辽阔，从容行之。择安静居所、享舒缓旅程，每一方天地都是身心的归处。",
+     desc_en:"Vast mountains and open seas, travelled at an easy pace. Quiet lodgings and unhurried days — every corner of the world becomes a place to come home to.",
+     tags:["从容节奏","品质居停","小团慢游"],
+     tags_en:["Easy Pace","Quality Stays","Small Groups"],
+     cta:"开启风光慢旅",cta_en:"Start a Scenic Journey",
+     image:"./site-source/images/featured-scenic.jpg"},
+    {id:2,
+     tag:"商旅考察",tag_en:"Business Journey",tagUpp:"BUSINESS JOURNEY",
+     title:"行商阅山，自有通途",title_en:"Trade Routes, Mountain Views",
+     desc:"商务落点与风光留白交织，深耕行业资源，链接产业一线，让案头有成果，眼底有山河。不虚此行，是我们的底线。",
+     desc_en:"Business calls interwoven with open horizons: deep industry resources and direct links to the front line. Results on the desk, mountains in view — a trip worth taking is our baseline.",
+     tags:["商旅融合","行业资源","发现机遇"],
+     tags_en:["Business & Travel","Industry Access","New Opportunities"],
+     cta:"定制商旅路线",cta_en:"Plan a Business Route",
+     image:"./site-source/images/featured-business.jpg"},
+    {id:3,
+     tag:"文化研修",tag_en:"Cultural Study",tagUpp:"CULTURAL STUDY",
+     title:"探微知著，格物致美",title_en:"Reading Detail, Meeting Beauty",
+     desc:"择一雅居，共赴雅集。于建筑寻踪、茶艺品鉴、器物赏玩、非遗体验之间，往细处看，向深处走。让文化在场域里自然延伸，悄然生长。",
+     desc_en:"A refined residence, a gathering of kindred spirits. Architecture walks, tea tastings, objects and living heritage — look closer, go deeper, and let culture grow quietly where it stands.",
+     tags:["生活美学","养气修心","同好同行"],
+     tags_en:["Living Aesthetics","Cultivation","Kindred Company"],
+     cta:"预约文化之旅",cta_en:"Book a Cultural Journey",
+     image:"./site-source/images/featured-culture.jpg"},
+    {id:4,
+     tag:"亲子研学",tag_en:"Family Study Tour",tagUpp:"FAMILY STUDY TOUR",
+     title:"天地之间，行知相长",title_en:"Learning in the Open",
+     desc:"以行走积见识，以实践长才干。躬身以试，发问以进，试错以明，复盘以固。一程结束，脑中有学问，肩上有韧劲，眼里有底气。",
+     desc_en:"Insight gathered by walking, capability built by doing. Try, ask, adjust, review — and come home with knowledge in mind, resilience in the shoulders, confidence in the eyes.",
+     tags:["实践求知","能力养成","知行合一"],
+     tags_en:["Learning by Doing","Capability","Knowledge in Action"],
+     cta:"开启行走课堂",cta_en:"Open the Outdoor Classroom",
+     image:"./site-source/images/featured-family.jpg"}
+  ],
+  about_us:{
+    /* ── 页头 ── */
+    hero_eyebrow:"About Silk Road Family",hero_eyebrow_en:"",
+    hero_title:"关于丝路之家",hero_title_en:"About Silk Road Family",
+    hero_sub:"从丝路出发，与美好相逢。",hero_sub_en:"From the Silk Road, meet the beautiful.",
+    /* ── 品牌简介 ── */
+    intro_title:"品牌简介",intro_title_en:"Who We Are",
+    intro_text:"<strong>北京丝路之家文旅产业发展有限公司</strong>是一个特色文旅服务品牌，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务，业务涵盖风光度假、商旅考察、文化研修、亲子研学等多元定制化内容。",
+    intro_text_en:"<strong>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd.</strong> is a distinctive cultural tourism service brand. Taking the ancient Silk Road as our cultural bond and guided by a professional, efficient service philosophy, we provide global travelers with China journeys that honour local customs, deliver rich experiences and attend to every detail — across scenic holidays, business tours, cultural study and family study tours.",
+    tags:["风光度假","商旅考察","文化研修","亲子研学"],
+    tags_en:["Scenic Holidays","Business Tours","Cultural Study","Family Study Tours"],
+    /* ── 核心优势：主张语 ── */
+    claim_tag:"我们的优势",
+    claim_tag_en:"Our Strength",
+    /* 主张语按需求固定断四行（\n 由 .ab-claim-lead 的 white-space:pre-line 生效）：
+       我们不仅是旅行 / 服务商，/ 更是值得托付的 / 在地伙伴 */
+    claim:"我们不仅是旅行\n服务商，\n更是值得托付的\n在地伙伴",
+    claim_en:"More than a travel service provider\n— a local partner you can trust",
+    claim_sub:"以专业护航行程，用服务传递温度，让旅途安心自在",
+    claim_sub_en:"Professional care along the way, warmth in every detail, ease in every journey",
+    /* ── 四大友好体验 ── */
+    g1_title:"四大友好体验",g1_title_en:"Four Travel-Friendly Experiences",
+    friendly:[
+      {title:"文化友好",title_en:"Cultural Friendly",
+       lead:"专业多语导览，深谙礼俗规范",lead_en:"Multilingual guides, fluent in etiquette",
+       detail:"配备专业多语导览团队，全程恪守文化准则，精准把控沟通尺度，为宾客营造包容得体的出行氛围。",
+       detail_en:"A professional multilingual guiding team observes cultural norms throughout, calibrating communication with care to create an inclusive, considerate atmosphere for every guest."},
+      {title:"行程友好",title_en:"Itinerary Friendly",
+       lead:"舒缓旅途节奏，周到礼拜安排",lead_en:"An easy pace, prayer times arranged",
+       detail:"专业合规营运车辆，合理把控旅途节奏，兼顾宾客礼俗需求，均衡排布观光与休整环节，确保行程从容有序。",
+       detail_en:"Licensed, well-maintained vehicles and a carefully paced route balance sightseeing with rest and honour religious needs, keeping every day calm and orderly."},
+      {title:"饮食友好",title_en:"Dining Friendly",
+       lead:"严选旅途餐食，兼顾地方风味",lead_en:"Certified kitchens, authentic flavours",
+       detail:"严选具备认证资质的餐饮合作方，融合在地本土特色饮食，在恪守饮食规范的同时呈现地道风味体验。",
+       detail_en:"We work only with certified restaurant partners, blending authentic regional cuisine with strict dietary compliance for a flavourful, worry-free table."},
+      {title:"住宿友好",title_en:"Stay Friendly",
+       lead:"精选品质居所，保障私密舒心",lead_en:"Quality stays, privacy assured",
+       detail:"甄选品质住所，无酒精住宿环境，配套完善礼拜设施，保障居住私密性与舒适度，打造安心惬意的休憩空间。",
+       detail_en:"Carefully selected alcohol-free accommodation with proper prayer facilities protects privacy and comfort — a restful haven at the end of every day."}
+    ],
+    /* ── 四大实力保障 ── */
+    g2_title:"四大实力保障",g2_title_en:"Four Strengths Behind Us",
+    assurance:[
+      {title:"本土深耕",title_en:"Local Roots",
+       lead:"丰富在地资源，布局国内市场",lead_en:"Deep local resources across China",
+       detail:"深耕国内文旅市场，直连海量在地文旅资源，缩减中间流转环节，保障服务响应效率与品质。",
+       detail_en:"Deeply rooted in China's tourism market, we connect directly with a vast network of local resources, cutting out intermediaries to keep every response fast and every service reliable."},
+      {title:"专属定制",title_en:"Tailor-Made",
+       lead:"打造个性方案，解锁深度体验",lead_en:"Personal itineraries, deeper experiences",
+       detail:"采用专属定制服务模式，依据宾客出行需求量身打造行程方案，突破常规产品同质化局限，解锁深度游玩体验。",
+       detail_en:"A bespoke service model shapes each itinerary around the traveller, breaking free of one-size-fits-all products to unlock genuinely in-depth experiences."},
+      {title:"商旅全链",title_en:"Full Business Chain",
+       lead:"对接商旅资源，产业链路支持",lead_en:"End-to-end business travel support",
+       detail:"提供商旅考察服务，涵盖产业资源对接、会展服务接待与行程路线保障模块，实现商务效率与旅行体验感的双重提升。",
+       detail_en:"Business inspection services covering industry matchmaking, MICE reception and route assurance — raising business efficiency and travel experience together."},
+      {title:"可靠支持",title_en:"Reliable Support",
+       lead:"专业服务团队，守护全程安心",lead_en:"A trained team, at your side throughout",
+       detail:"核心服务团队均经系统培训与专业考核，具备丰富接待服务经验，提供专属对接服务，守护宾客出行无忧。",
+       detail_en:"Every core team member is systematically trained and professionally assessed, bringing extensive hosting experience and dedicated point-of-contact service for complete peace of mind."}
+    ]
+  },
+  contact_us:{
+    title:"开始您的旅程",title_en:"Start Your Journey",
+    desc:"分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。",
+    desc_en:"Share your travel dates, team size and vision, and our professional consultants will help you plan the perfect trip.",
+    address:"山东省诸城市舜德路159号",address_en:"No. 159, Shunde Road, Zhucheng City, Shandong Province",
+    phone:"+86 (20) 2829 9999",email:"info@safarark.com"
+  }
+};
+
+var I18N = {
+  zh:{ "nav.home":"首页","nav.products":"产品","nav.about":"关于我们","nav.contact":"联系我们","nav.tailor":"定制服务",
+       "banner.en":"Muslim-Friendly China Tourism","banner.main":"畅游华夏胜境，悦享舒心旅程",
+       "banner.l3":"从山水到人文，从风光到礼遇","banner.l4":"我们为您悉心安排，从容感受华夏魅力",
+       "banner.tag":"穆斯林友好之旅","banner.cta":"即刻启程",
+       "products.title":"特色产品","products.all":"查看全部产品",
+       "contact.info":"联系方式","contact.addr":"公司地址","contact.phone":"联系电话","contact.email":"电子邮箱",
+       "contact.next":"下一站，中国",
+       "form.title":"发送需求","form.cardTitle":"为您定制，专属于您的旅程","form.reqNote":"为必填项",
+       "form.privacy":"当前为需求预览，不会发送或保存您的信息",
+       "form.name":"称呼","form.date":"预计出行时间","form.dest":"意向目的地",
+       "form.days":"计划停留天数","form.size":"出行人数","form.req":"其他个性化需求",
+       "form.wa":"WhatsApp 账号","form.email":"电子邮箱","form.submit":"提交需求",
+       "form.unitDay":"天","form.unitPerson":"人",
+       "form.namePh":"我们该如何称呼您","form.datePh":"请输入预计出行时间","form.destPh":"选择您向往的目的地",
+       "form.daysPh":"预计停留天数","form.sizePh":"预计出行人数","form.reqPh":"旅行偏好、饮食需求、特别安排……我们愿意倾听更多",
+       "form.waPh":"请输入国际区号及账号","form.emailPh":"您的电子邮箱地址",
+       "footer.slogan":"专注于穆斯林友好旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
+       "footer.s1":"定制穆斯林友好旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
+  en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
+       "banner.en":"Muslim-Friendly China Tourism","banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
+       "banner.l3":"From nature to culture, from scenery to warm hospitality",
+       "banner.l4":"Every detail arranged for you, so you can take in China's charm at ease",
+       "banner.tag":"Muslim-Friendly Travel","banner.cta":"Set Off Now",
+       "products.title":"Featured Products","products.all":"View All Products",
+       "contact.info":"Contact Information","contact.addr":"Address","contact.phone":"Phone","contact.email":"Email",
+       "contact.next":"Next Stop, China",
+       "form.title":"Send Inquiry","form.cardTitle":"Tailored to You, a Journey of Your Own","form.reqNote":"Required",
+       "form.privacy":"Preview only — nothing is sent or stored",
+       "form.name":"Name","form.date":"Expected Travel Date","form.dest":"Preferred Destination",
+       "form.days":"Planned Days of Stay","form.size":"Number of Travelers","form.req":"Other Personalized Requests",
+       "form.wa":"WhatsApp","form.email":"Email","form.submit":"Submit Inquiry",
+       "form.unitDay":"days","form.unitPerson":"pax",
+       "form.namePh":"How should we address you","form.datePh":"Enter expected travel date","form.destPh":"Select your destination",
+       "form.daysPh":"Planned days","form.sizePh":"Number of travelers","form.reqPh":"Travel preferences, dietary needs, special arrangements — we'd love to hear more",
+       "form.waPh":"Country code and account","form.emailPh":"Your email address",
+       "footer.slogan":"International travel agency specializing in Muslim-friendly travel services","footer.links":"Quick Links","footer.services":"Our Services",
+       "footer.s1":"Customized Muslim-Friendly Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved." }
+};
+
+var ADV_ICONS_FRIENDLY = [
+  /* 文化友好 · 书卷 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.6 5.1 8.6 4.3 5.9 4.3c-.7 0-1.3.6-1.3 1.3v11.5c0 .7.6 1.3 1.3 1.3 2.7 0 4.7.8 6.1 2.2 1.4-1.4 3.4-2.2 6.1-2.2.7 0 1.3-.6 1.3-1.3V5.6c0-.7-.6-1.3-1.3-1.3-2.7 0-4.7.8-6.1 2.2Z"/><path d="M12 6.5v13.7"/></svg>',
+  /* 行程友好 · 路线 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="18.5" r="1.7"/><circle cx="18.5" cy="5.5" r="1.7"/><path d="M7.2 18.5h5.8a3.2 3.2 0 0 0 0-6.4H9.5a3.2 3.2 0 0 1 0-6.4h7" stroke-dasharray="2.4 2.4"/></svg>',
+  /* 饮食友好 · 叉勺 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3v4.5a2 2 0 0 0 4 0V3M9.5 3v18"/><path d="M16.5 3c-1.5 0-2.6 1.9-2.6 4.2s1.1 4.2 2.6 4.2 2.6-1.9 2.6-4.2S18 3 16.5 3ZM16.5 11.4V21"/></svg>',
+  /* 住宿友好 · 床铺 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v11M3 15h18M21 18v-5a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="12.2" r="1.5"/></svg>'
+];
+var ADV_ICONS_ASSURANCE = [
+  /* 本土深耕 · 地图定位钉 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21.2S5.4 15.7 5.4 10.9a6.6 6.6 0 0 1 13.2 0c0 4.8-6.6 10.3-6.6 10.3Z"/><circle cx="12" cy="10.7" r="2.3"/></svg>',
+  /* 专属定制 · 魔棒 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 17.5 17 7"/><path d="M15.6 3.4v2.1M20.6 8.4h-2.1M19.2 4.8l-1.5 1.5"/><path d="M8.6 3.2l.65 1.6 1.6.65-1.6.65-.65 1.6-.65-1.6-1.6-.65 1.6-.65.65-1.6Z"/></svg>',
+  /* 商旅全链 · 公文包 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7.6" width="17" height="11.9" rx="2"/><path d="M9.2 7.6V6.2a2 2 0 0 1 2-2h1.6a2 2 0 0 1 2 2v1.4M3.5 12.2h17M10.7 11.2h2.6v2.2h-2.6z"/></svg>',
+  /* 可靠支持 · 盾牌对勾 */
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.4 5.2 5.9v5.3c0 4.4 2.9 7.5 6.8 9.2 3.9-1.7 6.8-4.8 6.8-9.2V5.9L12 3.4Z"/><path d="m9.2 11.6 2 2 3.7-3.9"/></svg>'
+];
+/* ══ 关于页：四大友好体验（2×2 沙米卡）+ 四大实力保障（四列汉字圆徽卡）══
+   参考稿版式：友好卡 = 茶金圆号 01-04 + 渐隐细线；保障卡 = 墨绿汉字圆徽 + Georgia 大序号 */
+function renderAboutCards(){
+  var zh = LANG === 'zh';
+  var A  = DATA.about_us;
+  var FNUM = ['01','02','03','04'];
+  var SNUM = ['壹','贰','叁','肆'];
+  document.getElementById('abGrid1').innerHTML = A.friendly.map(function(a, i){
+    /* style="--i:N" 供入场弹入动画错峰 */
+    return '<article class="ab-fcard" style="--i:' + i + '">' +
+             '<div class="ab-fcard-top">' +
+               '<span class="ab-fnum" aria-hidden="true">' + FNUM[i] + '</span>' +
+               '<i class="ab-fcard-line" aria-hidden="true"></i>' +
+             '</div>' +
+             '<h4 class="ab-fcard-title">' + (zh ? a.title  : a.title_en ) + '</h4>' +
+             '<p class="ab-fcard-lead">'    + (zh ? a.lead   : a.lead_en  ) + '</p>' +
+             '<p class="ab-fcard-desc">'    + (zh ? a.detail : a.detail_en) + '</p>' +
+           '</article>';
+  }).join('');
+  document.getElementById('abGrid2').innerHTML = A.assurance.map(function(a, i){
+    return '<article class="ab-scard" style="--i:' + i + '">' +
+             '<div class="ab-scard-top">' +
+               '<span class="ab-shanzi" aria-hidden="true">' + SNUM[i] + '</span>' +
+               '<span class="ab-sno" aria-hidden="true">0' + (i + 1) + '</span>' +
+             '</div>' +
+             '<h4 class="ab-scard-title">' + (zh ? a.title  : a.title_en ) + '</h4>' +
+             '<p class="ab-scard-lead">'    + (zh ? a.lead   : a.lead_en  ) + '</p>' +
+             '<p class="ab-scard-desc">'    + (zh ? a.detail : a.detail_en) + '</p>' +
+           '</article>';
+  }).join('');
+}
+
+/* ══ 「我们的优势」与右栏首排卡片上沿对齐 ══
+   两栏的上内边距公式不同，右栏 ≥2000px 还有 justify-content:center 带来的居中偏移，
+   纯 CSS 只能算到前几档（见 .ab-photo-copy 的 margin-top 兜底公式），
+   这里按实测差值写入 margin-top，任何视口都严格齐平。
+   room 限幅保证整组不会越过照片栏下边缘；<1024 单栏时清除位移 */
+function alignCommitCopy(){
+  var commit = document.getElementById('commit');
+  if(!commit) return;
+  var photo = commit.querySelector('.ab-duo-photo');
+  var copy  = commit.querySelector('.ab-photo-copy');
+  var grid  = document.getElementById('abGrid1');
+  if(!photo || !copy || !grid) return;
+  if(window.innerWidth < 1024){ copy.style.marginTop = ''; return; }
+  copy.style.marginTop = '0px';                    /* 先归零再量：同步触发一次布局，避免旧值干扰 */
+  var p = photo.getBoundingClientRect();
+  var g = grid.getBoundingClientRect();
+  var cs = getComputedStyle(photo);
+  var padTop = parseFloat(cs.paddingTop) || 0;
+  var padBottom = parseFloat(cs.paddingBottom) || 0;
+  var copyH = copy.getBoundingClientRect().height;  /* translateY 不影响 height，入场动画进行中也量得准 */
+  var want = Math.round(g.top - p.top - padTop);   /* 目标位移：与首排卡片上沿齐平 */
+  var room = Math.round(p.height - padTop - padBottom - copyH);  /* 上限：不溢出照片栏 */
+  copy.style.marginTop = Math.max(0, Math.min(want, room)) + 'px';
+}
+alignCommitCopy();
+/* resize 连续触发时合并到一帧，避免每次拖窗口都强制 layout */
+var alignRaf = 0;
+function queueAlignCommitCopy(){
+  if(alignRaf) return;
+  alignRaf = requestAnimationFrame(function(){ alignRaf = 0; alignCommitCopy(); });
+}
+window.addEventListener('resize', queueAlignCommitCopy, {passive:true});
+window.addEventListener('load', alignCommitCopy);
+/* 字体与图片到位后尺寸会变一档，再校一次 */
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(alignCommitCopy);
+
+/* ══ 语言切换 ══ */
+function applyLocale(){
+  var zh = LANG === 'zh';
+  var t = I18N[zh ? 'zh' : 'en'];
+  [].slice.call(document.querySelectorAll('[data-i18n]')).forEach(function(el){
+    var k = el.dataset.i18n; if(t[k]) el.textContent = t[k];
+  });
+  [].slice.call(document.querySelectorAll('[data-ph]')).forEach(function(el){
+    var k = el.dataset.ph; if(t[k]) el.placeholder = t[k];
+  });
+  var A = DATA.about_us;
+  /* 页头：英文模式下 eyebrow 为空串即自然隐藏（装饰性英文小标） */
+  var eyebrow = document.getElementById('abEyebrow');
+  eyebrow.textContent = zh ? A.hero_eyebrow : A.hero_eyebrow_en;
+  eyebrow.hidden = !zh;
+  document.getElementById('abHeroTitle').textContent = zh ? A.hero_title : A.hero_title_en;
+  document.getElementById('abHeroSub').textContent   = zh ? A.hero_sub   : A.hero_sub_en;
+  /* 品牌简介：英文模式下英文小标隐藏（大标题已是英文，避免重复） */
+  document.getElementById('introTitle').textContent  = zh ? A.intro_title : A.intro_title_en;
+  document.getElementById('introTitleEn').hidden     = !zh;
+  document.getElementById('introText').innerHTML     = zh ? A.intro_text : A.intro_text_en;
+  document.getElementById('introTags').innerHTML = (zh ? A.tags : A.tags_en).map(function(tg, i){
+    return '<li>' + tg + '</li>';
+  }).join('');
+  /* 核心优势：主张语（组合块左栏）+ 实力保障区头；两组标题中文模式走普惠体 */
+  document.getElementById('claimTag').textContent  = zh ? A.claim_tag : A.claim_tag_en;
+  document.getElementById('claimTitle').textContent = zh ? A.claim     : A.claim_en;
+  document.getElementById('claimSub').textContent   = zh ? A.claim_sub : A.claim_sub_en;
+  /* 组合块右栏组头：中文走普惠体小标；英文装饰行已按需求删除，英文模式直接用 g1_title_en */
+  document.getElementById('g1Title').textContent = zh ? A.g1_title : A.g1_title_en;
+  document.getElementById('g2Title').textContent = zh ? A.g2_title : A.g2_title_en;
+  document.getElementById('g2En').hidden    = !zh;
+  renderAboutCards();
+  /* 文案填充后文字组高度变化（中英文行数不同），重新校一次左栏对齐 */
+  if(typeof alignCommitCopy === 'function') alignCommitCopy();
+}
+/* ══ 语言切换：自定义下拉（替代原生 select） ══ */
+var LANG = 'zh';
+var langBtn  = document.getElementById('langBtn');
+var langMenu = document.getElementById('langMenu');
+var langLabel= document.getElementById('langLabel');
+function closeLang(){
+  langMenu.hidden = true;
+  langBtn.setAttribute('aria-expanded','false');
+}
+function openLang(){
+  langMenu.hidden = false;
+  langBtn.setAttribute('aria-expanded','true');
+}
+langBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  langMenu.hidden ? openLang() : closeLang();
+});
+[].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(opt){
+  opt.addEventListener('click', function(e){
+    e.stopPropagation();
+    var lg = opt.dataset.lang;
+    if(lg === LANG){ closeLang(); return; }
+    LANG = lg;
+    langLabel.textContent = lg === 'zh' ? '中文' : 'EN';
+    [].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(o){
+      o.setAttribute('aria-selected', String(o.dataset.lang === lg));
+    });
+    applyLocale();
+    closeLang();
+  });
+});
+/* 点击外部 / Esc 关闭；菜单展开时按 Tab 移出则自动收起 */
+document.addEventListener('click', function(e){
+  if(!langMenu.hidden && !e.target.closest('.lang-switch')) closeLang();
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && !langMenu.hidden){ closeLang(); langBtn.focus(); }
+});
+
+/* 联系表单已按需求移除（2026-10-30）；导航「联系我们」指向首页 #contact */
+
+
+/* ══ 滚动入场动效：IntersectionObserver + 几何兜底 ══ */
+var REVEAL_SEL = [
+  '#intro .ab-intro-media', '#intro .ab-intro-body',
+  /* 「我们的优势」已并入照片栏：整块 .ab-photo-copy 一次入场；
+     栏目头移到右栏卡片上方后单列入场（与 .ab-fcard 平级，不会父子嵌套动两次） */
+  '#commit .ab-photo-copy', '#commit .ab-cards-head', '#abGrid1 .ab-fcard', '#abGrid2 .ab-scard',
+  'footer .grid > *'
+];
+function setupReveal(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = [];
+  REVEAL_SEL.forEach(function(s){
+    [].slice.call(document.querySelectorAll(s)).forEach(function(el){
+      if(els.indexOf(el) < 0 && !el.classList.contains('reveal')) els.push(el);
+    });
+  });
+  if(reduce || !els.length) return;                 /* 减少动效：保持原样，不加隐藏态 */
+  els.forEach(function(el){ el.classList.add('reveal'); });
+
+  /* 触发线：元素顶部越过视口 LINE 处即播。用 threshold:0 + 底部 rootMargin 收缩实现，
+     判定只跟"顶部位置"挂钩，与元素自身高矮无关 → 一组元素节奏一致。 */
+  var LINE = 0.86, STAGGER = 70;   /* 同组错峰步长 70ms */
+  var pending = els.slice();
+  var timers = [];
+
+  function markIn(el, stagger){
+    var d = 0;
+    if(stagger){
+      var idx = el.parentElement ? [].slice.call(el.parentElement.children).indexOf(el) : 0;
+      d = Math.min(idx, 5) * STAGGER;              /* 封顶 5 档 = 350ms */
+    }
+    if(!d){ el.classList.add('in'); return; }
+    /* 用 setTimeout 而非 CSS transition-delay：卡片自己的 transition 会覆盖
+       .reveal 的 transition-delay（实测四张卡全 0s、同时冒出），JS 调度不受影响 */
+    timers.push(setTimeout(function(){ el.classList.add('in'); }, d));
+  }
+
+  function play(el){
+    markIn(el, true);
+    if(io) io.unobserve(el);
+    var k = pending.indexOf(el); if(k >= 0) pending.splice(k, 1);
+  }
+
+  var hasIO = 'IntersectionObserver' in window;
+  var io = hasIO ? new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) play(e.target); });
+  /* rootMargin 底部 -14% == 触发线落在视口 86% 处 */
+  }, { threshold:0, rootMargin:'0px 0px -14% 0px' }) : null;
+  if(io) pending.forEach(function(el){ io.observe(el); });
+
+  /* 兜底：快速甩动/拖拽滚动条可能一次性跨过元素，IO 不来回调。
+     按几何位置直接判定——越过触发线或已滚过头顶的都立刻显示，杜绝内容永久隐形。 */
+  var ticking = false;
+  function sweep(){
+    ticking = false;
+    var vh = window.innerHeight;
+    /* 触底保险：页尾元素可能因剩余高度不足而永远越不过触发线，滚到底就全部放出 */
+    var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    for(var i = pending.length - 1; i >= 0; i--){
+      var el = pending[i], r = el.getBoundingClientRect();
+      if(atBottom || r.top < vh * LINE || r.bottom < 0) play(el);
+    }
+    if(!pending.length){
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      timers.length = 0;
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking = true; requestAnimationFrame(sweep); } }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll, { passive:true });
+  if(!hasIO) sweep(); else onScroll();
+}
+
+/* ══ 初始化 ══ */
+applyLocale();
+setupReveal();
+</script>
+</body>
+</html>
