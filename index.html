@@ -205,12 +205,6 @@ html,body{min-width:0 !important; overflow-x:hidden}
    白字压在视频上，靠 1px 级轻微暗描边兜底（视频亮帧时仍可读），
    不依赖大范围投影，保持画面干净 */
 .banner-copy{max-width:56rem; margin:0 auto}
-.bc-en{
-  margin:0 0 clamp(14px,2vw,22px);
-  font-size:clamp(.75rem,1.8vw,1.125rem); font-weight:500;
-  letter-spacing:.18em; margin-right:-.18em;   /* 负边距抵消尾字距，保证真正居中 */
-  color:#fff;
-}
 .bc-main{
   margin:0 0 clamp(12px,1.8vw,20px);
   font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
@@ -222,13 +216,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   font-size:clamp(.9375rem,2.1vw,1.375rem); line-height:1.9;
   color:rgba(255,255,255,.95);
 }
-.bc-tag{
-  margin:clamp(20px,3vw,34px) 0 0;
-  font-size:clamp(.9375rem,2vw,1.25rem); font-weight:500;
-  letter-spacing:.28em; margin-right:-.28em;
-  color:rgba(255,255,255,.92);
-}
-.bc-en,.bc-main,.bc-sub,.bc-tag{ text-shadow:0 1px 10px rgba(0,0,0,.45) }
+.bc-main,.bc-sub{ text-shadow:0 1px 10px rgba(0,0,0,.45) }
 
 /* 主色实底按钮：与「了解我们」按钮（.adv-more--solid）同款
    #094949 底 + 1.5px 同色描边 + 白字，圆角 8px；白字对比度 10.19:1（AAA） */
@@ -1297,12 +1285,10 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 
     <div class="absolute inset-0 flex items-center justify-center text-center text-white" id="heroCopy">
       <div class="banner-copy px-4">
-        <p  class="bc-en"   data-i18n="banner.en">Muslim-Friendly China Tourism</p>
         <h1 class="bc-main" data-i18n="banner.main">畅游华夏胜境，悦享舒心旅程</h1>
         <p  class="bc-sub"  data-i18n="banner.l3">从山水到人文，从风光到礼遇</p>
         <p  class="bc-sub"  data-i18n="banner.l4">我们为您悉心安排，从容感受华夏魅力</p>
-        <p  class="bc-tag"  data-i18n="banner.tag">穆斯林友好之旅</p>
-        <a  href="#contact" class="bc-cta" data-i18n="banner.cta">即刻启程</a>
+        <a  href="product.html" class="bc-cta" data-i18n="banner.cta">即刻启程</a>
       </div>
     </div>
   </section>
@@ -1810,9 +1796,9 @@ var DATA = {
 
 var I18N = {
   zh:{ "nav.home":"首页","nav.products":"产品","nav.about":"关于我们","nav.contact":"联系我们","nav.tailor":"定制服务",
-       "banner.en":"Muslim-Friendly China Tourism","banner.main":"畅游华夏胜境，悦享舒心旅程",
+       "banner.main":"畅游华夏胜境，悦享舒心旅程",
        "banner.l3":"从山水到人文，从风光到礼遇","banner.l4":"我们为您悉心安排，从容感受华夏魅力",
-       "banner.tag":"穆斯林友好之旅","banner.cta":"即刻启程",
+       "banner.cta":"即刻启程",
        "products.title":"特色产品","products.all":"查看全部产品",
        "contact.info":"联系方式","contact.addr":"公司地址","contact.phone":"联系电话","contact.email":"电子邮箱",
        "contact.next":"下一站，中国",
@@ -1828,10 +1814,10 @@ var I18N = {
        "footer.slogan":"专注于穆斯林友好旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
        "footer.s1":"定制穆斯林友好旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
   en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
-       "banner.en":"Muslim-Friendly China Tourism","banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
+       "banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
        "banner.l3":"From nature to culture, from scenery to warm hospitality",
        "banner.l4":"Every detail arranged for you, so you can take in China's charm at ease",
-       "banner.tag":"Muslim-Friendly Travel","banner.cta":"Set Off Now",
+       "banner.cta":"Set Off Now",
        "products.title":"Featured Products","products.all":"View All Products",
        "contact.info":"Contact Information","contact.addr":"Address","contact.phone":"Phone","contact.email":"Email",
        "contact.next":"Next Stop, China",
