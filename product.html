@@ -1704,7 +1704,9 @@ function applyLocale(){
   renderCats();
   renderProducts();
 }
+/* 语言持久化：记住用户选择，跳转/刷新后保持，不再跳回中文 */
 var LANG = 'zh';
+try{ if(localStorage.getItem('siteLang') === 'en') LANG = 'en'; }catch(e){}
 var langBtn  = document.getElementById('langBtn');
 var langMenu = document.getElementById('langMenu');
 var langLabel= document.getElementById('langLabel');
@@ -1726,6 +1728,7 @@ langBtn.addEventListener('click', function(e){
     var lg = opt.dataset.lang;
     if(lg === LANG){ closeLang(); return; }
     LANG = lg;
+    try{ localStorage.setItem('siteLang', lg); }catch(e){}
     langLabel.textContent = lg === 'zh' ? '中文' : 'EN';
     [].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(o){
       o.setAttribute('aria-selected', String(o.dataset.lang === lg));
@@ -1816,6 +1819,13 @@ function jumpToCat(){
 }
 
 /* ══ 初始化 ══ */
+/* 恢复上次选择的语言：同步按钮文案与菜单选中态 */
+(function(){
+  langLabel.textContent = LANG === 'zh' ? '中文' : 'EN';
+  [].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(o){
+    o.setAttribute('aria-selected', String(o.dataset.lang === LANG));
+  });
+})();
 applyLocale();
 jumpToCat();
 setupReveal();
