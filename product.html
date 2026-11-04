@@ -1617,10 +1617,11 @@ function chipLabel(p, i, zh){
 }
 
 /* ══ 产品卡片：整卡链接 → 详情页；图 → 主标题 → 副行 → 推荐人群 / 推荐时间 ══ */
-/* nb()：把「6-8」「9–10」「Jun–Aug」这类日期区间包成整体，禁止在连接号后换行，
-   避免手机端窄栏里出现「9–」留在行尾、「10 月」掉到下一行的伪截断 */
+/* nb()：把「6-8 月」「9–10 月」「Jun–Aug」这类日期区间（含紧随的「月」字）包成整体，禁止拆行，
+   避免手机端窄栏里出现「9-10」留在行尾、「月红墙金叶…」掉到下一行的伪截断。
+   v2：初版只包「9-10」，结果「月」仍可与数字拆开换行 —— 单位必须跟着区间走 */
 function nb(s){
-  return String(s).replace(/([A-Za-z0-9]+\s*[–—-]\s*[A-Za-z0-9]+)/g, '<span class="nb">$1</span>');
+  return String(s).replace(/([A-Za-z0-9]+\s*[–—-]\s*[A-Za-z0-9]+(?:\s*月)?)/g, '<span class="nb">$1</span>');
 }
 function renderProducts(){
   var zh = LANG === 'zh';
