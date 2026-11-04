@@ -559,13 +559,11 @@ html,body{min-width:0 !important; overflow-x:hidden}
   will-change:transform, opacity;
 }
 .adv-cf.dragging .adv-cf-card{transition:none}
-/* 当前卡：轻量选中态 —— 细淡绿环 + 大半径柔光晕 + 加深落影，替代原先 2px 实色深绿环。
-   三层 box-shadow：1px 半透明细环定形 → 6px 极浅光晕托起 → 落影增加悬浮感；
-   视觉重量远低于实色描边，且光晕在浅色/深色照片上都成立 */
+/* 当前卡：轻量选中态 —— 细淡橙环 + 加深落影（应用户要求去掉 6px 扩散光晕层）。
+   两层 box-shadow：1px 半透明细环定形 → 落影增加悬浮感 */
 .adv-cf-card.is-cur{
   border-color:rgba(205,122,54,.6);
   box-shadow:0 0 0 1px rgba(205,122,54,.5),
-             0 0 0 6px rgba(205,122,54,.1),
              0 16px 30px -16px rgba(9,73,73,.5);
 }
 
