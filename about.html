@@ -447,7 +447,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:min(1180px, 78vw); aspect-ratio:1921 / 874;
   /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
   transform:translateY(-58.5%);
-  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  background:url('./site-source/images/advantage-desert-dunes.webp') center / 100% 100% no-repeat;
   /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
   opacity:.8;
   pointer-events:none; z-index:0;
@@ -1091,7 +1091,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .ab-hero{
   position:relative; display:flex; align-items:center;
   min-height:clamp(320px,32vw,440px);
-  background:#0C1C18 url('./site-source/images/mist.jpg') center 62%/cover no-repeat;
+  background:#0C1C18 url('./site-source/images/mist.webp') center 62%/cover no-repeat;
   /* !important 覆盖 ≤640px 的通用 section{padding:56px !important}（类选择器优先级更高） */
   padding:calc(76px + clamp(40px,5.6vw,78px)) 0 clamp(40px,5.6vw,74px) !important;
 }
@@ -1529,8 +1529,9 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:42px; height:42px; border-radius:50%; flex:none;
   display:flex; align-items:center; justify-content:center;
   background:#094949; color:#F9F7F1;
-  font-size:1.125rem; font-weight:600; letter-spacing:0;
 }
+/* 圆内改为线性 SVG 图标：随 currentColor 取米白，尺寸对齐原字号视觉高度 */
+.ab-shanzi svg{width:20px; height:20px; display:block; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
 .ab-scard.in .ab-shanzi{animation:advIconPop .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay:.12s}
 .ab-sno{
   font-family:Georgia,'Times New Roman',serif;
@@ -1580,6 +1581,66 @@ html,body{min-width:0 !important; overflow-x:hidden}
 </style>
 </head>
 <body>
+
+<!-- ══ 页面加载动效：地标插画轻微浮动 + 品牌绿进度条，资源就绪后整体淡出（≥700ms 保底展示）══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-in">
+    <img class="boot-art" src="./site-source/images/loader-landmarks.webp" alt="" width="537" height="430">
+    <div class="boot-bar"><i id="bootFill"></i></div>
+  </div>
+</div>
+<style>
+/* 默认不显示：只有首屏真的慢（>500ms 未就绪）才淡入；站内跳转 / 同一会话内不再重复出现 */
+#boot{position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center;
+  background:#FDFCF7; opacity:0; pointer-events:none; transition:opacity .3s ease}
+#boot.show{opacity:1; pointer-events:auto}
+#boot.off{opacity:0; visibility:hidden; pointer-events:none}
+.boot-in{display:flex; flex-direction:column; align-items:center; width:min(320px,64vw)}
+.boot-art{width:100%; height:auto; animation:bootFloat 2.4s ease-in-out infinite}
+@keyframes bootFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+.boot-bar{width:72%; height:6px; margin-top:26px; border-radius:999px; background:#EAE6DA; overflow:hidden}
+.boot-bar i{display:block; height:100%; width:0; border-radius:inherit; background:#094949; transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){ .boot-art{animation:none} }
+</style>
+<script>
+(function(){
+  var boot=document.getElementById('boot'), fill=document.getElementById('bootFill');
+  if(!boot) return;
+  var shown=false, finished=false, timer=null, arm=null, i=0, tShow=0;
+  var steps=[30,55,75];
+  function kill(){ if(boot.parentNode) boot.remove(); }
+  /* 同一会话已出现过一次 → 后续页面（含站内跳转）直接跳过。
+     file:// 下 sessionStorage 可能不可用，静默降级为「只按速度判断」 */
+  var seen=false;
+  try{ seen = sessionStorage.getItem('siteBootShown')==='1'; }catch(e){}
+  if(seen){ kill(); return; }
+
+  function done(){
+    if(finished) return; finished=true;
+    if(timer) clearInterval(timer); if(arm) clearTimeout(arm);
+    try{ sessionStorage.setItem('siteBootShown','1'); }catch(e){}
+    if(!shown){ kill(); return; }              /* 页面本来就快：从没亮过，直接撤，零闪烁 */
+    fill.style.width='100%';
+    setTimeout(function(){
+      boot.classList.add('off');
+      setTimeout(kill, 400);
+    }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
+  }
+
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  arm=setTimeout(function(){
+    if(finished || document.readyState==='complete') return;
+    shown=true; tShow=Date.now();
+    boot.classList.add('show');
+    timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
+  }, 500);
+
+  if(document.readyState==='complete') done();
+  else window.addEventListener('load', done);
+  setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
+})();
+</script>
+
 
 <div class="travel-home bg-gray-50" data-v-9fcfbb94>
 
@@ -1640,10 +1701,10 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <div class="ab-intro-grid">
         <div class="ab-intro-media">
           <figure class="ab-ph ab-ph--main">
-            <img src="./site-source/images/featured-scenic.jpg" alt="丝路山水风光" loading="lazy">
+            <img src="./site-source/images/featured-scenic.webp" alt="丝路山水风光" loading="lazy">
           </figure>
           <figure class="ab-ph ab-ph--sub">
-            <img src="./site-source/images/featured-family.jpg" alt="一家同行走访村落" loading="lazy">
+            <img src="./site-source/images/featured-family.webp" alt="一家同行走访村落" loading="lazy">
           </figure>
         </div>
         <div class="ab-intro-body">
@@ -1666,7 +1727,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <section id="commit" class="ab-duo">
     <div class="ab-duo-photo">
       <figure class="ab-duo-media">
-        <img src="./site-source/images/partner-villa.jpg" alt="山林间的白色建筑" loading="lazy">
+        <img src="./site-source/images/partner-villa.webp" alt="山林间的白色建筑" loading="lazy">
       </figure>
       <div class="ab-photo-copy">
         <!-- 「我们的优势」文案组：橙线 → 中文标题 → Georgia 英文 → 主张语 → 副标题 -->
@@ -1733,7 +1794,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
           <div class="space-y-2 text-sm">
             <p>info@safarark.com</p>
-            <p>+86 (20) 2829 9999</p>
+            <p>+86 18563079286</p>
           </div>
         </div>
 
@@ -1849,13 +1910,13 @@ var DATA = {
   banners:[
     {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
      subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
-     image:"./site-source/images/banner001.png"},
+     image:"./site-source/images/banner001.webp"},
     {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
      subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
-     image:"./site-source/images/banner002.png"},
+     image:"./site-source/images/banner002.webp"},
     {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
      subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
-     image:"./site-source/images/banner003.png"}
+     image:"./site-source/images/banner003.webp"}
   ],
   /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
      不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
@@ -1868,7 +1929,7 @@ var DATA = {
      tags:["从容节奏","品质居停","小团慢游"],
      tags_en:["Easy Pace","Quality Stays","Small Groups"],
      cta:"开启风光慢旅",cta_en:"Start a Scenic Journey",
-     image:"./site-source/images/featured-scenic.jpg"},
+     image:"./site-source/images/featured-scenic.webp"},
     {id:2,
      tag:"商旅考察",tag_en:"Business Journey",tagUpp:"BUSINESS JOURNEY",
      title:"行商阅山，自有通途",title_en:"Trade Routes, Mountain Views",
@@ -1877,7 +1938,7 @@ var DATA = {
      tags:["商旅融合","行业资源","发现机遇"],
      tags_en:["Business & Travel","Industry Access","New Opportunities"],
      cta:"定制商旅路线",cta_en:"Plan a Business Route",
-     image:"./site-source/images/featured-business.jpg"},
+     image:"./site-source/images/featured-business.webp"},
     {id:3,
      tag:"文化研修",tag_en:"Cultural Study",tagUpp:"CULTURAL STUDY",
      title:"探微知著，格物致美",title_en:"Reading Detail, Meeting Beauty",
@@ -1886,7 +1947,7 @@ var DATA = {
      tags:["生活美学","养气修心","同好同行"],
      tags_en:["Living Aesthetics","Cultivation","Kindred Company"],
      cta:"预约文化之旅",cta_en:"Book a Cultural Journey",
-     image:"./site-source/images/featured-culture.jpg"},
+     image:"./site-source/images/featured-culture.webp"},
     {id:4,
      tag:"亲子研学",tag_en:"Family Study Tour",tagUpp:"FAMILY STUDY TOUR",
      title:"天地之间，行知相长",title_en:"Learning in the Open",
@@ -1895,7 +1956,7 @@ var DATA = {
      tags:["实践求知","能力养成","知行合一"],
      tags_en:["Learning by Doing","Capability","Knowledge in Action"],
      cta:"开启行走课堂",cta_en:"Open the Outdoor Classroom",
-     image:"./site-source/images/featured-family.jpg"}
+     image:"./site-source/images/featured-family.webp"}
   ],
   about_us:{
     /* ── 页头 ── */
@@ -1904,8 +1965,8 @@ var DATA = {
     hero_sub:"从丝路出发，与美好相逢。",hero_sub_en:"From the Silk Road, meet the beautiful.",
     /* ── 品牌简介 ── */
     intro_title:"品牌简介",intro_title_en:"Who We Are",
-    intro_text:"<strong>北京丝路之家文旅产业发展有限公司</strong>是一个特色文旅服务品牌，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务，业务涵盖风光度假、商旅考察、文化研修、亲子研学等多元定制化内容。",
-    intro_text_en:"<strong>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd.</strong> is a distinctive cultural tourism service brand. Taking the ancient Silk Road as our cultural bond and guided by a professional, efficient service philosophy, we provide global travelers with China journeys that honour local customs, deliver rich experiences and attend to every detail — across scenic holidays, business tours, cultural study and family study tours.",
+    intro_text:"<strong>北京丝路之家文旅产业发展有限公司</strong>是一个特色文旅服务商，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务，业务涵盖风光度假、商旅考察、文化研修、亲子研学等多元定制化内容。",
+    intro_text_en:"<strong>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd.</strong> is a distinctive cultural tourism service provider. Taking the ancient Silk Road as our cultural bond and guided by a professional, efficient service philosophy, we provide global travelers with China journeys that honour local customs, deliver rich experiences and attend to every detail — across scenic holidays, business tours, cultural study and family study tours.",
     tags:["风光度假","商旅考察","文化研修","亲子研学"],
     tags_en:["Scenic Holidays","Business Tours","Cultural Study","Family Study Tours"],
     /* ── 核心优势：主张语 ── */
@@ -1962,8 +2023,8 @@ var DATA = {
     title:"开始您的旅程",title_en:"Start Your Journey",
     desc:"分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。",
     desc_en:"Share your travel dates, team size and vision, and our professional consultants will help you plan the perfect trip.",
-    address:"山东省诸城市舜德路159号",address_en:"No. 159, Shunde Road, Zhucheng City, Shandong Province",
-    phone:"+86 (20) 2829 9999",email:"info@safarark.com"
+    address:"北京市西城区西绒线胡同26号院1-13号1至2层02",address_en:"Unit 02, Floors 1-2, No. 1-13, Yard 26, Xirongxian Hutong, Xicheng District, Beijing",
+    phone:"+86 18563079286",email:"info@safarark.com"
   }
 };
 
@@ -2033,7 +2094,18 @@ function renderAboutCards(){
   var zh = LANG === 'zh';
   var A  = DATA.about_us;
   var FNUM = ['01','02','03','04'];
-  var SNUM = ['壹','贰','叁','肆'];
+  /* 四大实力保障：圆形徽章内改用主题线性图标（地图定位/指南针/公文包/盾牌勾），
+     线性 SVG 随 currentColor 取米白，中英文共用，语言切换不受影响 */
+  var SICON = [
+    /* 本土深耕：地图定位 */
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.1-6-10a6 6 0 1 1 12 0c0 4.9-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>',
+    /* 专属定制：指南针 */
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-1.9 5.1-5.1 1.9 1.9-5.1 5.1-1.9z"/></svg>',
+    /* 商旅全链：公文包 */
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.8A1.8 1.8 0 0 1 10.3 4h3.4a1.8 1.8 0 0 1 1.8 1.8v1.7M3 12.5h18"/></svg>',
+    /* 可靠支持：盾牌 + 勾 */
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 2.8v5.4c0 4.4-2.9 7.8-7 9-4.1-1.2-7-4.6-7-9V5.8L12 3z"/><path d="M9.2 12l2 2 3.6-3.8"/></svg>'
+  ];
   document.getElementById('abGrid1').innerHTML = A.friendly.map(function(a, i){
     /* style="--i:N" 供入场弹入动画错峰 */
     return '<article class="ab-fcard" style="--i:' + i + '">' +
@@ -2049,7 +2121,7 @@ function renderAboutCards(){
   document.getElementById('abGrid2').innerHTML = A.assurance.map(function(a, i){
     return '<article class="ab-scard" style="--i:' + i + '">' +
              '<div class="ab-scard-top">' +
-               '<span class="ab-shanzi" aria-hidden="true">' + SNUM[i] + '</span>' +
+               '<span class="ab-shanzi" aria-hidden="true">' + SICON[i] + '</span>' +
                '<span class="ab-sno" aria-hidden="true">0' + (i + 1) + '</span>' +
              '</div>' +
              '<h4 class="ab-scard-title">' + (zh ? a.title  : a.title_en ) + '</h4>' +

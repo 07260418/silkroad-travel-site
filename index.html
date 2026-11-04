@@ -450,7 +450,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:min(1180px, 78vw); aspect-ratio:1921 / 874;
   /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
   transform:translateY(-58.5%);
-  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  background:url('./site-source/images/advantage-desert-dunes.webp') center / 100% 100% no-repeat;
   /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
   opacity:.8;
   pointer-events:none; z-index:0;
@@ -509,15 +509,36 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .adv-head-r{max-width:36em}
 
 /* 舞台：收在 .max-w-7xl 的内容盒里（1248-48=1200@1280，1440 下 1232），
-   与页头、页脚共用同一条左右边缘。越出舞台的远侧卡直接裁掉，两端各 56px 羽化，
-   让最外侧那张是"淡出"而不是被切断 —— 中间区段完全不受影响。 */
+   与页头、页脚共用同一条左右边缘。越出舞台的远侧卡直接裁掉，两端各 80px 羽化。
+   羽化用 smoothstep S 曲线分 5 档过渡（0/.16/.5/.84/1），替代单段线性渐变 ——
+   线性坡在视觉上是一条"直边"，S 曲线两头慢中间快，边缘卡像雾一样散开，看不出渐变存在。 */
 .adv-cf{
-  --cw:320px; --ch:448px; --fade:56px;
+  --cw:320px; --ch:448px; --fade:80px;
   position:relative; height:calc(var(--ch) + 56px);
   overflow:hidden; outline:none;
   touch-action:pan-y; user-select:none; -webkit-user-select:none;
-  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
-  mask-image:linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,
+    transparent 0,
+    rgba(0,0,0,.16) calc(var(--fade) * .25),
+    rgba(0,0,0,.5)  calc(var(--fade) * .5),
+    rgba(0,0,0,.84) calc(var(--fade) * .75),
+    #000 var(--fade),
+    #000 calc(100% - var(--fade)),
+    rgba(0,0,0,.84) calc(100% - var(--fade) * .75),
+    rgba(0,0,0,.5)  calc(100% - var(--fade) * .5),
+    rgba(0,0,0,.16) calc(100% - var(--fade) * .25),
+    transparent 100%);
+  mask-image:linear-gradient(to right,
+    transparent 0,
+    rgba(0,0,0,.16) calc(var(--fade) * .25),
+    rgba(0,0,0,.5)  calc(var(--fade) * .5),
+    rgba(0,0,0,.84) calc(var(--fade) * .75),
+    #000 var(--fade),
+    #000 calc(100% - var(--fade)),
+    rgba(0,0,0,.84) calc(100% - var(--fade) * .75),
+    rgba(0,0,0,.5)  calc(100% - var(--fade) * .5),
+    rgba(0,0,0,.16) calc(100% - var(--fade) * .25),
+    transparent 100%);
 }
 .adv-cf:focus-visible{outline:2px solid #CD7A36; outline-offset:6px; border-radius:10px}
 
@@ -538,10 +559,15 @@ html,body{min-width:0 !important; overflow-x:hidden}
   will-change:transform, opacity;
 }
 .adv-cf.dragging .adv-cf-card{transition:none}
-/* 当前卡：茶金描边环（用 box-shadow 画，不占尺寸、不挤文字）+ 略深一点的落影。
-   border 同步转橙：默认的 1px 淡绿边（rgba(9,73,73,.13)）夹在橙环与照片之间
-   会显成一道"白缝"（浅色照片上尤其明显），转橙后环紧贴照片、视觉宽度仍是 2px */
-.adv-cf-card.is-cur{border-color:#CD7A36; box-shadow:0 0 0 1px #CD7A36, 0 12px 26px -14px rgba(9,73,73,.48)}
+/* 当前卡：轻量选中态 —— 细淡绿环 + 大半径柔光晕 + 加深落影，替代原先 2px 实色深绿环。
+   三层 box-shadow：1px 半透明细环定形 → 6px 极浅光晕托起 → 落影增加悬浮感；
+   视觉重量远低于实色描边，且光晕在浅色/深色照片上都成立 */
+.adv-cf-card.is-cur{
+  border-color:rgba(205,122,54,.6);
+  box-shadow:0 0 0 1px rgba(205,122,54,.5),
+             0 0 0 6px rgba(205,122,54,.1),
+             0 16px 30px -16px rgba(9,73,73,.5);
+}
 
 /* 照片区：压暗只作用在照片上（--dim 由脚本按纵深层级写入），信息条永远满对比 */
 .adv-cf-photo{position:relative; flex:1 1 auto; min-height:0; overflow:hidden; background:#E4E7DE}
@@ -603,7 +629,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 .adv-cf-prev{left:12px; right:auto}
 .adv-cf-next{right:12px; left:auto}
 
-/* 圆点：激活态拉长成 24px 的短棒 + 品牌橙 */
+/* 圆点：激活态拉长成 24px 的短棒 + 品牌绿 */
 .adv-cf-foot{display:flex; align-items:center; justify-content:center; margin-top:26px}
 .adv-cf-dots{display:flex; align-items:center; gap:8px}
 .adv-cf-dot{
@@ -620,7 +646,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 .adv-cf-dot.on{width:24px; background:#CD7A36}
 
 @media (max-width:640px){
-  .adv-cf{--cw:258px; --ch:404px; --fade:26px; height:calc(var(--ch) + 40px)}
+  .adv-cf{--cw:258px; --ch:404px; --fade:44px; height:calc(var(--ch) + 40px)}
   .adv-cf-cap{min-height:118px; padding:0 15px}
   /* 小屏整体降一档，但档位关系与小卡一致：小标 12 / 卡题 16 / 副行 13 */
   .adv-cf-meta{font-size:.75rem; margin-bottom:5px}
@@ -1152,6 +1178,66 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 </head>
 <body>
 
+<!-- ══ 页面加载动效：地标插画轻微浮动 + 品牌绿进度条，资源就绪后整体淡出（≥700ms 保底展示）══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-in">
+    <img class="boot-art" src="./site-source/images/loader-landmarks.webp" alt="" width="537" height="430">
+    <div class="boot-bar"><i id="bootFill"></i></div>
+  </div>
+</div>
+<style>
+/* 默认不显示：只有首屏真的慢（>500ms 未就绪）才淡入；站内跳转 / 同一会话内不再重复出现 */
+#boot{position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center;
+  background:#FDFCF7; opacity:0; pointer-events:none; transition:opacity .3s ease}
+#boot.show{opacity:1; pointer-events:auto}
+#boot.off{opacity:0; visibility:hidden; pointer-events:none}
+.boot-in{display:flex; flex-direction:column; align-items:center; width:min(320px,64vw)}
+.boot-art{width:100%; height:auto; animation:bootFloat 2.4s ease-in-out infinite}
+@keyframes bootFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+.boot-bar{width:72%; height:6px; margin-top:26px; border-radius:999px; background:#EAE6DA; overflow:hidden}
+.boot-bar i{display:block; height:100%; width:0; border-radius:inherit; background:#094949; transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){ .boot-art{animation:none} }
+</style>
+<script>
+(function(){
+  var boot=document.getElementById('boot'), fill=document.getElementById('bootFill');
+  if(!boot) return;
+  var shown=false, finished=false, timer=null, arm=null, i=0, tShow=0;
+  var steps=[30,55,75];
+  function kill(){ if(boot.parentNode) boot.remove(); }
+  /* 同一会话已出现过一次 → 后续页面（含站内跳转）直接跳过。
+     file:// 下 sessionStorage 可能不可用，静默降级为「只按速度判断」 */
+  var seen=false;
+  try{ seen = sessionStorage.getItem('siteBootShown')==='1'; }catch(e){}
+  if(seen){ kill(); return; }
+
+  function done(){
+    if(finished) return; finished=true;
+    if(timer) clearInterval(timer); if(arm) clearTimeout(arm);
+    try{ sessionStorage.setItem('siteBootShown','1'); }catch(e){}
+    if(!shown){ kill(); return; }              /* 页面本来就快：从没亮过，直接撤，零闪烁 */
+    fill.style.width='100%';
+    setTimeout(function(){
+      boot.classList.add('off');
+      setTimeout(kill, 400);
+    }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
+  }
+
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  arm=setTimeout(function(){
+    if(finished || document.readyState==='complete') return;
+    shown=true; tShow=Date.now();
+    boot.classList.add('show');
+    timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
+  }, 500);
+
+  if(document.readyState==='complete') done();
+  else window.addEventListener('load', done);
+  setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
+})();
+</script>
+
+
 <div class="travel-home bg-gray-50" data-v-9fcfbb94>
 
   <!-- ══ HEADER：fixed + 实底 #FFFFFF，覆盖在全屏视频之上 ══ -->
@@ -1201,10 +1287,10 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
   <section class="banner-section relative h-screen w-full overflow-hidden bg-black">
     <!-- 视频加载/不支持时的兜底底图：取视频第 0 帧（banner-poster.jpg），
          与视频开头画面一致 —— 视频就位后不会出现跳色，也不会再闪现紫色旧图 -->
-    <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('./site-source/images/banner-poster.jpg')"></div>
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('./site-source/images/banner-poster.webp')"></div>
     <video id="bannerVideo" class="absolute inset-0 h-full w-full object-cover"
            autoplay muted loop playsinline preload="auto"
-           poster="./site-source/images/banner-poster.jpg">
+           poster="./site-source/images/banner-poster.webp">
       <source src="./site-source/media/banner.mp4" type="video/mp4">
     </video>
 
@@ -1289,7 +1375,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
           <!-- 裁切框：Ken Burns 缓慢推近时把溢出的画面收在框内，
                印章仍在框外（right:-16px 跨边），所以只裁图、不裁印章 -->
           <span class="about-media-frame">
-            <img id="aboutImg" src="./site-source/images/about-hill.jpg" alt="丝路之家">
+            <img id="aboutImg" src="./site-source/images/about-hill.webp" alt="丝路之家">
           </span>
           <span class="about-seal" aria-hidden="true"><span>丝路</span><span>之家</span></span>
           <figcaption class="about-media-cap">
@@ -1326,8 +1412,8 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 
         <div class="ct-info">
           <ul class="ct-info-list">
-            <li><span class="ct-info-key" data-i18n="contact.addr">公司地址</span><span class="ct-info-val" id="ctAddr">山东省诸城市舜德路159号</span></li>
-            <li><span class="ct-info-key" data-i18n="contact.phone">联系电话</span><span class="ct-info-val" id="ctPhone">+86 (20) 2829 9999</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.addr">公司地址</span><span class="ct-info-val" id="ctAddr">北京市西城区西绒线胡同26号院1-13号1至2层02</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.phone">联系电话</span><span class="ct-info-val" id="ctPhone">+86 18563079286</span></li>
             <li><span class="ct-info-key" data-i18n="contact.email">电子邮箱</span><span class="ct-info-val" id="ctEmail">info@safarark.com</span></li>
           </ul>
         </div>
@@ -1486,7 +1572,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
           <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
           <div class="space-y-2 text-sm">
             <p>info@safarark.com</p>
-            <p>+86 (20) 2829 9999</p>
+            <p>+86 18563079286</p>
           </div>
         </div>
 
@@ -1634,13 +1720,13 @@ var DATA = {
   banners:[
     {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
      subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
-     image:"./site-source/images/banner001.png"},
+     image:"./site-source/images/banner001.webp"},
     {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
      subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
-     image:"./site-source/images/banner002.png"},
+     image:"./site-source/images/banner002.webp"},
     {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
      subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
-     image:"./site-source/images/banner003.png"}
+     image:"./site-source/images/banner003.webp"}
   ],
   /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
      不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
@@ -1653,7 +1739,7 @@ var DATA = {
      tags:["从容节奏","品质居停","小团慢游"],
      tags_en:["Easy Pace","Quality Stays","Small Groups"],
      cta:"开启风光慢旅",cta_en:"Start a Scenic Journey",
-     image:"./site-source/images/featured-scenic.jpg"},
+     image:"./site-source/images/featured-scenic.webp"},
     {id:2, cat:"business",
      tag:"商旅考察",tag_en:"Business Journey",tagUpp:"BUSINESS JOURNEY",
      title:"行商阅山，自有通途",title_en:"Trade Routes, Mountain Views",
@@ -1662,7 +1748,7 @@ var DATA = {
      tags:["商旅融合","行业资源","发现机遇"],
      tags_en:["Business & Travel","Industry Access","New Opportunities"],
      cta:"定制商旅路线",cta_en:"Plan a Business Route",
-     image:"./site-source/images/featured-business.jpg"},
+     image:"./site-source/images/featured-business.webp"},
     {id:3, cat:"culture",
      tag:"文化研修",tag_en:"Cultural Study",tagUpp:"CULTURAL STUDY",
      title:"探微知著，格物致美",title_en:"Reading Detail, Meeting Beauty",
@@ -1671,7 +1757,7 @@ var DATA = {
      tags:["生活美学","养气修心","同好同行"],
      tags_en:["Living Aesthetics","Cultivation","Kindred Company"],
      cta:"预约文化之旅",cta_en:"Book a Cultural Journey",
-     image:"./site-source/images/featured-culture.jpg"},
+     image:"./site-source/images/featured-culture.webp"},
     {id:4, cat:"family",
      tag:"亲子研学",tag_en:"Family Study Tour",tagUpp:"FAMILY STUDY TOUR",
      title:"天地之间，行知相长",title_en:"Learning in the Open",
@@ -1680,18 +1766,18 @@ var DATA = {
      tags:["实践求知","能力养成","知行合一"],
      tags_en:["Learning by Doing","Capability","Knowledge in Action"],
      cta:"开启行走课堂",cta_en:"Open the Outdoor Classroom",
-     image:"./site-source/images/featured-family.jpg"}
+     image:"./site-source/images/featured-family.webp"}
   ],
   about_us:{
     title:"关于丝路之家",title_en:"About Silk Road Family",
     slogan:"从丝路出发，与美好相逢。",slogan_en:"From the Silk Road, meet the beautiful.",
-    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色旅游服务品牌，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
-    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service brand. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
+    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色文旅服务商，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
+    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service provider. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
     tags:["风光旅居","商旅考察","文化交流","亲子研学"],
     tags_en:["Scenic Holidays","Business Inspection","Cultural Exchange","Family Study Tours"],
     media_cap:"以旅行为桥，让文化相遇",media_cap_en:"Bridging cultures through travel",
     more:"了解我们",more_en:"About Us",
-    image:"./site-source/images/about-hill.jpg",
+    image:"./site-source/images/about-hill.webp",
     advantage_title:"我们的优势",advantage_title_en:"Our Advantages",
     advantage_sub:"我们不仅是旅行服务商，",
     advantage_sub_en:"More than a travel service provider —",
@@ -1705,22 +1791,22 @@ var DATA = {
     group2_title:"四大实力保障",group2_title_en:"Four Strengths Behind Us",
     /* 每条优势配一张封面图（adv/ 下为 760px 见方、按卡片近正方比例预裁的优化版） */
     advantages:[
-      {g:1,img:"adv-01-culture.jpg",  title:"文化友好",title_en:"Cultural",desc:"专业多语导览，深谙礼俗规范",desc_en:"Professional multilingual guides, well-versed in etiquette and customs"},
-      {g:1,img:"adv-02-itinerary.jpg",title:"行程友好",title_en:"Itinerary",desc:"舒缓旅途节奏，周到礼拜安排",desc_en:"Relaxed travel pace with thoughtful prayer arrangements"},
-      {g:1,img:"adv-03-dining.jpg",   title:"饮食友好",title_en:"Dining",desc:"严选旅途餐食，兼顾地方风味",desc_en:"Carefully selected meals balancing local flavors"},
-      {g:1,img:"adv-04-stay.jpg",     title:"住宿友好",title_en:"Stay",desc:"精选品质居所，保障私密舒心",desc_en:"Quality accommodations ensuring privacy and comfort"},
-      {g:2,img:"adv-05-local.jpg",    title:"本土深耕",title_en:"Local Roots",desc:"丰富在地资源，布局国内市场",desc_en:"Rich local resources with nationwide market presence"},
-      {g:2,img:"adv-06-tailor.jpg",   title:"专属定制",title_en:"Tailor-Made",desc:"打造个性方案，解锁深度体验",desc_en:"Personalized plans unlocking in-depth experiences"},
-      {g:2,img:"adv-07-biz.jpg",      title:"商旅全链",title_en:"Full Chain",desc:"对接商旅资源，产业链路支持",desc_en:"Business travel resources with full industry-chain support"},
-      {g:2,img:"adv-08-support.jpg",  title:"可靠支持",title_en:"Reliable Support",desc:"专业服务团队，守护全程安心",desc_en:"Professional service team safeguarding peace of mind throughout"}
+      {g:1,img:"adv-01-culture.webp",  title:"文化友好",title_en:"Cultural",desc:"专业多语导览，深谙礼俗规范",desc_en:"Professional multilingual guides, well-versed in etiquette and customs"},
+      {g:1,img:"adv-02-itinerary.webp",title:"行程友好",title_en:"Itinerary",desc:"舒缓旅途节奏，周到礼拜安排",desc_en:"Relaxed travel pace with thoughtful prayer arrangements"},
+      {g:1,img:"adv-03-dining.webp",   title:"饮食友好",title_en:"Dining",desc:"严选旅途餐食，兼顾地方风味",desc_en:"Carefully selected meals balancing local flavors"},
+      {g:1,img:"adv-04-stay.webp",     title:"住宿友好",title_en:"Stay",desc:"精选品质居所，保障私密舒心",desc_en:"Quality accommodations ensuring privacy and comfort"},
+      {g:2,img:"adv-05-local.webp",    title:"本土深耕",title_en:"Local Roots",desc:"丰富在地资源，布局国内市场",desc_en:"Rich local resources with nationwide market presence"},
+      {g:2,img:"adv-06-tailor.webp",   title:"专属定制",title_en:"Tailor-Made",desc:"打造个性方案，解锁深度体验",desc_en:"Personalized plans unlocking in-depth experiences"},
+      {g:2,img:"adv-07-biz.webp",      title:"商旅全链",title_en:"Full Chain",desc:"对接商旅资源，产业链路支持",desc_en:"Business travel resources with full industry-chain support"},
+      {g:2,img:"adv-08-support.webp",  title:"可靠支持",title_en:"Reliable Support",desc:"专业服务团队，守护全程安心",desc_en:"Professional service team safeguarding peace of mind throughout"}
     ]
   },
   contact_us:{
     title:"开始您的旅程",title_en:"Start Your Journey",
     desc:"分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。",
     desc_en:"Share your travel dates, team size and vision, and our professional consultants will help you plan the perfect trip.",
-    address:"山东省诸城市舜德路159号",address_en:"No. 159, Shunde Road, Zhucheng City, Shandong Province",
-    phone:"+86 (20) 2829 9999",email:"info@safarark.com"
+    address:"北京市西城区西绒线胡同26号院1-13号1至2层02",address_en:"Unit 02, Floors 1-2, No. 1-13, Yard 26, Xirongxian Hutong, Xicheng District, Beijing",
+    phone:"+86 18563079286",email:"info@safarark.com"
   }
 };
 
@@ -2283,7 +2369,7 @@ document.addEventListener('keydown', function(e){
 document.getElementById('inquiry').addEventListener('submit', function(e){
   e.preventDefault();
   var zh = LANG === 'zh';
-  alert(zh ? '感谢您的需求，我们将尽快与您联系！' : 'Thank you for your inquiry, we will contact you soon!');
+  showOk(zh);
   this.reset();
   /* 自定义下拉 / 日历不走 reset()，手动清回 placeholder 状态 */
   closeDest(false); setDest('');
@@ -2382,6 +2468,61 @@ function setupParallax(){
 applyLocale();
 setupReveal();
 setupParallax();
+</script>
+
+<!-- ══ 提交成功弹窗：替代原生 alert（原生对话框固定出现在视口顶部且样式不可定制）══
+     居中偏上（视口 42% 处）卡片 + 品牌绿确定按钮，双语文案在打开时按当前语言写入 -->
+<style>
+.ok-mask{position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;
+  padding:24px; background:rgba(9,73,73,.45); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px)}
+.ok-mask[hidden]{display:none}
+.ok-card{background:#FDFCF7; border:1px solid rgba(9,73,73,.12); border-radius:12px;
+  max-width:360px; width:100%; padding:34px 30px 30px; text-align:center;
+  box-shadow:0 24px 60px -24px rgba(9,73,73,.55);
+  animation:okIn .28s cubic-bezier(.34,1.56,.64,1) both}
+/* 视口偏高时把卡片钉在 42% 高度附近，避免居中后视觉上「掉」到下半屏 */
+@media (min-height:720px){ .ok-mask{align-items:flex-start} .ok-card{margin-top:42vh; transform:translateY(-50%)} }
+@keyframes okIn{from{opacity:0; transform:translateY(14px) scale(.96)} to{opacity:1; transform:none}}
+@media (min-height:720px){ @keyframes okIn{from{opacity:0; transform:translateY(-50%) translateY(14px) scale(.96)} to{opacity:1; transform:translateY(-50%)}} }
+.ok-ico{display:flex; width:52px; height:52px; margin:0 auto 16px; border-radius:50%;
+  align-items:center; justify-content:center; background:rgba(9,73,73,.08)}
+.ok-ico svg{width:26px; height:26px; display:block; fill:none; stroke:#094949; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ok-title{margin:0; font-size:1.125rem; font-weight:700; color:#253230; letter-spacing:.02em}
+.ok-desc{margin:10px 0 0; font-size:.875rem; line-height:1.8; color:#5C635D}
+.ok-btn{margin-top:24px; background:#094949; color:#FDFCF7; border:0; border-radius:999px;
+  padding:10px 42px; font-size:.9375rem; font-weight:600; letter-spacing:.04em; cursor:pointer;
+  font-family:inherit; transition:background .25s ease, transform .25s ease, box-shadow .25s ease}
+.ok-btn:hover{background:#0E6F6F; transform:translateY(-1px); box-shadow:0 10px 22px -12px rgba(9,73,73,.6)}
+.ok-btn:focus-visible{outline:2px solid #CD7A36; outline-offset:2px}
+@media (prefers-reduced-motion:reduce){ .ok-card{animation:none} .ok-btn:hover{transform:none} }
+</style>
+<div class="ok-mask" id="okMask" hidden>
+  <div class="ok-card" role="alertdialog" aria-modal="true" aria-labelledby="okTitle" aria-describedby="okDesc">
+    <span class="ok-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.4-2.9 7.8-7 9-4.1-1.2-7-4.6-7-9V5.8L12 3z"/><path d="M9.2 12l2 2 3.6-3.8"/></svg>
+    </span>
+    <h3 class="ok-title" id="okTitle">提交成功</h3>
+    <p class="ok-desc" id="okDesc">感谢您的需求，我们将尽快与您联系！</p>
+    <button type="button" class="ok-btn" id="okBtn">确定</button>
+  </div>
+</div>
+<script>
+(function(){
+  var mask=document.getElementById('okMask'), btn=document.getElementById('okBtn');
+  var T={zh:{t:'提交成功',d:'感谢您的需求，我们将尽快与您联系！',b:'确定'},
+         en:{t:'Submission Received',d:'Thank you for your inquiry, we will contact you soon!',b:'OK'}};
+  window.showOk=function(zh){
+    var s=T[zh?'zh':'en'];
+    document.getElementById('okTitle').textContent=s.t;
+    document.getElementById('okDesc').textContent=s.d;
+    btn.textContent=s.b;
+    mask.hidden=false; btn.focus();
+  };
+  function hide(){ mask.hidden=true; }
+  btn.addEventListener('click',hide);
+  mask.addEventListener('click',function(e){ if(e.target===mask) hide(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!mask.hidden) hide(); });
+})();
 </script>
 </body>
 </html>

@@ -439,7 +439,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:min(1180px, 78vw); aspect-ratio:1921 / 874;
   /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
   transform:translateY(-58.5%);
-  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  background:url('./site-source/images/advantage-desert-dunes.webp') center / 100% 100% no-repeat;
   /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
   opacity:.8;
   pointer-events:none; z-index:0;
@@ -1091,7 +1091,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .pd-hero{
   position:relative; display:flex; align-items:center;
   min-height:clamp(320px,32vw,440px);
-  background:#0C1C18 url('./site-source/images/featured-scenic.jpg') center 58%/cover no-repeat;
+  background:#0C1C18 url('./site-source/images/featured-scenic.webp') center 58%/cover no-repeat;
   /* !important 覆盖 ≤640px 的通用 section{padding:56px !important}，给固定导航留位（实测 76px） */
   padding:calc(76px + clamp(40px,5.6vw,78px)) 0 clamp(40px,5.6vw,74px) !important;
 }
@@ -1232,7 +1232,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 /* 副行：路线 · 天数（承上启下的灰字，标题太长时它负责交代行程规模）
    卡内小字统一 14px（.875rem）：副行 / 元信息标签 / 元信息正文 —— 同一档字号，靠颜色与字重分层 */
 .pd-card-sub{
-  margin:6px 0 0; font-size:.875rem; line-height:1.6; color:#6B7A72; letter-spacing:.02em;
+  margin:2px 0 0; font-size:.875rem; line-height:1.55; color:#6B7A72; letter-spacing:.02em;
 }
 /* 元信息：推荐人群 / 推荐时间。dt 用 max-content，中英文各自收紧，行内对齐 */
 .pd-meta{
@@ -1246,6 +1246,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .pd-meta dd{
   margin:0; font-size:.875rem; line-height:1.7; color:#4C544E; text-wrap:pretty;
 }
+/* 日期区间整体换行保护（配合渲染端 nb()） */
+.pd-meta dd .nb{white-space:nowrap}
 .pd-empty{margin:32px 0 0; text-align:center; font-size:.9375rem; color:#6B7A72}
 
 /* 减少动效：关掉入场与图片缩放 */
@@ -1254,9 +1256,82 @@ html,body{min-width:0 !important; overflow-x:hidden}
   .pd-card-media img,.pd-card:hover .pd-card-media img{transition:none; transform:none}
   .pd-card,.pd-card:hover{transition:none; transform:none}
 }
+
+/* ── 缺省态：无匹配线路时的空状态（地图+放大镜插画，进场浮现 + 轻微摆动漂浮）── */
+.empty-state{grid-column:1/-1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(40px,6vw,72px) 20px}
+.empty-art{width:min(300px,64vw); height:auto; animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
+@keyframes emptyIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+@keyframes emptyFloat{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-7px) rotate(-1.2deg)}}
+.empty-title{margin:20px 0 0; font-size:1.0625rem; font-weight:700; color:#253230; letter-spacing:.02em}
+.empty-desc{margin:8px 0 0; font-size:.875rem; line-height:1.8; color:#5C635D; max-width:32em}
+.empty-btn{display:inline-block; margin-top:22px; background:#094949; color:#FDFCF7; border-radius:999px;
+  padding:10px 36px; font-size:.9375rem; font-weight:600; letter-spacing:.04em; text-decoration:none;
+  transition:background .25s ease, transform .25s ease, box-shadow .25s ease}
+.empty-btn:hover{background:#0E6F6F; transform:translateY(-1px); box-shadow:0 10px 22px -12px rgba(9,73,73,.6)}
+@media (prefers-reduced-motion:reduce){ .empty-art{animation:none} }
 </style>
 
 <body>
+
+<!-- ══ 页面加载动效：地标插画轻微浮动 + 品牌绿进度条，资源就绪后整体淡出（≥700ms 保底展示）══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-in">
+    <img class="boot-art" src="./site-source/images/loader-landmarks.webp" alt="" width="537" height="430">
+    <div class="boot-bar"><i id="bootFill"></i></div>
+  </div>
+</div>
+<style>
+/* 默认不显示：只有首屏真的慢（>500ms 未就绪）才淡入；站内跳转 / 同一会话内不再重复出现 */
+#boot{position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center;
+  background:#FDFCF7; opacity:0; pointer-events:none; transition:opacity .3s ease}
+#boot.show{opacity:1; pointer-events:auto}
+#boot.off{opacity:0; visibility:hidden; pointer-events:none}
+.boot-in{display:flex; flex-direction:column; align-items:center; width:min(320px,64vw)}
+.boot-art{width:100%; height:auto; animation:bootFloat 2.4s ease-in-out infinite}
+@keyframes bootFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+.boot-bar{width:72%; height:6px; margin-top:26px; border-radius:999px; background:#EAE6DA; overflow:hidden}
+.boot-bar i{display:block; height:100%; width:0; border-radius:inherit; background:#094949; transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){ .boot-art{animation:none} }
+</style>
+<script>
+(function(){
+  var boot=document.getElementById('boot'), fill=document.getElementById('bootFill');
+  if(!boot) return;
+  var shown=false, finished=false, timer=null, arm=null, i=0, tShow=0;
+  var steps=[30,55,75];
+  function kill(){ if(boot.parentNode) boot.remove(); }
+  /* 同一会话已出现过一次 → 后续页面（含站内跳转）直接跳过。
+     file:// 下 sessionStorage 可能不可用，静默降级为「只按速度判断」 */
+  var seen=false;
+  try{ seen = sessionStorage.getItem('siteBootShown')==='1'; }catch(e){}
+  if(seen){ kill(); return; }
+
+  function done(){
+    if(finished) return; finished=true;
+    if(timer) clearInterval(timer); if(arm) clearTimeout(arm);
+    try{ sessionStorage.setItem('siteBootShown','1'); }catch(e){}
+    if(!shown){ kill(); return; }              /* 页面本来就快：从没亮过，直接撤，零闪烁 */
+    fill.style.width='100%';
+    setTimeout(function(){
+      boot.classList.add('off');
+      setTimeout(kill, 400);
+    }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
+  }
+
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  arm=setTimeout(function(){
+    if(finished || document.readyState==='complete') return;
+    shown=true; tShow=Date.now();
+    boot.classList.add('show');
+    timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
+  }, 500);
+
+  if(document.readyState==='complete') done();
+  else window.addEventListener('load', done);
+  setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
+})();
+</script>
+
 
 <div class="travel-home bg-gray-50" data-v-9fcfbb94>
 
@@ -1355,7 +1430,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
           <div class="space-y-2 text-sm">
             <p>info@safarark.com</p>
-            <p>+86 (20) 2829 9999</p>
+            <p>+86 18563079286</p>
           </div>
         </div>
 
@@ -1542,10 +1617,27 @@ function chipLabel(p, i, zh){
 }
 
 /* ══ 产品卡片：整卡链接 → 详情页；图 → 主标题 → 副行 → 推荐人群 / 推荐时间 ══ */
+/* nb()：把「6-8」「9–10」「Jun–Aug」这类日期区间包成整体，禁止在连接号后换行，
+   避免手机端窄栏里出现「9–」留在行尾、「10 月」掉到下一行的伪截断 */
+function nb(s){
+  return String(s).replace(/([A-Za-z0-9]+\s*[–—-]\s*[A-Za-z0-9]+)/g, '<span class="nb">$1</span>');
+}
 function renderProducts(){
   var zh = LANG === 'zh';
   var t  = I18N[zh ? 'zh' : 'en'];
   var list = PRODUCTS.filter(function(p){ return CAT === 'all' || p.cat === CAT; });
+  /* 缺省态：该分类下没有可展示的线路（数据为空或筛选无结果）*/
+  if(!list.length){
+    document.getElementById('pdGrid').innerHTML =
+      '<div class="empty-state">' +
+        '<img class="empty-art" src="./site-source/images/empty-map.webp" alt="" width="739" height="344">' +
+        '<p class="empty-title">'  + (zh ? '没有找到相关线路' : 'No routes found') + '</p>' +
+        '<p class="empty-desc">'   + (zh ? '试试浏览全部产品，或告诉我们您的需求，顾问将为您量身定制。'
+                                          : 'Try browsing all routes, or tell us your needs and our consultant will tailor one for you.') + '</p>' +
+        '<a class="empty-btn" href="product.html">' + (zh ? '浏览全部产品' : 'Browse All Routes') + '</a>' +
+      '</div>';
+    return;
+  }
   document.getElementById('pdGrid').innerHTML = list.map(function(p, i){
     var label = chipLabel(p, i, zh);
     var alt = zh ? (label + '：' + p.title) : (label + ': ' + p.title_en);
@@ -1561,11 +1653,11 @@ function renderProducts(){
                '<dl class="pd-meta">' +
                  '<div class="pd-meta-row">' +
                    '<dt>' + (zh ? '推荐人群' : 'For') + '</dt>' +
-                   '<dd>' + (zh ? p.for_ : p.for_en) + '</dd>' +
+                   '<dd>' + nb(zh ? p.for_ : p.for_en) + '</dd>' +
                  '</div>' +
                  '<div class="pd-meta-row">' +
                    '<dt>' + (zh ? '推荐时间' : 'Best Time') + '</dt>' +
-                   '<dd>' + (zh ? p.when : p.when_en) + '</dd>' +
+                   '<dd>' + nb(zh ? p.when : p.when_en) + '</dd>' +
                  '</div>' +
                '</dl>' +
              '</div>' +

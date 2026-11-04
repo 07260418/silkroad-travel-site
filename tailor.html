@@ -429,7 +429,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:min(1180px, 78vw); aspect-ratio:1921 / 874;
   /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
   transform:translateY(-58.5%);
-  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  background:url('./site-source/images/advantage-desert-dunes.webp') center / 100% 100% no-repeat;
   /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
   opacity:.8;
   pointer-events:none; z-index:0;
@@ -989,7 +989,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   position:relative;
   display:flex; align-items:center;
   min-height:clamp(340px,34vw,462px);
-  background:#131D17 url('./site-source/images/tailor-hero-lake.jpg') center 58%/cover no-repeat;
+  background:#131D17 url('./site-source/images/tailor-hero-lake.webp') center 58%/cover no-repeat;
   /* !important 是必需的：≤640px 有一条通用 `section{padding:56px !important}`，
      同为作者 !important 时类选择器优先级高于类型选择器，故本规则胜出 */
   padding:calc(76px + clamp(44px,6vw,84px)) 0 clamp(44px,6vw,80px) !important;
@@ -1044,6 +1044,66 @@ html,body{min-width:0 !important; overflow-x:hidden}
 </style>
 </head>
 <body>
+
+<!-- ══ 页面加载动效：地标插画轻微浮动 + 品牌绿进度条，资源就绪后整体淡出（≥700ms 保底展示）══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-in">
+    <img class="boot-art" src="./site-source/images/loader-landmarks.webp" alt="" width="537" height="430">
+    <div class="boot-bar"><i id="bootFill"></i></div>
+  </div>
+</div>
+<style>
+/* 默认不显示：只有首屏真的慢（>500ms 未就绪）才淡入；站内跳转 / 同一会话内不再重复出现 */
+#boot{position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center;
+  background:#FDFCF7; opacity:0; pointer-events:none; transition:opacity .3s ease}
+#boot.show{opacity:1; pointer-events:auto}
+#boot.off{opacity:0; visibility:hidden; pointer-events:none}
+.boot-in{display:flex; flex-direction:column; align-items:center; width:min(320px,64vw)}
+.boot-art{width:100%; height:auto; animation:bootFloat 2.4s ease-in-out infinite}
+@keyframes bootFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+.boot-bar{width:72%; height:6px; margin-top:26px; border-radius:999px; background:#EAE6DA; overflow:hidden}
+.boot-bar i{display:block; height:100%; width:0; border-radius:inherit; background:#094949; transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){ .boot-art{animation:none} }
+</style>
+<script>
+(function(){
+  var boot=document.getElementById('boot'), fill=document.getElementById('bootFill');
+  if(!boot) return;
+  var shown=false, finished=false, timer=null, arm=null, i=0, tShow=0;
+  var steps=[30,55,75];
+  function kill(){ if(boot.parentNode) boot.remove(); }
+  /* 同一会话已出现过一次 → 后续页面（含站内跳转）直接跳过。
+     file:// 下 sessionStorage 可能不可用，静默降级为「只按速度判断」 */
+  var seen=false;
+  try{ seen = sessionStorage.getItem('siteBootShown')==='1'; }catch(e){}
+  if(seen){ kill(); return; }
+
+  function done(){
+    if(finished) return; finished=true;
+    if(timer) clearInterval(timer); if(arm) clearTimeout(arm);
+    try{ sessionStorage.setItem('siteBootShown','1'); }catch(e){}
+    if(!shown){ kill(); return; }              /* 页面本来就快：从没亮过，直接撤，零闪烁 */
+    fill.style.width='100%';
+    setTimeout(function(){
+      boot.classList.add('off');
+      setTimeout(kill, 400);
+    }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
+  }
+
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  arm=setTimeout(function(){
+    if(finished || document.readyState==='complete') return;
+    shown=true; tShow=Date.now();
+    boot.classList.add('show');
+    timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
+  }, 500);
+
+  if(document.readyState==='complete') done();
+  else window.addEventListener('load', done);
+  setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
+})();
+</script>
+
 
 <div class="travel-home bg-gray-50" data-v-9fcfbb94>
 
@@ -1113,8 +1173,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
         <div class="ct-info">
           <ul class="ct-info-list">
-            <li><span class="ct-info-key" data-i18n="contact.addr">公司地址</span><span class="ct-info-val" id="ctAddr">山东省诸城市舜德路159号</span></li>
-            <li><span class="ct-info-key" data-i18n="contact.phone">联系电话</span><span class="ct-info-val" id="ctPhone">+86 (20) 2829 9999</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.addr">公司地址</span><span class="ct-info-val" id="ctAddr">北京市西城区西绒线胡同26号院1-13号1至2层02</span></li>
+            <li><span class="ct-info-key" data-i18n="contact.phone">联系电话</span><span class="ct-info-val" id="ctPhone">+86 18563079286</span></li>
             <li><span class="ct-info-key" data-i18n="contact.email">电子邮箱</span><span class="ct-info-val" id="ctEmail">info@safarark.com</span></li>
           </ul>
         </div>
@@ -1273,7 +1333,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
           <div class="space-y-2 text-sm">
             <p>info@safarark.com</p>
-            <p>+86 (20) 2829 9999</p>
+            <p>+86 18563079286</p>
           </div>
         </div>
 
@@ -1396,13 +1456,13 @@ var DATA = {
   banners:[
     {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
      subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
-     image:"./site-source/images/banner001.png"},
+     image:"./site-source/images/banner001.webp"},
     {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
      subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
-     image:"./site-source/images/banner002.png"},
+     image:"./site-source/images/banner002.webp"},
     {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
      subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
-     image:"./site-source/images/banner003.png"}
+     image:"./site-source/images/banner003.webp"}
   ],
   /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
      不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
@@ -1415,7 +1475,7 @@ var DATA = {
      tags:["从容节奏","品质居停","小团慢游"],
      tags_en:["Easy Pace","Quality Stays","Small Groups"],
      cta:"开启风光慢旅",cta_en:"Start a Scenic Journey",
-     image:"./site-source/images/featured-scenic.jpg"},
+     image:"./site-source/images/featured-scenic.webp"},
     {id:2,
      tag:"商旅考察",tag_en:"Business Journey",tagUpp:"BUSINESS JOURNEY",
      title:"行商阅山，自有通途",title_en:"Trade Routes, Mountain Views",
@@ -1424,7 +1484,7 @@ var DATA = {
      tags:["商旅融合","行业资源","发现机遇"],
      tags_en:["Business & Travel","Industry Access","New Opportunities"],
      cta:"定制商旅路线",cta_en:"Plan a Business Route",
-     image:"./site-source/images/featured-business.jpg"},
+     image:"./site-source/images/featured-business.webp"},
     {id:3,
      tag:"文化研修",tag_en:"Cultural Study",tagUpp:"CULTURAL STUDY",
      title:"探微知著，格物致美",title_en:"Reading Detail, Meeting Beauty",
@@ -1433,7 +1493,7 @@ var DATA = {
      tags:["生活美学","养气修心","同好同行"],
      tags_en:["Living Aesthetics","Cultivation","Kindred Company"],
      cta:"预约文化之旅",cta_en:"Book a Cultural Journey",
-     image:"./site-source/images/featured-culture.jpg"},
+     image:"./site-source/images/featured-culture.webp"},
     {id:4,
      tag:"亲子研学",tag_en:"Family Study Tour",tagUpp:"FAMILY STUDY TOUR",
      title:"天地之间，行知相长",title_en:"Learning in the Open",
@@ -1442,18 +1502,18 @@ var DATA = {
      tags:["实践求知","能力养成","知行合一"],
      tags_en:["Learning by Doing","Capability","Knowledge in Action"],
      cta:"开启行走课堂",cta_en:"Open the Outdoor Classroom",
-     image:"./site-source/images/featured-family.jpg"}
+     image:"./site-source/images/featured-family.webp"}
   ],
   about_us:{
     title:"关于丝路之家",title_en:"About Silk Road Family",
     slogan:"从丝路出发，与美好相逢。",slogan_en:"From the Silk Road, meet the beautiful.",
-    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色旅游服务品牌，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
-    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service brand. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
+    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色文旅服务商，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
+    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service provider. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
     tags:["风光旅居","商旅考察","文化交流","亲子研学"],
     tags_en:["Scenic Holidays","Business Inspection","Cultural Exchange","Family Study Tours"],
     media_cap:"以旅行为桥，让文化相遇",media_cap_en:"Bridging cultures through travel",
     more:"了解我们",more_en:"About Us",
-    image:"./site-source/images/about-hill.jpg",
+    image:"./site-source/images/about-hill.webp",
     advantage_title:"我们的优势",advantage_title_en:"Our Advantages",
     advantage_sub:"我们不仅是旅行服务商，",
     advantage_sub_en:"More than a travel service provider —",
@@ -1480,8 +1540,8 @@ var DATA = {
     title:"开始您的旅程",title_en:"Start Your Journey",
     desc:"分享您的旅行日期、团队规模和愿景，我们的专业顾问将协助您制定完美行程。",
     desc_en:"Share your travel dates, team size and vision, and our professional consultants will help you plan the perfect trip.",
-    address:"山东省诸城市舜德路159号",address_en:"No. 159, Shunde Road, Zhucheng City, Shandong Province",
-    phone:"+86 (20) 2829 9999",email:"info@safarark.com"
+    address:"北京市西城区西绒线胡同26号院1-13号1至2层02",address_en:"Unit 02, Floors 1-2, No. 1-13, Yard 26, Xirongxian Hutong, Xicheng District, Beijing",
+    phone:"+86 18563079286",email:"info@safarark.com"
   }
 };
 
@@ -1930,7 +1990,7 @@ document.addEventListener('keydown', function(e){
 document.getElementById('inquiry').addEventListener('submit', function(e){
   e.preventDefault();
   var zh = LANG === 'zh';
-  alert(zh ? '感谢您的需求，我们将尽快与您联系！' : 'Thank you for your inquiry, we will contact you soon!');
+  showOk(zh);
   this.reset();
   /* 自定义下拉 / 日历不走 reset()，手动清回 placeholder 状态 */
   closeDest(false); setDest('');
@@ -2026,6 +2086,61 @@ function setupParallax(){
 applyLocale();
 setupReveal();
 setupParallax();
+</script>
+
+<!-- ══ 提交成功弹窗：替代原生 alert（原生对话框固定出现在视口顶部且样式不可定制）══
+     居中偏上（视口 42% 处）卡片 + 品牌绿确定按钮，双语文案在打开时按当前语言写入 -->
+<style>
+.ok-mask{position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;
+  padding:24px; background:rgba(9,73,73,.45); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px)}
+.ok-mask[hidden]{display:none}
+.ok-card{background:#FDFCF7; border:1px solid rgba(9,73,73,.12); border-radius:12px;
+  max-width:360px; width:100%; padding:34px 30px 30px; text-align:center;
+  box-shadow:0 24px 60px -24px rgba(9,73,73,.55);
+  animation:okIn .28s cubic-bezier(.34,1.56,.64,1) both}
+/* 视口偏高时把卡片钉在 42% 高度附近，避免居中后视觉上「掉」到下半屏 */
+@media (min-height:720px){ .ok-mask{align-items:flex-start} .ok-card{margin-top:42vh; transform:translateY(-50%)} }
+@keyframes okIn{from{opacity:0; transform:translateY(14px) scale(.96)} to{opacity:1; transform:none}}
+@media (min-height:720px){ @keyframes okIn{from{opacity:0; transform:translateY(-50%) translateY(14px) scale(.96)} to{opacity:1; transform:translateY(-50%)}} }
+.ok-ico{display:flex; width:52px; height:52px; margin:0 auto 16px; border-radius:50%;
+  align-items:center; justify-content:center; background:rgba(9,73,73,.08)}
+.ok-ico svg{width:26px; height:26px; display:block; fill:none; stroke:#094949; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ok-title{margin:0; font-size:1.125rem; font-weight:700; color:#253230; letter-spacing:.02em}
+.ok-desc{margin:10px 0 0; font-size:.875rem; line-height:1.8; color:#5C635D}
+.ok-btn{margin-top:24px; background:#094949; color:#FDFCF7; border:0; border-radius:999px;
+  padding:10px 42px; font-size:.9375rem; font-weight:600; letter-spacing:.04em; cursor:pointer;
+  font-family:inherit; transition:background .25s ease, transform .25s ease, box-shadow .25s ease}
+.ok-btn:hover{background:#0E6F6F; transform:translateY(-1px); box-shadow:0 10px 22px -12px rgba(9,73,73,.6)}
+.ok-btn:focus-visible{outline:2px solid #CD7A36; outline-offset:2px}
+@media (prefers-reduced-motion:reduce){ .ok-card{animation:none} .ok-btn:hover{transform:none} }
+</style>
+<div class="ok-mask" id="okMask" hidden>
+  <div class="ok-card" role="alertdialog" aria-modal="true" aria-labelledby="okTitle" aria-describedby="okDesc">
+    <span class="ok-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.4-2.9 7.8-7 9-4.1-1.2-7-4.6-7-9V5.8L12 3z"/><path d="M9.2 12l2 2 3.6-3.8"/></svg>
+    </span>
+    <h3 class="ok-title" id="okTitle">提交成功</h3>
+    <p class="ok-desc" id="okDesc">感谢您的需求，我们将尽快与您联系！</p>
+    <button type="button" class="ok-btn" id="okBtn">确定</button>
+  </div>
+</div>
+<script>
+(function(){
+  var mask=document.getElementById('okMask'), btn=document.getElementById('okBtn');
+  var T={zh:{t:'提交成功',d:'感谢您的需求，我们将尽快与您联系！',b:'确定'},
+         en:{t:'Submission Received',d:'Thank you for your inquiry, we will contact you soon!',b:'OK'}};
+  window.showOk=function(zh){
+    var s=T[zh?'zh':'en'];
+    document.getElementById('okTitle').textContent=s.t;
+    document.getElementById('okDesc').textContent=s.d;
+    btn.textContent=s.b;
+    mask.hidden=false; btn.focus();
+  };
+  function hide(){ mask.hidden=true; }
+  btn.addEventListener('click',hide);
+  mask.addEventListener('click',function(e){ if(e.target===mask) hide(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!mask.hidden) hide(); });
+})();
 </script>
 </body>
 </html>

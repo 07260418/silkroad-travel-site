@@ -439,7 +439,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   width:min(1180px, 78vw); aspect-ratio:1921 / 874;
   /* 画面最上沿（远山轮廓）落在图高的 58.5% 处，所以 -58.5% 就是"轮廓压在卡片底边线上" */
   transform:translateY(-58.5%);
-  background:url('./site-source/images/advantage-desert-dunes.png') center / 100% 100% no-repeat;
+  background:url('./site-source/images/advantage-desert-dunes.webp') center / 100% 100% no-repeat;
   /* 新图本身偏灰、彩度低，.5 几乎看不见，故提到 .8；素材里已烘进右/底缘渐隐 */
   opacity:.8;
   pointer-events:none; z-index:0;
@@ -1090,7 +1090,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .pd-hero{
   position:relative; display:flex; align-items:center;
   min-height:clamp(320px,32vw,440px);
-  background:#0C1C18 url('./site-source/images/featured-scenic.jpg') center 58%/cover no-repeat;
+  background:#0C1C18 url('./site-source/images/featured-scenic.webp') center 58%/cover no-repeat;
   /* !important 覆盖 ≤640px 的通用 section{padding:56px !important}，给固定导航留位（实测 76px） */
   padding:calc(76px + clamp(40px,5.6vw,78px)) 0 clamp(40px,5.6vw,74px) !important;
 }
@@ -1294,11 +1294,12 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .dt-chip{
   display:inline-flex; align-items:baseline; margin:0 0 14px;
   padding:7px 15px 8px; border-radius:999px;
-  /* 亮色实心底：米白 #F1ECDF + 品牌橙字 #CD7A36，描边同步转橙系收边 */
-  background:#F1ECDF;
-  border:1px solid rgba(205,122,54,.42);
-  color:#CD7A36; font-size:.875rem; font-weight:600; letter-spacing:.05em; line-height:1;
-  box-shadow:0 8px 18px -10px rgba(0,0,0,.5);
+  /* 玻璃暗胶囊：半透明白底 + 毛玻璃融进大图，文字用茶金与 meta 小标同色系 */
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.38);
+  color:#F2D9A6; font-size:.875rem; font-weight:600; letter-spacing:.05em; line-height:1;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:0 8px 18px -10px rgba(0,0,0,.35);
 }
 .dt-hero-title{
   margin:0; font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
@@ -1342,12 +1343,18 @@ html,body{min-width:0 !important; overflow-x:hidden}
   font-size:1.25rem; font-weight:700; letter-spacing:.04em; line-height:1.4; color:#333;
 }
 .dt-rule{width:36px; height:2px; border-radius:2px; background:#CD7A36; margin:0 0 14px}
-.dt-sec-note{margin:12px 0 0; font-size:.875rem; line-height:1.9; color:#6B7A72}
+.dt-sec-note{margin:8px 0 0; font-size:.875rem; line-height:1.9; color:#6B7A72}
+
+/* 行程概览：标题组按需求整体移除，白卡只装行程长图并去内边距 —— 图铺满整框，
+   圆角/描边/投影由 .dt-itin-imgs 统一给 */
+.dt-sec--itin{background:transparent; border:0; box-shadow:none; padding:0}
 
 /* 行程海报图：顾问提供的行程长图，竖版一张接一张无缝拼成连续长卷
-   容器统一收圆角/描边/投影，单图不带装饰；两侧留白由 .dt-sec 的 padding 提供 */
+   容器统一收圆角/描边/投影，单图不带装饰；margin 归零保证与右侧速览卡顶部对齐 */
+/* hidden 属性会被下方 display 规则顶掉，导致空容器只剩上下描边（一条线）——显式补回 display:none */
+.dt-itin-imgs[hidden], .dt-itin-empty[hidden]{display:none}
 .dt-itin-imgs{
-  display:block; margin:22px 0 0;
+  display:block; margin:0;
   border:1px solid rgba(9,73,73,.12); border-radius:10px; overflow:hidden;
   box-shadow:0 12px 26px -18px rgba(9,73,73,.45);
 }
@@ -1374,6 +1381,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .dt-side-meta > div{display:grid; grid-template-columns:max-content minmax(0,1fr); gap:12px; align-items:baseline}
 .dt-side-meta dt{font-size:.875rem; line-height:1.6; color:#9A7440; letter-spacing:.02em; white-space:nowrap}
 .dt-side-meta dd{margin:0; font-size:.875rem; line-height:1.7; color:#4C544E; text-wrap:pretty}
+/* 日期区间整体换行保护（配合渲染端 nb()），hero meta 与侧栏通用 */
+.dt-hero-meta .nb, .dt-side-meta .nb{white-space:nowrap}
 .dt-side-cta{
   display:flex; align-items:center; justify-content:center;
   margin-top:20px; min-height:46px; padding:0 24px; border-radius:5px;
@@ -1398,15 +1407,86 @@ html,body{min-width:0 !important; overflow-x:hidden}
   font-size:clamp(1.25rem,2.4vw,1.75rem); font-weight:700; letter-spacing:.04em; color:#333;
 }
 .dt-missing p{margin:14px 0 0; font-size:.9375rem; line-height:2; color:#4C544E}
+.dt-missing .empty-art{display:block; margin:0 auto 12px}
 
 /* 减少动效 */
 @media (prefers-reduced-motion: reduce){
   .dt-hero-inner > *{animation:none}
   .pd-card,.pd-card:hover{transition:none; transform:none}
 }
+
+/* ── 缺省态：地图+放大镜插画（未找到线路 / 行程长图缺失），进场浮现 + 轻微摆动漂浮 ── */
+.empty-art{width:min(300px,64vw); height:auto; animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
+@keyframes emptyIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+@keyframes emptyFloat{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-7px) rotate(-1.2deg)}}
+/* 行程长图缺失时的空态文案 */
+.dt-itin-empty{display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(28px,4vw,48px) 20px}
+.dt-itin-empty p{margin:18px 0 0; font-size:.9375rem; line-height:1.9; color:#5C635D}
+.dt-itin-empty .empty-title{font-size:1.0625rem; font-weight:700; color:#253230; letter-spacing:.02em}
+@media (prefers-reduced-motion: reduce){ .empty-art{animation:none} }
 </style>
 
 <body>
+
+<!-- ══ 页面加载动效：地标插画轻微浮动 + 品牌绿进度条，资源就绪后整体淡出（≥700ms 保底展示）══ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-in">
+    <img class="boot-art" src="./site-source/images/loader-landmarks.webp" alt="" width="537" height="430">
+    <div class="boot-bar"><i id="bootFill"></i></div>
+  </div>
+</div>
+<style>
+/* 默认不显示：只有首屏真的慢（>500ms 未就绪）才淡入；站内跳转 / 同一会话内不再重复出现 */
+#boot{position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center;
+  background:#FDFCF7; opacity:0; pointer-events:none; transition:opacity .3s ease}
+#boot.show{opacity:1; pointer-events:auto}
+#boot.off{opacity:0; visibility:hidden; pointer-events:none}
+.boot-in{display:flex; flex-direction:column; align-items:center; width:min(320px,64vw)}
+.boot-art{width:100%; height:auto; animation:bootFloat 2.4s ease-in-out infinite}
+@keyframes bootFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+.boot-bar{width:72%; height:6px; margin-top:26px; border-radius:999px; background:#EAE6DA; overflow:hidden}
+.boot-bar i{display:block; height:100%; width:0; border-radius:inherit; background:#094949; transition:width .35s ease}
+@media (prefers-reduced-motion:reduce){ .boot-art{animation:none} }
+</style>
+<script>
+(function(){
+  var boot=document.getElementById('boot'), fill=document.getElementById('bootFill');
+  if(!boot) return;
+  var shown=false, finished=false, timer=null, arm=null, i=0, tShow=0;
+  var steps=[30,55,75];
+  function kill(){ if(boot.parentNode) boot.remove(); }
+  /* 同一会话已出现过一次 → 后续页面（含站内跳转）直接跳过。
+     file:// 下 sessionStorage 可能不可用，静默降级为「只按速度判断」 */
+  var seen=false;
+  try{ seen = sessionStorage.getItem('siteBootShown')==='1'; }catch(e){}
+  if(seen){ kill(); return; }
+
+  function done(){
+    if(finished) return; finished=true;
+    if(timer) clearInterval(timer); if(arm) clearTimeout(arm);
+    try{ sessionStorage.setItem('siteBootShown','1'); }catch(e){}
+    if(!shown){ kill(); return; }              /* 页面本来就快：从没亮过，直接撤，零闪烁 */
+    fill.style.width='100%';
+    setTimeout(function(){
+      boot.classList.add('off');
+      setTimeout(kill, 400);
+    }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
+  }
+
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  arm=setTimeout(function(){
+    if(finished || document.readyState==='complete') return;
+    shown=true; tShow=Date.now();
+    boot.classList.add('show');
+    timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
+  }, 500);
+
+  if(document.readyState==='complete') done();
+  else window.addEventListener('load', done);
+  setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
+})();
+</script>
+
 
 <div class="travel-home bg-gray-50" data-v-9fcfbb94>
 
@@ -1466,12 +1546,14 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <section class="dt-body" id="dtBody">
     <div class="dt-wrap dt-layout">
       <div class="dt-main">
-        <section class="dt-sec">
-          <span class="dt-rule" aria-hidden="true"></span>
-          <h2 class="dt-sec-title" id="dtItinTitle"></h2>
-          <p class="dt-sec-note" id="dtItinNote"></p>
+        <section class="dt-sec dt-sec--itin">
           <div class="dt-itin-imgs" id="dtItinImgs" hidden></div>
-        </section>
+          <div class="dt-itin-empty" id="dtItinEmpty" hidden>
+            <img class="empty-art" src="./site-source/images/empty-map.webp" alt="" width="739" height="344">
+            <p class="empty-title" id="dtItinEmptyTitle"></p>
+            <p id="dtItinEmptyDesc"></p>
+          </div>
+          </section>
       </div>
 
       <aside class="dt-side">
@@ -1487,6 +1569,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
   <!-- ══ ?p= 未匹配时的兜底 ══ -->
   <section class="pd-more dt-missing" id="dtMissing" hidden>
+    <img class="empty-art" src="./site-source/images/empty-map.webp" alt="" width="739" height="344">
     <h1 id="dtMissTitle"></h1>
     <p id="dtMissDesc"></p>
     <a class="pd-more-btn" href="product.html" id="dtMissBtn"></a>
@@ -1522,7 +1605,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <h4 class="mb-4 font-semibold text-white" data-i18n="nav.contact">联系我们</h4>
           <div class="space-y-2 text-sm">
             <p>info@safarark.com</p>
-            <p>+86 (20) 2829 9999</p>
+            <p>+86 18563079286</p>
           </div>
         </div>
 
@@ -1691,6 +1774,7 @@ var I18N = {
     "dt.crumbHome":"首页","dt.crumbProducts":"产品","dt.crumbAria":"面包屑导航",
     "dt.days":"行程天数","dt.for":"推荐人群","dt.when":"推荐时间","dt.cat":"产品分类",
     "dt.itinTitle":"行程概览","dt.itinNote":"以下为逐日行程模板，确认出行日期后，顾问会为您排出完整的每日安排。",
+    "dt.itinEmptyTitle":"行程详情整理中","dt.itinEmptyDesc":"该线路行程长图正在整理，您可先咨询顾问获取每日安排。",
     "dt.dayTitle":"安排待确认","dt.dayPh":"行程内容整理中",
     "dt.costTitle":"费用说明","dt.inTitle":"费用包含","dt.outTitle":"费用不含",
     "dt.in":[
@@ -1728,6 +1812,7 @@ var I18N = {
     "dt.crumbHome":"Home","dt.crumbProducts":"Products","dt.crumbAria":"Breadcrumb",
     "dt.days":"Duration","dt.for":"Recommended For","dt.when":"Best Time","dt.cat":"Category",
     "dt.itinTitle":"Itinerary Overview","dt.itinNote":"A day-by-day template. Once your travel dates are confirmed, a consultant will lay out the full daily schedule.",
+    "dt.itinEmptyTitle":"Itinerary coming soon","dt.itinEmptyDesc":"The route map is being prepared — ask your consultant for the daily schedule in the meantime.",
     "dt.dayTitle":"To be confirmed","dt.dayPh":"Details being finalised",
     "dt.costTitle":"What's Included","dt.inTitle":"Included","dt.outTitle":"Not Included",
     "dt.in":[
@@ -1768,6 +1853,10 @@ var P = (function(){
   return hit;
 })();
 
+/* nb()：日期区间「6-8 / 9–10 / Jun–Aug」包成整体，禁止连接号后换行（防手机端伪截断） */
+function nb(s){
+  return String(s).replace(/([A-Za-z0-9]+\s*[–—-]\s*[A-Za-z0-9]+)/g, '<span class="nb">$1</span>');
+}
 function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1812,11 +1901,7 @@ function renderDetail(){
 
   document.getElementById('dtHeroMeta').innerHTML =
       '<div><dt>' + t['dt.days'] + '</dt><dd>' + duration(P, zh) + '</dd></div>' +
-      '<div><dt>' + t['dt.when'] + '</dt><dd>' + esc(zh ? P.when : P.when_en) + '</dd></div>';
-
-  document.getElementById('dtItinTitle').textContent = t['dt.itinTitle'];
-  document.getElementById('dtItinNote').textContent  =
-      P.itin_note ? (zh ? P.itin_note : P.itin_note_en) : t['dt.itinNote'];
+      '<div><dt>' + t['dt.when'] + '</dt><dd>' + nb(esc(zh ? P.when : P.when_en)) + '</dd></div>';
 
   /* 行程海报图：顾问提供的行程长图，仅有图的产品显示。
      英文页不渲染——海报是中文成图，英文版后续由后台直接录入文本行程 */
@@ -1830,6 +1915,15 @@ function renderDetail(){
   } else {
     imgWrap.hidden = true;
     imgWrap.innerHTML = '';
+    /* 缺省态：中文页无行程长图时给出插画空态（英文页按设计整体不渲染行程区） */
+    var emptyBox = document.getElementById('dtItinEmpty');
+    if(zh){
+      emptyBox.hidden = false;
+      document.getElementById('dtItinEmptyTitle').textContent = t['dt.itinEmptyTitle'] || '行程详情整理中';
+      document.getElementById('dtItinEmptyDesc').textContent  = t['dt.itinEmptyDesc']  || '该线路行程长图正在整理，您可先咨询顾问获取每日安排。';
+    } else {
+      emptyBox.hidden = true;
+    }
   }
 
   /* 侧栏速览 */
@@ -1838,7 +1932,7 @@ function renderDetail(){
       '<div><dt>' + t['dt.cat']  + '</dt><dd>' + esc(zh ? P.tag : P.tag_en) + '</dd></div>' +
       '<div><dt>' + t['dt.days'] + '</dt><dd>' + duration(P, zh) + '</dd></div>' +
       '<div><dt>' + t['dt.for']  + '</dt><dd>' + esc(zh ? P.for_ : P.for_en) + '</dd></div>' +
-      '<div><dt>' + t['dt.when'] + '</dt><dd>' + esc(zh ? P.when : P.when_en) + '</dd></div>';
+      '<div><dt>' + t['dt.when'] + '</dt><dd>' + nb(esc(zh ? P.when : P.when_en)) + '</dd></div>';
   document.getElementById('dtCta').textContent  = t['dt.cta'];
   document.getElementById('dtBack').textContent = t['dt.back'];
 }
