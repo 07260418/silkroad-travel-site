@@ -1292,7 +1292,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
         <h1 class="bc-main" data-i18n="banner.main">畅游华夏胜境，悦享舒心旅程</h1>
         <p  class="bc-sub"  data-i18n="banner.l3">从山水到人文，从风光到礼遇</p>
         <p  class="bc-sub"  data-i18n="banner.l4">我们为您悉心安排，从容感受华夏魅力</p>
-        <a  href="product.html" class="bc-cta" data-i18n="banner.cta">即刻启程</a>
+        <a  href="#products" id="bannerCta" class="bc-cta" data-i18n="banner.cta">即刻启程</a>
       </div>
     </div>
   </section>
@@ -1698,6 +1698,19 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
   /* 平滑滚动（对不支持 scrollTo options 的浏览器降级） */
   if(!('scrollBehavior' in document.documentElement.style)){
     // 行为降级：默认跳转即可，无需额外处理
+  }
+
+  /* banner「即刻启程」→ 首页特色产品区（复用 goTo，落点让开 fixed header）
+     无 JS 时退化为原生 #products 锚点，靠 CSS scroll-margin-top 让位 */
+  var bannerCta = document.getElementById('bannerCta');
+  if(bannerCta){
+    bannerCta.addEventListener('click', function(e){
+      var target = document.getElementById('products');
+      if(!target) return;                    /* 兜底：区块不存在则按原生锚点走 */
+      e.preventDefault();
+      goTo('products');
+      if(history.replaceState) history.replaceState(null,'','#products');
+    });
   }
 })();
 
