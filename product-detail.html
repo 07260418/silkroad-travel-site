@@ -1323,6 +1323,9 @@ html,body{min-width:0 !important; overflow-x:hidden}
 @media (max-width:640px){
   .dt-hero{min-height:clamp(320px,62vw,430px)}
   .dt-hero::before{background:linear-gradient(180deg, rgba(8,28,24,.48) 0%, rgba(8,28,24,.66) 50%, rgba(8,28,24,.84) 100%)}
+  /* 手机端收紧 hero → 线路速览 的间距（默认 38+40=78px 太空）：hero 底 24 + 主体顶 20 ≈ 44px */
+  .dt-hero{padding-bottom:24px !important}
+  .dt-body{padding-top:20px !important}
 }
 
 /* ── 主体 ── */
