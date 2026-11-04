@@ -1248,6 +1248,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 }
 /* 日期区间整体换行保护（配合渲染端 nb()） */
 .pd-meta dd .nb{white-space:nowrap}
+/* 推荐时间按语义断句成整行块（配合渲染端 whenHtml()） */
+.pd-meta dd .when-line{display:block}
 .pd-empty{margin:32px 0 0; text-align:center; font-size:.9375rem; color:#6B7A72}
 
 /* 减少动效：关掉入场与图片缩放 */
@@ -1623,6 +1625,17 @@ function chipLabel(p, i, zh){
 function nb(s){
   return String(s).replace(/([A-Za-z0-9]+\s*[–—-]\s*[A-Za-z0-9]+(?:\s*月)?)/g, '<span class="nb">$1</span>');
 }
+/* whenHtml()：推荐时间多为「时间段+描述，时间段+描述」结构，宽度不够时仍会在短语中间断行
+   （实测「9-10 月」整体 50px 塞不进第一行剩余 46px，怎么调都还是会切）。
+   按中文逗号 / 英文句号切成整行块，每个时间段独占一行，任何宽度下断点都落在语义边界 */
+function whenHtml(s, zh){
+  var sep = zh ? '，' : '. ';
+  var parts = String(s).split(sep).filter(Boolean);
+  if(parts.length < 2) return nb(s);
+  return parts.map(function(p, i){
+    return '<span class="when-line">' + nb(p + (i < parts.length - 1 ? sep : '')) + '</span>';
+  }).join('');
+}
 function renderProducts(){
   var zh = LANG === 'zh';
   var t  = I18N[zh ? 'zh' : 'en'];
@@ -1658,7 +1671,7 @@ function renderProducts(){
                  '</div>' +
                  '<div class="pd-meta-row">' +
                    '<dt>' + (zh ? '推荐时间' : 'Best Time') + '</dt>' +
-                   '<dd>' + nb(zh ? p.when : p.when_en) + '</dd>' +
+                   '<dd>' + whenHtml(zh ? p.when : p.when_en, zh) + '</dd>' +
                  '</div>' +
                '</dl>' +
              '</div>' +
