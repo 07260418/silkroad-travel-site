@@ -589,13 +589,14 @@ html[lang="en"] .adv-eyebrow-en{display:none}
    英文态收窄字距，保住单行（字距本来就是为中文小标服务的） */
 html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 /* 卡题：与全站卡片标题同语言 —— 普惠体 700 / .03em 字距 / #333
-   （此前误用微软雅黑 + #28302B，与产品卡 .pd-card-title、产品行 .feat-title 不一致） */
+   （此前误用微软雅黑 + #28302B，与产品卡 .pd-card-title、产品行 .feat-title 不一致）。
+   字号向特色产品卡靠拢统一：1.125rem → 1.25rem（产品大标题 .feat-title 保持不动） */
 .adv-cf-cap h3{
   font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
-  font-size:1.125rem; font-weight:700; letter-spacing:.03em; line-height:1.45; color:#333;
+  font-size:1.25rem; font-weight:700; letter-spacing:.03em; line-height:1.45; color:#333;
 }
-/* 卡内副行：对齐「卡内小字统一 14px（.875rem）」规范，正文副色 #4C544E（同 .feat-desc / .pd-card-sub 系） */
-.adv-cf-cap p{margin-top:6px; font-size:.875rem; line-height:1.7; color:#4C544E}
+/* 卡内副行：与特色产品描述 .feat-desc 完全同档 .9375rem，行高 1.8 兼顾小卡空间 */
+.adv-cf-cap p{margin-top:7px; font-size:.9375rem; line-height:1.8; color:#4C544E}
 
 /* 箭头：回到 44px 的常规大小，垂直居中，压在左右最外侧卡片（羽化区那张）的边上。
    住在 .adv-cf-wrap 里而不是舞台里 —— 舞台两端有 56px 羽化遮罩，
@@ -637,10 +638,10 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 @media (max-width:640px){
   .adv-cf{--cw:258px; --ch:404px; --fade:44px; height:calc(var(--ch) + 40px)}
   .adv-cf-cap{min-height:118px; padding:0 15px}
-  /* 小屏整体降一档，但档位关系与小卡一致：小标 12 / 卡题 16 / 副行 13 */
+  /* 小屏整体降一档，但档位关系与小卡一致：小标 12 / 卡题 17 / 副行 14（副行与桌面同向产品卡对齐） */
   .adv-cf-meta{font-size:.75rem; margin-bottom:5px}
-  .adv-cf-cap h3{font-size:1rem}
-  .adv-cf-cap p{font-size:.8125rem; margin-top:5px}
+  .adv-cf-cap h3{font-size:1.0625rem}
+  .adv-cf-cap p{font-size:.875rem; margin-top:5px}
   .adv-cf-no{font-size:34px; top:6px; right:12px}
   .adv-cf-foot{margin-top:18px}
   /* 小屏舞台只剩 327 宽，箭头缩到 38px、贴到舞台两端，仍压在最外侧卡边上 */
