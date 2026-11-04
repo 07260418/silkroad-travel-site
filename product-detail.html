@@ -1357,6 +1357,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
    容器统一收圆角/描边/投影，单图不带装饰；margin 归零保证与右侧速览卡顶部对齐 */
 /* hidden 属性会被下方 display 规则顶掉，导致空容器只剩上下描边（一条线）——显式补回 display:none */
 .dt-itin-imgs[hidden], .dt-itin-empty[hidden]{display:none}
+/* hero/body 初始 hidden（渲染前不露骨架）：dt-hero 的 display:flex 会顶掉 hidden，显式补回 */
+.dt-hero[hidden], .dt-body[hidden]{display:none}
 .dt-itin-imgs{
   display:block; margin:0;
   border:1px solid rgba(9,73,73,.12); border-radius:10px; overflow:hidden;
@@ -1535,8 +1537,10 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <a href="tailor.html"         class="nav-link-m" data-i18n="nav.tailor">定制服务</a>
     </div>
   </header>
-  <!-- ══ 页头：线路大图 + 面包屑 + 标题 + 速览 ══ -->
-  <section class="dt-hero" id="dtHero">
+  <!-- ══ 页头：线路大图 + 面包屑 + 标题 + 速览 ══
+       初始 hidden：products.js 渲染前整个骨架不可见，避免暴露空 hero（分隔细线/空胶囊）
+       与空速览卡；渲染完成由 renderDetail() 按 ?p= 匹配结果解除 -->
+  <section class="dt-hero" id="dtHero" hidden>
     <div class="dt-hero-inner">
       <nav class="dt-crumb" id="dtCrumb"></nav>
       <p class="dt-chip" id="dtTag"></p>
@@ -1547,7 +1551,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   </section>
 
   <!-- ══ 主体：行程 / 费用 / 须知 + 侧栏咨询 ══ -->
-  <section class="dt-body" id="dtBody">
+  <section class="dt-body" id="dtBody" hidden>
     <div class="dt-wrap dt-layout">
       <div class="dt-main">
         <section class="dt-sec dt-sec--itin">
