@@ -1237,7 +1237,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
   <!-- ══ HEADER：fixed + 实底 #FFFFFF，覆盖在全屏视频之上 ══ -->
   <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="#top" class="logo-link" aria-label="丝路之家 Silk Road Family">
+      <a href="#top" class="logo-link" data-nav="top" aria-label="丝路之家 Silk Road Family">
         <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
       </a>
 
@@ -1637,7 +1637,11 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
       var target = this.getAttribute('data-nav');
       setActive(target);
       goTo(target);
-      if(history.replaceState) history.replaceState(null,'','#'+target);
+      /* 回首页不往地址栏写 #top：保持干净 URL（#top 仅浏览器保留字滚顶，页面上无此锚点） */
+      if(history.replaceState){
+        if(target === 'top') history.replaceState(null, '', location.pathname + location.search);
+        else history.replaceState(null, '', '#' + target);
+      }
     });
   });
 
