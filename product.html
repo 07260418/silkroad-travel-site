@@ -1135,13 +1135,13 @@ html,body{min-width:0 !important; overflow-x:hidden}
       卡片 #FDFCF7 对底亮度比 1.11（原纸白底上仅 1.04），描边由 .15 收回 .12 ── */
 .pd-body{
   background:#F3F0E8;
-  padding:clamp(40px,5vw,68px) 0 clamp(56px,7vw,88px) !important;
+  padding:clamp(30px,4vw,52px) 0 clamp(44px,6vw,72px) !important;
 }
 .pd-wrap{max-width:1240px; margin:0 auto; padding:0 clamp(20px,4.6vw,60px)}
 
 /* 分类胶囊：未选=暖白描边，选中=墨绿实底白字（对比度 9.5:1，AA/AAA 均达标） */
 /* ── 列表区卖点标题：眉题 + 大标题 + 一句说明，居中在分类条上方 ── */
-.pd-intro{text-align:center; margin-bottom:clamp(26px,3vw,40px)}
+.pd-intro{text-align:center; margin-bottom:clamp(20px,2.4vw,30px)}
 .pd-intro-eyebrow{
   margin:0; font-size:.8125rem; font-weight:600; letter-spacing:.32em; text-transform:uppercase;
   color:#CD7A36;
@@ -1161,7 +1161,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 /* 分类切换：整条浅底胶囊内嵌选项（分段式），选中项墨绿实底白字 */
 .pd-cats{
   display:flex; align-items:center; gap:4px;
-  width:max-content; max-width:100%; margin:0 auto clamp(24px,3vw,36px);
+  width:max-content; max-width:100%; margin:0 auto clamp(18px,2.2vw,28px);
   padding:5px; border-radius:999px;
   background:rgba(9,73,73,.07);
   overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
@@ -1183,7 +1183,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 @media (min-width:640px){ .pd-cats{overflow-x:visible} }
 
 /* 卡片网格：1 → 2（≥640）→ 3（≥1024）列 */
-.pd-grid{display:grid; gap:clamp(18px,2.2vw,28px); grid-template-columns:minmax(0,1fr)}
+.pd-grid{display:grid; gap:clamp(14px,1.8vw,22px); grid-template-columns:minmax(0,1fr)}
 @media (min-width:640px){ .pd-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 @media (min-width:1024px){ .pd-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
 
@@ -1320,16 +1320,20 @@ html,body{min-width:0 !important; overflow-x:hidden}
     }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
   }
 
-  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰。
+     注意：判据是「内容已可交互」（DOMContentLoaded），不是 window.load ——
+     load 会被 banner 视频等大资源拖住，导致页面已经画好却又被加载页盖住（首页闪一下） */
   arm=setTimeout(function(){
-    if(finished || document.readyState==='complete') return;
+    if(finished || document.readyState!=='loading') return;
     shown=true; tShow=Date.now();
     boot.classList.add('show');
     timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
   }, 500);
 
-  if(document.readyState==='complete') done();
-  else window.addEventListener('load', done);
+  /* 内容可交互即撤掉加载页：不等 load（视频/大图不阻塞首屏可见） */
+  if(document.readyState!=='loading') done();
+  else document.addEventListener('DOMContentLoaded', done);
+  window.addEventListener('load', done);       /* 兜底：DOMContentLoaded 前 load 就绪的情况 */
   setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
 })();
 </script>
@@ -1407,7 +1411,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
         <div>
           <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
-          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于穆斯林友好旅游服务的国际旅行社</p>
+          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
         <div>
@@ -1556,7 +1560,7 @@ var I18N = {
        "pd.introDesc":"从风光度假到文化研修，以不同主题深入目的地，遇见旅途真正的意义。",
        "pd.cats":"产品分类","pd.empty":"该分类暂无产品","pd.for":"推荐人群","pd.when":"推荐时间",
        "pd.detail":"详情","pd.detailOf":"查看详情：",
-       "footer.slogan":"专注于穆斯林友好旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
+       "footer.slogan":"专注于旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
        "footer.s1":"定制穆斯林友好旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
   en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
        "pd.eyebrow":"Products","pd.title":"Featured Products",
@@ -1565,7 +1569,7 @@ var I18N = {
        "pd.introDesc":"From scenic escapes to cultural immersions — go deeper by theme, and meet the true meaning of travel.",
        "pd.cats":"Product Categories","pd.empty":"No products in this category yet","pd.for":"For","pd.when":"Best Time",
        "pd.detail":"Details","pd.detailOf":"View details: ",
-       "footer.slogan":"International travel agency specializing in Muslim-friendly travel services","footer.links":"Quick Links","footer.services":"Our Services",
+       "footer.slogan":"International travel agency specializing in travel services","footer.links":"Quick Links","footer.services":"Our Services",
        "footer.s1":"Customized Muslim-Friendly Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved." }
 };
 

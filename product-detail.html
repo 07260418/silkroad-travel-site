@@ -1479,16 +1479,20 @@ html,body{min-width:0 !important; overflow-x:hidden}
     }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
   }
 
-  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰。
+     注意：判据是「内容已可交互」（DOMContentLoaded），不是 window.load ——
+     load 会被 banner 视频等大资源拖住，导致页面已经画好却又被加载页盖住（首页闪一下） */
   arm=setTimeout(function(){
-    if(finished || document.readyState==='complete') return;
+    if(finished || document.readyState!=='loading') return;
     shown=true; tShow=Date.now();
     boot.classList.add('show');
     timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
   }, 500);
 
-  if(document.readyState==='complete') done();
-  else window.addEventListener('load', done);
+  /* 内容可交互即撤掉加载页：不等 load（视频/大图不阻塞首屏可见） */
+  if(document.readyState!=='loading') done();
+  else document.addEventListener('DOMContentLoaded', done);
+  window.addEventListener('load', done);       /* 兜底：DOMContentLoaded 前 load 就绪的情况 */
   setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
 })();
 </script>
@@ -1588,7 +1592,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
         <div>
           <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
-          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于穆斯林友好旅游服务的国际旅行社</p>
+          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
         <div>
@@ -1813,7 +1817,7 @@ var I18N = {
   },
   en:{
     "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
-    "footer.slogan":"International travel agency specializing in Muslim-friendly travel services",
+    "footer.slogan":"International travel agency specializing in travel services",
     "footer.links":"Quick Links","footer.services":"Our Services",
     "footer.s1":"Customized Muslim-Friendly Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved.",
 
@@ -1911,8 +1915,8 @@ function renderDetail(){
       '<div><dt>' + t['dt.days'] + '</dt><dd>' + duration(P, zh) + '</dd></div>' +
       '<div><dt>' + t['dt.when'] + '</dt><dd>' + nb(esc(zh ? P.when : P.when_en)) + '</dd></div>';
 
-  /* 行程海报图：顾问提供的行程长图，仅有图的产品显示。
-     英文页不渲染——海报是中文成图，英文版后续由后台直接录入文本行程 */
+  /* 行程海报图：顾问提供的行程长图（中文成图），仅中文页展示；
+     英文页暂无文本行程 → 与中文无图时一致，走插画缺省态，不留空白区块 */
   var itinImgs = zh ? (P.itin_imgs || []) : [];
   var imgWrap = document.getElementById('dtItinImgs');
   if(itinImgs.length){
@@ -1923,15 +1927,11 @@ function renderDetail(){
   } else {
     imgWrap.hidden = true;
     imgWrap.innerHTML = '';
-    /* 缺省态：中文页无行程长图时给出插画空态（英文页按设计整体不渲染行程区） */
+    /* 缺省态：无行程长图时给出插画空态（中英双语），避免整块留白 */
     var emptyBox = document.getElementById('dtItinEmpty');
-    if(zh){
-      emptyBox.hidden = false;
-      document.getElementById('dtItinEmptyTitle').textContent = t['dt.itinEmptyTitle'] || '行程详情整理中';
-      document.getElementById('dtItinEmptyDesc').textContent  = t['dt.itinEmptyDesc']  || '该线路行程长图正在整理，您可先咨询顾问获取每日安排。';
-    } else {
-      emptyBox.hidden = true;
-    }
+    emptyBox.hidden = false;
+    document.getElementById('dtItinEmptyTitle').textContent = t['dt.itinEmptyTitle'];
+    document.getElementById('dtItinEmptyDesc').textContent  = t['dt.itinEmptyDesc'];
   }
 
   /* 侧栏速览 */

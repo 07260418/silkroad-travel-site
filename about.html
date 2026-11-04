@@ -1627,16 +1627,20 @@ html,body{min-width:0 !important; overflow-x:hidden}
     }, Math.max(0, 400-(Date.now()-tShow)));   /* 亮过就至少展示 400ms，避免一闪而过 */
   }
 
-  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰 */
+  /* 首屏 500ms 内就绪的视为「不需要等」：完全不亮相，秒开页零打扰。
+     注意：判据是「内容已可交互」（DOMContentLoaded），不是 window.load ——
+     load 会被 banner 视频等大资源拖住，导致页面已经画好却又被加载页盖住（首页闪一下） */
   arm=setTimeout(function(){
-    if(finished || document.readyState==='complete') return;
+    if(finished || document.readyState!=='loading') return;
     shown=true; tShow=Date.now();
     boot.classList.add('show');
     timer=setInterval(function(){ if(i<steps.length) fill.style.width=steps[i++]+'%'; }, 320);
   }, 500);
 
-  if(document.readyState==='complete') done();
-  else window.addEventListener('load', done);
+  /* 内容可交互即撤掉加载页：不等 load（视频/大图不阻塞首屏可见） */
+  if(document.readyState!=='loading') done();
+  else document.addEventListener('DOMContentLoaded', done);
+  window.addEventListener('load', done);       /* 兜底：DOMContentLoaded 前 load 就绪的情况 */
   setTimeout(done, 3500);                      /* 兜底：网络卡死也不锁屏 */
 })();
 </script>
@@ -1769,7 +1773,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
         <div>
           <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
-          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于穆斯林友好旅游服务的国际旅行社</p>
+          <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
         <div>
@@ -2045,7 +2049,7 @@ var I18N = {
        "form.namePh":"我们该如何称呼您","form.datePh":"请输入预计出行时间","form.destPh":"选择您向往的目的地",
        "form.daysPh":"预计停留天数","form.sizePh":"预计出行人数","form.reqPh":"旅行偏好、饮食需求、特别安排……我们愿意倾听更多",
        "form.waPh":"请输入国际区号及账号","form.emailPh":"您的电子邮箱地址",
-       "footer.slogan":"专注于穆斯林友好旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
+       "footer.slogan":"专注于旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
        "footer.s1":"定制穆斯林友好旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
   en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
        "banner.en":"Muslim-Friendly China Tourism","banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
@@ -2064,7 +2068,7 @@ var I18N = {
        "form.namePh":"How should we address you","form.datePh":"Enter expected travel date","form.destPh":"Select your destination",
        "form.daysPh":"Planned days","form.sizePh":"Number of travelers","form.reqPh":"Travel preferences, dietary needs, special arrangements — we'd love to hear more",
        "form.waPh":"Country code and account","form.emailPh":"Your email address",
-       "footer.slogan":"International travel agency specializing in Muslim-friendly travel services","footer.links":"Quick Links","footer.services":"Our Services",
+       "footer.slogan":"International travel agency specializing in travel services","footer.links":"Quick Links","footer.services":"Our Services",
        "footer.s1":"Customized Muslim-Friendly Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved." }
 };
 
