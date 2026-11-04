@@ -1350,7 +1350,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
 /* 行程概览：标题组按需求整体移除，白卡只装行程长图并去内边距 —— 图铺满整框，
    圆角/描边/投影由 .dt-itin-imgs 统一给 */
-.dt-sec--itin{background:transparent; border:0; box-shadow:none; padding:0}
+/* padding 需 !important：≤640px 有通用 section{padding:56px !important}，否则行程图上会多出 56px 空隙 */
+.dt-sec--itin{background:transparent; border:0; box-shadow:none; padding:0 !important}
 
 /* 行程海报图：顾问提供的行程长图，竖版一张接一张无缝拼成连续长卷
    容器统一收圆角/描边/投影，单图不带装饰；margin 归零保证与右侧速览卡顶部对齐 */
