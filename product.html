@@ -1263,7 +1263,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .empty-state{grid-column:1/-1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(40px,6vw,72px) 20px}
 .empty-art{position:relative; width:min(238px,52vw); animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
 .empty-art .empty-art-map{display:block; width:100%; height:auto}
-.empty-art .empty-art-lens{position:absolute; left:41%; top:4%; width:34%; height:auto;
+.empty-art .empty-art-lens{display:block; position:absolute; left:41%; top:4%; width:34%; height:auto;
   filter:drop-shadow(0 6px 8px rgba(31,53,45,.18));
   animation:lensSweep 6.5s ease-in-out .8s infinite}
 @keyframes lensSweep{
@@ -1661,7 +1661,7 @@ function renderProducts(){
       '<div class="empty-state">' +
         '<span class="empty-art" aria-hidden="true">' +
           '<img class="empty-art-map" src="./site-source/images/empty-map-v2.webp" alt="" width="320" height="149">' +
-          '<img class="empty-art-lens" src="./site-source/images/empty-lens.svg" alt="" width="120" height="120">' +
+          '<svg class=\"empty-art-lens\" viewBox=\"0 0 120 120\" aria-hidden=\"true\"><circle cx=\"52\" cy=\"50\" r=\"33\" fill=\"rgba(43,82,67,.06)\" stroke=\"#2B5243\" stroke-width=\"12\"/><path d=\"M33 42 A 20 20 0 0 1 46 30\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"6\" stroke-linecap=\"round\" opacity=\".85\"/><path d=\"M78 76 L101 99\" stroke=\"#2B5243\" stroke-width=\"14\" stroke-linecap=\"round\"/></svg>' +
         '</span>' +
         '<p class="empty-title">'  + (zh ? '没有找到相关线路' : 'No routes found') + '</p>' +
         '<p class="empty-desc">'   + (zh ? '试试浏览全部产品，或告诉我们您的需求，顾问将为您量身定制。'
