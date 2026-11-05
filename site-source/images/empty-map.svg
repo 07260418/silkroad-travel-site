@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 226" role="img" aria-hidden="true">
+  <defs>
+    <linearGradient id="em-foldL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3E5C4F" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#3E5C4F" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="em-foldR" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#3E5C4F" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#3E5C4F" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="em-clip">
+      <path d="M92 82 L188 60 L288 60 L384 82 L384 200 L288 220 L188 220 L92 200 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- 地面线 -->
+  <path d="M58 219 H422" stroke="#C9D2CB" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+  <!-- 云 -->
+  <g fill="#E9EEE9">
+    <ellipse cx="76" cy="42" rx="26" ry="10"/>
+    <ellipse cx="64" cy="36" rx="14" ry="9"/>
+    <ellipse cx="86" cy="35" rx="12" ry="8"/>
+    <ellipse cx="428" cy="92" rx="22" ry="9"/>
+    <ellipse cx="418" cy="87" rx="12" ry="8"/>
+    <ellipse cx="437" cy="86" rx="10" ry="7"/>
+  </g>
+
+  <!-- 两侧小横线装饰 -->
+  <g stroke="#BFCAC2" stroke-width="5" stroke-linecap="round">
+    <path d="M30 120 H46"/>
+    <path d="M436 148 H452"/>
+  </g>
+
+  <!-- 地图（三折页） -->
+  <path d="M92 82 L188 60 L288 60 L384 82 L384 200 L288 220 L188 220 L92 200 Z"
+        fill="#F8F7F1" stroke="#3E5C4F" stroke-width="5" stroke-linejoin="round"/>
+  <g clip-path="url(#em-clip)">
+    <!-- 中折页微暗 -->
+    <path d="M188 58 H288 V222 H188 Z" fill="#ECEFE7"/>
+    <!-- 地块色块 -->
+    <g fill="#CBD8D0">
+      <path d="M98 108 C120 92 150 96 162 112 C174 128 168 152 150 166 C132 180 106 176 98 158 C92 144 90 122 98 108 Z"/>
+      <path d="M196 84 C220 90 232 112 228 140 C224 168 210 190 196 198 Z" opacity=".8"/>
+      <path d="M300 96 C322 84 352 92 362 112 C372 132 366 156 348 168 C330 180 306 174 300 156 Z"/>
+    </g>
+    <g fill="#DCE4DD">
+      <ellipse cx="122" cy="190" rx="22" ry="12"/>
+      <ellipse cx="352" cy="190" rx="18" ry="10"/>
+    </g>
+    <!-- 虚线路线 -->
+    <path d="M104 178 C140 150 160 168 186 138 C210 110 240 152 262 128 C284 106 318 134 352 118"
+          fill="none" stroke="#A9BBB1" stroke-width="4" stroke-linecap="round" stroke-dasharray="0.5 11"/>
+    <!-- 折痕阴影 -->
+    <rect x="188" y="56" width="28" height="168" fill="url(#em-foldL)"/>
+    <rect x="260" y="56" width="28" height="168" fill="url(#em-foldR)"/>
+  </g>
+  <g stroke="#3E5C4F" stroke-width="3" opacity=".35">
+    <path d="M188 60 V220"/>
+    <path d="M288 60 V220"/>
+  </g>
+
+  <!-- 左下植物 -->
+  <g fill="none" stroke="#9DB5A4" stroke-width="4" stroke-linecap="round">
+    <path d="M62 216 C58 196 54 176 50 158"/>
+  </g>
+  <g fill="#B7C9BC">
+    <path d="M50 160 C36 152 30 138 34 126 C46 130 52 144 50 160 Z"/>
+    <path d="M60 198 C46 194 38 184 38 172 C50 174 58 184 60 198 Z"/>
+  </g>
+  <g fill="#C4D5C9">
+    <path d="M56 172 C68 164 74 150 70 138 C58 142 52 156 56 172 Z"/>
+    <path d="M62 206 C74 202 82 192 82 180 C70 182 64 192 62 206 Z"/>
+  </g>
+
+  <!-- 右下小灌木 -->
+  <path d="M400 218 C398 196 410 184 422 184 C436 184 444 198 442 218 Z" fill="#CBD8D0"/>
+  <path d="M421 216 C420 204 424 196 430 190" fill="none" stroke="#9DB5A4" stroke-width="3" stroke-linecap="round"/>
+</svg>

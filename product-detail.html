@@ -1421,15 +1421,26 @@ html,body{min-width:0 !important; overflow-x:hidden}
   .pd-card,.pd-card:hover{transition:none; transform:none}
 }
 
-/* ── 缺省态：地图+放大镜插画（未找到线路 / 行程长图缺失），进场浮现 + 轻微摆动漂浮 ── */
-.empty-art{width:min(238px,52vw); height:auto; animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
+/* ── 缺省态：地图+放大镜双层 SVG（未找到线路 / 行程长图缺失），地图轻摆漂浮 + 放大镜周期扫视 ── */
+.empty-art{position:relative; width:min(238px,52vw); animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
+.empty-art .empty-art-map{display:block; width:100%; height:auto}
+.empty-art .empty-art-lens{position:absolute; left:41%; top:4%; width:34%; height:auto;
+  filter:drop-shadow(0 6px 8px rgba(31,53,45,.18));
+  animation:lensSweep 6.5s ease-in-out .8s infinite}
+@keyframes lensSweep{
+  0%   {transform:translate(-18%,-10%) rotate(-12deg)}
+  30%  {transform:translate(-6%,4%) rotate(-5deg)}
+  58%  {transform:translate(16%,-8%) rotate(7deg)}
+  80%  {transform:translate(16%,-8%) rotate(7deg)}
+  100% {transform:translate(-18%,-10%) rotate(-12deg)}
+}
 @keyframes emptyIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
 @keyframes emptyFloat{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-7px) rotate(-1.2deg)}}
 /* 行程长图缺失时的空态文案 */
 .dt-itin-empty{display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(28px,4vw,48px) 20px}
 .dt-itin-empty p{margin:18px 0 0; font-size:.9375rem; line-height:1.9; color:#5C635D}
 .dt-itin-empty .empty-title{font-size:1.0625rem; font-weight:700; color:#253230; letter-spacing:.02em}
-@media (prefers-reduced-motion: reduce){ .empty-art{animation:none} }
+@media (prefers-reduced-motion: reduce){ .empty-art,.empty-art .empty-art-lens{animation:none} }
 </style>
 
 <body>
@@ -1561,7 +1572,10 @@ html,body{min-width:0 !important; overflow-x:hidden}
         <section class="dt-sec dt-sec--itin">
           <div class="dt-itin-imgs" id="dtItinImgs" hidden></div>
           <div class="dt-itin-empty" id="dtItinEmpty" hidden>
-            <img class="empty-art" src="./site-source/images/empty-map.webp" alt="" width="739" height="344">
+            <span class="empty-art" aria-hidden="true">
+              <img class="empty-art-map" src="./site-source/images/empty-map.svg" alt="" width="480" height="226">
+              <img class="empty-art-lens" src="./site-source/images/empty-lens.svg" alt="" width="120" height="120">
+            </span>
             <p class="empty-title" id="dtItinEmptyTitle"></p>
             <p id="dtItinEmptyDesc"></p>
           </div>
@@ -1581,7 +1595,10 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
   <!-- ══ ?p= 未匹配时的兜底 ══ -->
   <section class="pd-more dt-missing" id="dtMissing" hidden>
-    <img class="empty-art" src="./site-source/images/empty-map.webp" alt="" width="739" height="344">
+    <span class="empty-art" aria-hidden="true">
+      <img class="empty-art-map" src="./site-source/images/empty-map.svg" alt="" width="480" height="226">
+      <img class="empty-art-lens" src="./site-source/images/empty-lens.svg" alt="" width="120" height="120">
+    </span>
     <h1 id="dtMissTitle"></h1>
     <p id="dtMissDesc"></p>
     <a class="pd-more-btn" href="product.html" id="dtMissBtn"></a>
