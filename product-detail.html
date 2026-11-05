@@ -1440,6 +1440,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .dt-itin-empty{display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(28px,4vw,48px) 20px}
 .dt-itin-empty p{margin:18px 0 0; font-size:.9375rem; line-height:1.9; color:#5C635D}
 .dt-itin-empty .empty-title{font-size:1.0625rem; font-weight:700; color:#253230; letter-spacing:.02em}
+.dt-itin-empty .empty-title + p{margin-top:16px}
 @media (prefers-reduced-motion: reduce){ .empty-art,.empty-art .empty-art-lens{animation:none} }
 </style>
 
@@ -1573,7 +1574,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <div class="dt-itin-imgs" id="dtItinImgs" hidden></div>
           <div class="dt-itin-empty" id="dtItinEmpty" hidden>
             <span class="empty-art" aria-hidden="true">
-              <img class="empty-art-map" src="./site-source/images/empty-map.svg" alt="" width="480" height="226">
+              <img class="empty-art-map" src="./site-source/images/empty-map-v2.webp" alt="" width="320" height="149">
               <img class="empty-art-lens" src="./site-source/images/empty-lens.svg" alt="" width="120" height="120">
             </span>
             <p class="empty-title" id="dtItinEmptyTitle"></p>
@@ -1596,7 +1597,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <!-- ══ ?p= 未匹配时的兜底 ══ -->
   <section class="pd-more dt-missing" id="dtMissing" hidden>
     <span class="empty-art" aria-hidden="true">
-      <img class="empty-art-map" src="./site-source/images/empty-map.svg" alt="" width="480" height="226">
+      <img class="empty-art-map" src="./site-source/images/empty-map-v2.webp" alt="" width="320" height="149">
       <img class="empty-art-lens" src="./site-source/images/empty-lens.svg" alt="" width="120" height="120">
     </span>
     <h1 id="dtMissTitle"></h1>
@@ -1806,7 +1807,7 @@ var I18N = {
     "dt.crumbHome":"首页","dt.crumbProducts":"产品","dt.crumbAria":"面包屑导航",
     "dt.days":"行程天数","dt.for":"推荐人群","dt.when":"推荐时间","dt.cat":"产品分类",
     "dt.itinTitle":"行程概览","dt.itinNote":"以下为逐日行程模板，确认出行日期后，顾问会为您排出完整的每日安排。",
-    "dt.itinEmptyTitle":"行程详情整理中","dt.itinEmptyDesc":"该线路行程长图正在整理，您可先咨询顾问获取每日安排。",
+    "dt.itinEmptyTitle":"暂无详情","dt.itinEmptyDesc":"您可先咨询顾问获取每日安排。",
     "dt.dayTitle":"安排待确认","dt.dayPh":"行程内容整理中",
     "dt.costTitle":"费用说明","dt.inTitle":"费用包含","dt.outTitle":"费用不含",
     "dt.in":[
@@ -1844,7 +1845,7 @@ var I18N = {
     "dt.crumbHome":"Home","dt.crumbProducts":"Products","dt.crumbAria":"Breadcrumb",
     "dt.days":"Duration","dt.for":"Recommended For","dt.when":"Best Time","dt.cat":"Category",
     "dt.itinTitle":"Itinerary Overview","dt.itinNote":"A day-by-day template. Once your travel dates are confirmed, a consultant will lay out the full daily schedule.",
-    "dt.itinEmptyTitle":"Itinerary coming soon","dt.itinEmptyDesc":"The route map is being prepared — ask your consultant for the daily schedule in the meantime.",
+    "dt.itinEmptyTitle":"No details yet","dt.itinEmptyDesc":"Ask your consultant for the daily schedule.",
     "dt.dayTitle":"To be confirmed","dt.dayPh":"Details being finalised",
     "dt.costTitle":"What's Included","dt.inTitle":"Included","dt.outTitle":"Not Included",
     "dt.in":[
