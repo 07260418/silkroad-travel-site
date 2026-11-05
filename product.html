@@ -1261,7 +1261,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 
 /* ── 缺省态：无匹配线路时的空状态（地图+放大镜插画，进场浮现 + 轻微摆动漂浮）── */
 .empty-state{grid-column:1/-1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:clamp(40px,6vw,72px) 20px}
-.empty-art{width:min(300px,64vw); height:auto; animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
+.empty-art{width:min(238px,52vw); height:auto; animation:emptyIn .55s ease both, emptyFloat 3.2s ease-in-out .55s infinite}
 @keyframes emptyIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
 @keyframes emptyFloat{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-7px) rotate(-1.2deg)}}
 .empty-title{margin:20px 0 0; font-size:1.0625rem; font-weight:700; color:#253230; letter-spacing:.02em}
