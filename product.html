@@ -755,8 +755,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
   overflow:hidden;
 }
 .ct-wrap{
-  max-width:1240px; margin:0 auto;
-  padding:clamp(52px,7vw,104px) clamp(20px,4.6vw,60px);
+  max-width:1280px; margin:0 auto;
+  padding:clamp(52px,7vw,104px) 24px;
   display:grid; grid-template-columns:1fr; gap:clamp(30px,4vw,52px);
   align-items:center;
 }
@@ -1034,6 +1034,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 }
 @media (max-width:640px){
   .max-w-7xl.px-6{padding-left:16px !important; padding-right:16px !important}
+  /* 内页大容器：小屏与导航同 16px，保证内容边缘与 logo/菜单对齐 */
+  .pd-wrap, .pd-hero-inner, .dt-wrap, .dt-hero-inner, .ct-wrap{padding-left:16px !important; padding-right:16px !important}
   section{padding-top:56px !important; padding-bottom:56px !important}
   footer{padding-top:48px !important; padding-bottom:48px !important}
   .mb-16{margin-bottom:32px !important}
@@ -1103,7 +1105,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 }
 .pd-hero-inner{
   position:relative; z-index:1; width:100%;
-  max-width:1240px; margin:0 auto; padding:0 clamp(20px,4.6vw,60px);
+  max-width:1280px; margin:0 auto; padding:0 24px;
 }
 /* 页头文字入场：加载即逐行浮起（与首页 banner 同一语言） */
 .pd-hero-inner > *{animation:pdHeroIn .8s cubic-bezier(.22,.61,.36,1) both}
@@ -1137,7 +1139,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   background:#F3F0E8;
   padding:clamp(30px,4vw,52px) 0 clamp(44px,6vw,72px) !important;
 }
-.pd-wrap{max-width:1240px; margin:0 auto; padding:0 clamp(20px,4.6vw,60px)}
+.pd-wrap{max-width:1280px; margin:0 auto; padding:0 24px}
 
 /* 分类胶囊：未选=暖白描边，选中=墨绿实底白字（对比度 9.5:1，AA/AAA 均达标） */
 /* ── 列表区卖点标题：眉题 + 大标题 + 一句说明，居中在分类条上方 ── */
@@ -1252,6 +1254,22 @@ html,body{min-width:0 !important; overflow-x:hidden}
 .pd-meta dd .when-line{display:block}
 .pd-empty{margin:32px 0 0; text-align:center; font-size:.9375rem; color:#6B7A72}
 
+/* 加载更多：不翻页。≤12 条全部直出（按钮隐藏）；线路更多时先出 12 条，
+   点一次追加 12 条 —— 以后加线路无需改代码，按钮自动出现/消失 */
+.pd-more{display:flex; justify-content:center; margin-top:clamp(26px,3vw,40px)}
+.pd-more[hidden]{display:none}
+.pd-more-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:46px; padding:0 40px; border-radius:999px; border:0; cursor:pointer;
+  background:#094949; color:#FDFCF7; font-family:inherit;
+  font-size:.9375rem; letter-spacing:.06em;
+  box-shadow:0 10px 22px -12px rgba(9,73,73,.55);
+  transition:background-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.pd-more-btn:hover{background:#0E6F6F; transform:translateY(-1px); box-shadow:0 14px 26px -12px rgba(9,73,73,.6)}
+.pd-more-btn:focus-visible{outline:2px solid #7E5812; outline-offset:3px}
+@media (prefers-reduced-motion: reduce){ .pd-more-btn{transition:none; transform:none} }
+
 /* 减少动效：关掉入场与图片缩放 */
 @media (prefers-reduced-motion: reduce){
   .pd-hero-inner > *{animation:none}
@@ -1355,8 +1373,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <!-- ══ HEADER：与主站一致（fixed + 白实底），本页高亮「关于我们」══ -->
   <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Family">
-        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
+      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Gateway">
+        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Gateway" class="logo-img" width="691" height="160">
       </a>
 
       <nav class="hidden items-center gap-8 md:flex">
@@ -1414,6 +1432,9 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <div class="pd-cats" id="pdCats" role="group" aria-label="产品分类"></div>
       <div class="pd-grid" id="pdGrid"></div>
       <p class="pd-empty" id="pdEmpty" hidden>该分类暂无产品</p>
+      <div class="pd-more" id="pdMore" hidden>
+        <button type="button" class="pd-more-btn" id="pdMoreBtn">加载更多</button>
+      </div>
     </div>
   </section>
   <footer class="bg-footer py-16 text-white">
@@ -1421,7 +1442,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
 
         <div>
-          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Gateway" class="footer-logo mb-4" width="691" height="160">
           <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
@@ -1614,6 +1635,7 @@ function renderCats(){
   [].slice.call(document.querySelectorAll('.pd-cat')).forEach(function(b){
     b.addEventListener('click', function(){
       CAT = this.getAttribute('data-cat');
+      shownCount = LOAD_INIT;               /* 换分类从头展示，加载进度不跨分类保留 */
       syncCatUrl();
       renderCats();                       /* 重建只为同步 aria-pressed */
       renderProducts();
@@ -1651,12 +1673,18 @@ function whenHtml(s, zh){
     return '<span class="when-line">' + nb(p + (i < parts.length - 1 ? sep : '')) + '</span>';
   }).join('');
 }
+/* ══ 加载更多（不翻页）：≤ LOAD_INIT 条全部直出、按钮不出现；
+   线路更多时先展示 LOAD_INIT 条，每点一次追加 LOAD_STEP 条，加载完自动隐藏 ══ */
+var LOAD_INIT = 12, LOAD_STEP = 12, shownCount = LOAD_INIT;
+
 function renderProducts(){
   var zh = LANG === 'zh';
   var t  = I18N[zh ? 'zh' : 'en'];
   var list = PRODUCTS.filter(function(p){ return CAT === 'all' || p.cat === CAT; });
   /* 缺省态：该分类下没有可展示的线路（数据为空或筛选无结果）*/
   if(!list.length){
+    shownCount = LOAD_INIT;
+    document.getElementById('pdMore').hidden = true;
     document.getElementById('pdGrid').innerHTML =
       '<div class="empty-state">' +
         '<span class="empty-art" aria-hidden="true">' +
@@ -1670,7 +1698,9 @@ function renderProducts(){
       '</div>';
     return;
   }
-  document.getElementById('pdGrid').innerHTML = list.map(function(p, i){
+  /* 只渲染前 shownCount 条；slice 保序，chipLabel 的「路线一、二…」编号跨批次连续 */
+  var view = list.slice(0, shownCount);
+  document.getElementById('pdGrid').innerHTML = view.map(function(p, i){
     var label = chipLabel(p, i, zh);
     var alt = zh ? (label + '：' + p.title) : (label + ': ' + p.title_en);
     return '<a class="pd-card" href="product-detail.html?p=' + p.id + '"' +
@@ -1696,7 +1726,24 @@ function renderProducts(){
            '</a>';
   }).join('');
   document.getElementById('pdEmpty').hidden = list.length > 0;
+  renderMore(list.length);
 }
+
+/* 加载更多按钮：还有余量才出现；文案带剩余条数，中英随语言切换 */
+function renderMore(total){
+  var zh = LANG === 'zh';
+  var rest = total - shownCount;
+  var more = document.getElementById('pdMore');
+  if(rest <= 0){ more.hidden = true; return; }
+  document.getElementById('pdMoreBtn').textContent =
+    zh ? ('加载更多（' + rest + '）') : ('Load More (' + rest + ')');
+  more.hidden = false;
+}
+document.getElementById('pdMoreBtn').addEventListener('click', function(){
+  shownCount += LOAD_STEP;
+  renderProducts();
+  setupReveal();   /* 新追加的卡片接上滚动入场动效 */
+});
 
 /* ══ 语言切换：静态文案走 data-i18n，动态区块重建 ══ */
 function applyLocale(){
