@@ -1167,6 +1167,9 @@ html,body{min-width:0 !important; overflow-x:hidden}
   .ab-ph--sub{border-width:4px}
 }
 .ab-rule{width:44px; height:2px; margin:6px 0 18px; background:#CD7A36; border-radius:2px}
+/* 品牌简介组头：横线在左、「品牌简介」在右，与首页关于区 eyebrow 同构 */
+.ab-intro-head{display:flex; align-items:center; gap:14px; margin:0 0 14px}
+.ab-intro-head .ab-rule{margin:0}
 .ab-h2{
   font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
   font-size:clamp(1.375rem,3vw,1.75rem); font-weight:700; color:#22302C;
@@ -1178,8 +1181,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
 }
 .ab-intro-body{font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif}
 .ab-lead{
-  font-size:clamp(1rem,1.35vw,1.125rem); line-height:2.1; color:#3D3D3A;
-  margin:8px 0 0; max-width:38em; text-wrap:pretty;
+  font-size:15px; line-height:1.5; color:#3D3D3A;
+  margin:24px 0 0; max-width:38em; text-wrap:pretty;
 }
 .ab-lead strong{color:#22302C; font-weight:700}
 /* 业务标签：白底胶囊 + 主色描边（与首页关于区标签同一套） */
@@ -1651,8 +1654,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <!-- ══ HEADER：与主站一致（fixed + 白实底），本页高亮「关于我们」══ -->
   <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Family">
-        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
+      <a href="index.html" class="logo-link" aria-label="丝路之家 Silk Road Gateway">
+        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Gateway" class="logo-img" width="691" height="160">
       </a>
 
       <nav class="hidden items-center gap-8 md:flex">
@@ -1693,7 +1696,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
   <!-- ══ 页头：关于丝路之家 ══ -->
   <section class="ab-hero">
     <div class="ab-hero-inner">
-      <p class="ab-eyebrow" id="abEyebrow" aria-hidden="true">About Silk Road Family</p>
+      <p class="ab-eyebrow" id="abEyebrow" aria-hidden="true">About Silk Road Gateway</p>
       <h1 class="ab-hero-title" id="abHeroTitle">关于丝路之家</h1>
       <p class="ab-hero-sub" id="abHeroSub">从丝路出发，与美好相逢。</p>
     </div>
@@ -1712,9 +1715,11 @@ html,body{min-width:0 !important; overflow-x:hidden}
           </figure>
         </div>
         <div class="ab-intro-body">
-          <p class="ab-rule" aria-hidden="true"></p>
-          <h2 class="ab-h2" id="introTitle">品牌简介</h2>
-          <p class="ab-h2-en" id="introTitleEn" aria-hidden="true">About Silk Road Family</p>
+          <div class="ab-intro-head">
+            <p class="ab-rule" aria-hidden="true"></p>
+            <h2 class="ab-h2" id="introTitle">品牌简介</h2>
+          </div>
+          <p class="ab-h2-en" id="introTitleEn" aria-hidden="true">About Silk Road Gateway</p>
           <p class="ab-lead" id="introText"></p>
           <ul class="ab-tags" id="introTags"></ul>
         </div>
@@ -1737,7 +1742,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
         <!-- 「我们的优势」文案组：橙线 → 中文标题 → Georgia 英文 → 主张语 → 副标题 -->
         <div class="ab-claim-block">
           <p class="ab-rule" aria-hidden="true"></p>
-          <h3 class="ab-claim-title" id="claimTag">我们的优势</h3>
+          <h3 class="ab-claim-title" id="claimTag">核心优势</h3>
           <p class="ab-h2-en" id="claimEn" aria-hidden="true">Our Trusted Local Partner</p>
           <p class="ab-claim-lead" id="claimTitle"></p>
           <p class="ab-claim-sub" id="claimSub"></p>
@@ -1772,7 +1777,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
 
         <div>
-          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Gateway" class="footer-logo mb-4" width="691" height="160">
           <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
@@ -1964,18 +1969,18 @@ var DATA = {
   ],
   about_us:{
     /* ── 页头 ── */
-    hero_eyebrow:"About Silk Road Family",hero_eyebrow_en:"",
-    hero_title:"关于丝路之家",hero_title_en:"About Silk Road Family",
+    hero_eyebrow:"About Silk Road Gateway",hero_eyebrow_en:"",
+    hero_title:"关于丝路之家",hero_title_en:"About Silk Road Gateway",
     hero_sub:"从丝路出发，与美好相逢。",hero_sub_en:"From the Silk Road, meet the beautiful.",
     /* ── 品牌简介 ── */
     intro_title:"品牌简介",intro_title_en:"Who We Are",
-    intro_text:"<strong>北京丝路之家文旅产业发展有限公司</strong>是一个特色文旅服务商，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务，业务涵盖风光度假、商旅考察、文化研修、亲子研学等多元定制化内容。",
-    intro_text_en:"<strong>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd.</strong> is a distinctive cultural tourism service provider. Taking the ancient Silk Road as our cultural bond and guided by a professional, efficient service philosophy, we provide global travelers with China journeys that honour local customs, deliver rich experiences and attend to every detail — across scenic holidays, business tours, cultural study and family study tours.",
-    tags:["风光度假","商旅考察","文化研修","亲子研学"],
-    tags_en:["Scenic Holidays","Business Tours","Cultural Study","Family Study Tours"],
+    intro_text:"<strong>北京丝路之家文旅产业发展有限公司</strong>，2024 年于北京创立，是深耕丝路主题的综合性特色文旅服务商。公司以“丝路之家”为核心品牌，溯源千年丝路文脉，专注特色文旅出行、工业旅游、高端商务接待与国际文化交流。<br><br>公司持有正规旅游经营资质，提供一站式全链条文旅解决方案：旅游线路策划、文旅项目开发咨询、工业旅游运营、会展服务、休闲观光、票务酒店预订、商务代办、文化艺术交流、因私出入境咨询等。依托厚重璀璨的丝路文明积淀，深耕定制化出行服务，匠心为客户打造安心、贴心的专属旅途。<br><br>公司恪守真诚致远、专业笃行的服务宗旨，构筑文明互鉴、跨境往来的互通桥梁。伴您踏漫漫丝路长路，赴亘古人文之约；丝路之家，安心随行，共览世界多元文明风华。",
+    intro_text_en:"<strong>Beijing Silk Road Gateway Cultural Tourism Industry Development Co., Ltd.</strong>, founded in Beijing in 2024, is a comprehensive cultural tourism service provider devoted to Silk Road themes. With \"Silk Road Gateway\" as its core brand, we trace the cultural lineage of the millennia-old Silk Road, focusing on distinctive cultural travel, industrial tourism, high-end business reception and international cultural exchange.<br><br>Holding licensed travel operation qualifications, we deliver one-stop, full-chain cultural tourism solutions: travel route planning, cultural tourism project development consulting, industrial tourism operation, exhibition and convention services, leisure sightseeing, ticketing and hotel reservations, business assistance, cultural and artistic exchange, and private entry-exit travel consulting. Drawing on the profound and brilliant heritage of Silk Road civilization, we specialize in tailor-made journeys, crafting safe, considerate and exclusive travels for every client.<br><br>We uphold the service creed of \"sincerity reaches far, professionalism endures\", building a bridge of mutual learning among civilizations and cross-border exchange. With you along the long Silk Road toward an eternal appointment with culture — Silk Road Gateway, travels with peace of mind, to behold together the diverse splendour of the world's civilizations.",
+    tags:["特色文旅出行","工业旅游","高端商务接待","国际文化交流"],
+    tags_en:["Cultural Travel","Industrial Tourism","Business Reception","Cultural Exchange"],
     /* ── 核心优势：主张语 ── */
-    claim_tag:"我们的优势",
-    claim_tag_en:"Our Strength",
+    claim_tag:"核心优势",
+    claim_tag_en:"Core Advantages",
     /* 主张语按需求固定断四行（\n 由 .ab-claim-lead 的 white-space:pre-line 生效）：
        我们不仅是旅行 / 服务商，/ 更是值得托付的 / 在地伙伴 */
     claim:"我们不仅是旅行\n服务商，\n更是值得托付的\n在地伙伴",
