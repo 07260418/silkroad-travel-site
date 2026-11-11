@@ -129,7 +129,7 @@ header .logo-img, header .tailor-btn{ text-shadow:none }
 .footer-copyright{border-top-color:rgba(241,236,223,.3) !important; color:rgba(253,245,229,.55) !important}
 .footer-copyright *{color:rgba(253,245,229,.55) !important}
 /* 页脚 logo：白色版 179×74（深底专用），显示高 56px（宽按 2.42:1 自动跟随） */
-.footer-logo{height:56px; width:auto; display:block}
+.footer-logo{height:auto; width:auto; max-height:56px; max-width:100%; display:block}
 
 /* ── 语言切换：无框文字按钮 + 向下弹出的自定义菜单 ──
    替代原生 <select>：原生 option 列表由系统绘制，位置不可控且会盖住选择区 */
@@ -1311,7 +1311,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
       <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
 
         <div>
-          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Gateway" class="footer-logo mb-4" width="691" height="160">
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Gateway" class="footer-logo mb-4" width="483" height="74">
           <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
