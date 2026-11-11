@@ -273,12 +273,9 @@ html,body{min-width:0 !important; overflow-x:hidden}
    参考稿语言：暖白纸卡 + 图角墨绿双语小签 + 宋体大标 + 茶金描边胶囊标签 + 墨绿实心按钮。
    三色沿用全站：纸卡 #F9F7F1 / 墨绿 #1F4438-#094949 / 茶金 #B08A4F。 */
 #products{
-  /* 恒温米 #F3F0E8（HSL 44/31/93，相对亮度 .872）：比旧米 #F1ECDF（.840）提亮 3 个点，
-     饱和度从 39% 降到 31%，更素更静。与卡片 #FDFCF7（.972）亮度比 1.11 —— 横匾仍浮起，
-     不必改描边；与上方纸白「关于我们」（.930）只差 1.06，两段几乎接成一片纸，
-     分段靠内容留白与标题承担，不靠明度。
-     ⚠️ 内联 style 同步改（见 <section id="products">），只改这里不生效。 */
-  background-color:#F3F0E8;
+  /* 纸白 #F9F7F1（.930）：上接核心优势（恒温米 #F3F0E8）、下接联系区（恒温米），
+     纸白居中形成米-纸-米交替节奏。内联 style 同步改（见 <section id="products">）。 */
+  background-color:#F9F7F1;
 }
 .feat-list{display:grid; gap:28px}
 .feat-row{
@@ -425,7 +422,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
    三色即全部：卡米白 #F0EBDF / 卡主色绿 #094949 / 编号棕金 #B08A4F
    间距统一 48px 栅格：区块与 banner 之间、列间距均为 48px */
 #services{
-  background-color:#F9F7F1;
+  background-color:#F3F0E8;
   /* 优势区现为照片封面流（单行轮播），高度跟内容走；固定上下留白定节奏。 */
   padding:88px 0 96px;
 }
@@ -461,7 +458,10 @@ html,body{min-width:0 !important; overflow-x:hidden}
   letter-spacing:.2em; color:#CD7A36; margin:10px 0 0; text-transform:uppercase; line-height:1.3;
 }
 /* 英文态隐藏橙色英文小标：h2 已被词条替换为同义英文（Our Advantages / Featured Products），
-   下方再显示全大写小标即两行重复；中文态保留双语排版不受影响 */
+   下方再显示全大写小标即两行重复；中文态保留双语排版不受影响。
+   完全 display:none，标题与副标语之间保持正常 gap:8px —— 不在这里留空。
+   少掉的那行高度由下方 #services 的 margin-top 补回（见 .adv-head 规则），
+   保证中英文区块总高一致、切换语言不跳动 */
 html[lang="en"] .adv-eyebrow-en{display:none}
 /* 除卡题（已归入普惠体标题族）外，本板块其余文字统一微软雅黑（跨平台回退链保底） */
 #services .adv-lead, #services .adv-more, #services .adv-cf-meta,
@@ -495,6 +495,10 @@ html[lang="en"] .adv-eyebrow-en{display:none}
    色值全部取自站内：纸白 #FDFCF7、墨绿 #094949、橙 #CD7A36、青铜 #7E5812、正文 #28302B */
 /* 页头居中：标题组 + 两行引言纵向堆叠、水平居中，与下方居中的封面流同轴 */
 .adv-head{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; margin-bottom:44px}
+/* 英文态小标被隐藏后标题组少了一行（margin 10px + 1.3 倍行高 ≈ 39px@1440）。
+   这部分高度挪到标题组上方补回：区块总高与中文一致，而标题、副标语之间仍是正常 8px 间距。
+   用 calc + 同一套 clamp 复算，随视口缩放始终精确补齐（不写死 39px） */
+html[lang="en"] #services .adv-head{margin-top:calc(10px + 1.3 * clamp(1rem, 3.2vw, 1.375rem))}
 .adv-head-l{display:flex; flex-direction:column; align-items:center}
 .adv-head-l .adv-eyebrow{white-space:nowrap}
 .adv-head-r{max-width:36em}
@@ -550,6 +554,9 @@ html[lang="en"] .adv-eyebrow-en{display:none}
   will-change:transform, opacity;
 }
 .adv-cf.dragging .adv-cf-card{transition:none}
+/* 入场门控：构建时冻结卡片过渡（收拢/摆位都在屏外瞬时完成），
+   等封面流进入视口再放开，播放「从中心展开」的入场动画 */
+.adv-cf.no-anim .adv-cf-card{transition:none}
 /* 当前卡：轻量选中态 —— 细淡橙环 + 加深落影（应用户要求去掉 6px 扩散光晕层）。
    两层 box-shadow：1px 半透明细环定形 → 落影增加悬浮感 */
 .adv-cf-card.is-cur{
@@ -674,7 +681,8 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 /* 左：图 + 左下角文案 + 右上印章 */
 .about-media{position:relative; margin:0}
 /* 裁切框：只包图，印章不进框 */
-.about-media-frame{display:block; overflow:hidden; border-radius:6px}
+.about-media-frame{display:block; overflow:hidden; border-radius:6px; cursor:pointer}
+.about-media-frame:focus-visible{outline:2px solid #CD7A36; outline-offset:4px; border-radius:6px}
 .about-media img{
   display:block; width:100%; aspect-ratio:4/3.1; object-fit:cover; border-radius:6px;
   /* 缩放动效与产品卡图片同一套语言：0.8s 同一条缓动曲线 */
@@ -685,6 +693,16 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 /* 触发缩放：鼠标悬停整块图（含印章与角标）时画面推近 1.06，
    溢出部分由 .about-media-frame 裁掉，边缘不会跑出圆角 */
 .about-media:hover #aboutImg{transform:scale(1.06)}
+/* 英文版右栏文字远比中文长（直译约为中文两倍行数），横图 4/3.1 会显得文字"高出"图很多。
+   英文改用竖构图（3/3.9，与右栏实际高度匹配），并切换英文专属竖图；中文版保持横图不动。
+   竖构图在 1440 视口下算出来约 764px，比右栏英文正文（约 580px）高出近 200px，
+   故加高度上限：超限由 object-fit:cover 居中裁掉上下（构图重心不跑），窄屏/矮屏随 vh 回落 */
+html[lang="en"] .about-media img{aspect-ratio:3/3.9; max-height:min(78vh, 620px)}
+/* 小屏（<1024px）回到上下堆叠单列：竖图满宽显示会占掉大半屏（390 宽 ≈ 445px 高），
+   且堆叠布局下"图比文矮"的问题不存在了 → 竖比例与高度上限一并撤掉，回落与中文版相同的横比例 */
+@media (max-width:1023px){
+  html[lang="en"] .about-media img{aspect-ratio:4/3.1; max-height:none}
+}
 /* 入场：图片不做"揭幕"（clip-path 由下往上刷开）了 ——
    揭幕会把图切成上下两截再拼回来，静态呈现时反而像是没加载完。
    现在图片直接随整列 .reveal 的上浮一起进场，节奏统一、没有二次加工 */
@@ -692,6 +710,12 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 .about-media::after{
   content:''; position:absolute; inset:0; border-radius:6px; pointer-events:none;
   background:linear-gradient(180deg, rgba(8,20,18,0) 52%, rgba(8,20,18,.60) 100%);
+}
+/* 英文竖图（755px 高、下部是亮色树冠）上同一条 0→.6 渐变会被"摊薄"：
+   中段几乎不变暗、底部压在亮黄绿植被上也不够深，肉眼看像没加遮罩。
+   竖版单独加强：渐变提前到 30% 起坡、底部加深到 .72，读感与中文横图对齐 */
+html[lang="en"] .about-media::after{
+  background:linear-gradient(180deg, rgba(8,20,18,0) 30%, rgba(8,20,18,.38) 62%, rgba(8,20,18,.72) 100%);
 }
 .about-media-cap{
   position:absolute; left:26px; bottom:22px; z-index:2;
@@ -768,7 +792,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
 #about .about-eyebrow, #about .adv-more{
   font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
 }
-.about-body{font-size:16px; line-height:1.9; color:#3D3D3A; margin:24px 0 0}  /* ≈ 10.6:1 ✅ */
+.about-body{font-size:15px; line-height:1.5; color:#3D3D3A; margin:24px 0 0}  /* ≈ 10.6:1 ✅ */
 .about-body p{margin:0 0 1em}
 .about-body p:last-child{margin-bottom:0}
 /* 业务标签徽章 */
@@ -1237,8 +1261,8 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
   <!-- ══ HEADER：fixed + 实底 #FFFFFF，覆盖在全屏视频之上 ══ -->
   <header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-nav-light shadow-sm transition-all">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <a href="#top" class="logo-link" data-nav="top" aria-label="丝路之家 Silk Road Family">
-        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Family" class="logo-img" width="179" height="64">
+      <a href="#top" class="logo-link" data-nav="top" aria-label="丝路之家 Silk Road Gateway">
+        <img src="./site-source/images/logo.png" alt="丝路之家 Silk Road Gateway" class="logo-img" width="691" height="160">
       </a>
 
       <nav class="hidden items-center gap-8 md:flex">
@@ -1301,6 +1325,36 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
     </div>
   </section>
 
+  <!-- ══ ABOUT：关于丝路之家（左图右文）══ -->
+  <section id="about" style="padding-top:48px; background-color:#F9F7F1">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="about-layout">
+        <!-- 左：图 + 印章 + 左下角文案 -->
+        <figure class="about-media">
+          <!-- 裁切框：Ken Burns 缓慢推近时把溢出的画面收在框内，
+               印章仍在框外（right:-16px 跨边），所以只裁图、不裁印章 -->
+          <a class="about-media-frame" id="aboutMediaLink" href="about.html">
+            <img id="aboutImg" src="./site-source/images/about-hill.webp" alt="丝路之家">
+          </a>
+          <span class="about-seal" aria-hidden="true"><span>丝路</span><span>之家</span></span>
+          <figcaption class="about-media-cap">
+            <span class="about-media-en" aria-hidden="true">SILK ROAD GATEWAY</span>
+            <strong id="aboutMediaCap">以旅行为桥，让文化相遇</strong>
+          </figcaption>
+        </figure>
+        <!-- 右：标题系统与优势区同构 -->
+        <div class="about-side">
+          <p class="about-eyebrow"><span id="aboutEyebrow">关于丝路之家</span><span class="about-eyebrow-line" aria-hidden="true"></span></p>
+          <h2 class="about-title" id="aboutTitle">从丝路出发，与美好相逢。</h2>
+          <p class="about-title-en" aria-hidden="true">About Silk Road Gateway</p>
+          <div class="about-body" id="aboutBody"></div>
+          <ul class="about-tags" id="aboutTags"></ul>
+          <a href="about.html" class="adv-more adv-more--solid" id="aboutMore">了解我们</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ SERVICES：我们的优势（白底编辑式：左标题栏 + 米白/深绿双卡）══ -->
   <section id="services" class="relative overflow-hidden">
     <div class="relative mx-auto max-w-7xl px-6 pt-0 pb-0">
@@ -1310,8 +1364,8 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
       <!-- 页头：标题组 + 单行引言（四句用 span 连排，flex gap 8px 分隔，小屏自动折行） -->
       <div class="adv-head">
         <div class="adv-head-l">
-          <h2 class="adv-eyebrow" id="advTitle">我们的优势</h2>
-          <p class="adv-eyebrow-en" aria-hidden="true">OUR ADVANTAGES</p>
+          <h2 class="adv-eyebrow" id="advTitle">核心优势</h2>
+          <p class="adv-eyebrow-en" aria-hidden="true">CORE ADVANTAGES</p>
         </div>
         <p class="adv-lead">
           <span id="advSub1">我们不仅是旅行服务商，</span><span id="advSub2">更是值得托付的在地伙伴</span>
@@ -1341,7 +1395,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
   </section>
 
   <!-- ══ PRODUCTS：特色产品（四条横排：左图 + 右文，由 renderFeatured() 渲染）══ -->
-  <section id="products" class="py-20" style="background-color:#F3F0E8">
+  <section id="products" class="py-20" style="background-color:#F9F7F1">
     <div class="mx-auto max-w-7xl px-6">
       <div class="mb-16 text-center">
         <!-- 标题与「我们的优势」同构：中文大字 + 金色英文小标签 -->
@@ -1354,36 +1408,6 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
       <!-- 产品区展示的即全部 4 条，没有独立的列表页；此按钮改为承接「看更多 → 走定制」 -->
       <div class="mt-14 text-center" style="margin-top:88px">
         <a href="product.html" class="feat-all" data-i18n="products.all">查看全部产品</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ ABOUT：关于丝路之家（左图右文）══ -->
-  <section id="about" style="padding-top:48px; background-color:#F9F7F1">
-    <div class="mx-auto max-w-7xl px-6">
-      <div class="about-layout">
-        <!-- 左：图 + 印章 + 左下角文案 -->
-        <figure class="about-media">
-          <!-- 裁切框：Ken Burns 缓慢推近时把溢出的画面收在框内，
-               印章仍在框外（right:-16px 跨边），所以只裁图、不裁印章 -->
-          <span class="about-media-frame">
-            <img id="aboutImg" src="./site-source/images/about-hill.webp" alt="丝路之家">
-          </span>
-          <span class="about-seal" aria-hidden="true"><span>丝路</span><span>之家</span></span>
-          <figcaption class="about-media-cap">
-            <span class="about-media-en" aria-hidden="true">SILK ROAD FAMILY</span>
-            <strong id="aboutMediaCap">以旅行为桥，让文化相遇</strong>
-          </figcaption>
-        </figure>
-        <!-- 右：标题系统与优势区同构 -->
-        <div class="about-side">
-          <p class="about-eyebrow"><span id="aboutEyebrow">关于丝路之家</span><span class="about-eyebrow-line" aria-hidden="true"></span></p>
-          <h2 class="about-title" id="aboutTitle">从丝路出发，与美好相逢。</h2>
-          <p class="about-title-en" aria-hidden="true">About Silk Road Family</p>
-          <div class="about-body" id="aboutBody"></div>
-          <ul class="about-tags" id="aboutTags"></ul>
-          <a href="about.html" class="adv-more adv-more--solid" id="aboutMore">了解我们</a>
-        </div>
       </div>
     </div>
   </section>
@@ -1538,7 +1562,7 @@ html[lang="en"] .adv-cf-meta{letter-spacing:.04em}
       <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
 
         <div>
-          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Family" class="footer-logo mb-4" width="179" height="74">
+          <img src="./site-source/images/logo-white.png" alt="丝路之家 Silk Road Gateway" class="footer-logo mb-4" width="691" height="160">
           <p class="mb-4 text-sm" data-i18n="footer.slogan">专注于旅游服务的国际旅行社</p>
         </div>
 
@@ -1778,16 +1802,16 @@ var DATA = {
      image:"./site-source/images/featured-family.webp"}
   ],
   about_us:{
-    title:"关于丝路之家",title_en:"About Silk Road Family",
+    title:"关于丝路之家",title_en:"About Silk Road Gateway",
     slogan:"从丝路出发，与美好相逢。",slogan_en:"From the Silk Road, meet the beautiful.",
-    content:"<p>北京丝路之家文旅产业发展有限公司是一个特色文旅服务商，依托古丝绸之路文化纽带，以专业高效为服务理念，为全球游客提供恪守礼俗、体验丰富、细节周到的华夏旅行服务。</p><p>业务涵盖风光旅居、商旅考察、文化交流、亲子研学等多元定制内容。每一次出发，都有我们用心相伴。</p>",
-    content_en:"<p>Beijing Silk Road Family Culture and Tourism Industry Development Co., Ltd. is a distinctive cultural tourism service provider. Rooted in the cultural bonds of the ancient Silk Road and guided by a professional and efficient service philosophy, we provide global travelers with China travel services that observe customs, enrich experiences, and attend to every detail.</p><p>Our business covers customized content across scenic holidays, business inspection, cultural exchange, and family study tours. On every journey, we accompany you with care.</p>",
-    tags:["风光旅居","商旅考察","文化交流","亲子研学"],
-    tags_en:["Scenic Holidays","Business Inspection","Cultural Exchange","Family Study Tours"],
+    content:"<p>北京丝路之家文旅产业发展有限公司，2024 年于北京创立，是深耕丝路主题的综合性特色文旅服务商。公司以“丝路之家”为核心品牌，溯源千年丝路文脉，专注特色文旅出行、工业旅游、高端商务接待与国际文化交流。</p><p>公司持有正规旅游经营资质，提供一站式全链条文旅解决方案：旅游线路策划、文旅项目开发咨询、工业旅游运营、会展服务、休闲观光、票务酒店预订、商务代办、文化艺术交流、因私出入境咨询等。依托厚重璀璨的丝路文明积淀，深耕定制化出行服务，匠心为客户打造安心、贴心的专属旅途。</p><p>公司恪守真诚致远、专业笃行的服务宗旨，构筑文明互鉴、跨境往来的互通桥梁。伴您踏漫漫丝路长路，赴亘古人文之约；丝路之家，安心随行，共览世界多元文明风华。</p>",
+    content_en:"<p>Beijing Silk Road Gateway Cultural Tourism Industry Development Co., Ltd., founded in Beijing in 2024, is a comprehensive cultural tourism service provider dedicated to the Silk Road theme. With “Silk Road Gateway” as its core brand, we trace the millennia-old heritage of the Silk Road and specialize in distinctive cultural travel, industrial tourism, high-end business reception, and international cultural exchange.</p><p>Holding formal tourism operation qualifications, we offer one-stop, full-chain cultural tourism solutions: travel route planning, cultural tourism project development consulting, industrial tourism operations, exhibition and convention services, leisure sightseeing, ticketing and hotel booking, business agency services, cultural and artistic exchange, and outbound &amp; entry travel consulting. Drawing on the splendid legacy of Silk Road civilization, we deepen customized travel services, crafting safe and attentive journeys for every client.</p><p>Upholding the service tenet of sincerity reaching far and professionalism with dedication, we build a bridge for mutual learning among civilizations and cross-border exchange. Journey with us along the long Silk Road to an age-old rendezvous with culture — Silk Road Gateway, traveling with you at ease, to behold together the diverse splendor of the world's civilizations.</p>",
+    tags:["特色文旅出行","工业旅游","高端商务接待","国际文化交流"],
+    tags_en:["Cultural Travel","Industrial Tourism","Business Reception","Cultural Exchange"],
     media_cap:"以旅行为桥，让文化相遇",media_cap_en:"Bridging cultures through travel",
     more:"了解我们",more_en:"About Us",
     image:"./site-source/images/about-hill.webp",
-    advantage_title:"我们的优势",advantage_title_en:"Our Advantages",
+    advantage_title:"核心优势",advantage_title_en:"Core Advantages",
     advantage_sub:"我们不仅是旅行服务商，",
     advantage_sub_en:"More than a travel service provider —",
     advantage_sub2:"更是值得托付的在地伙伴",
@@ -1876,7 +1900,7 @@ r */
    8 条优势 = 8 张照片封面；中心一张完整呈现，两侧逐层收小、照片轻度压暗。
    卡位不是「第几张 × 固定间距」，而是按相邻两卡的半宽累加 + 恒定留白 ——
    固定间距会让核心卡与第二张几乎贴死、外圈却空出一大截（里紧外松）。 */
-var ADV_CF = { cur:0, pos:null, dragX:0, built:false, cards:[], dots:[] };
+var ADV_CF = { cur:0, pos:null, dragX:0, built:false, awaitOpen:false, cards:[], dots:[] };
 var ADV_SCALES = [1, .84, .70, .58, .47];      /* 逐层缩放：0 中心 → 4 外圈 */
 var ADV_DIM    = [0, .09, .18, .27, .35];      /* 照片逐层压暗，信息条不参与 */
 var ADV_N = 0;
@@ -1928,11 +1952,26 @@ function advGo(i){
   advLayout();
 }
 
+/* 进入视口后的「展开」入场：冻结态下先回到收拢起点（中心、缩小），
+   强制回流让收拢态先渲染一帧，再放开过渡摆到终位 —— 卡片从中心舒展开 */
+function advOpen(){
+  if(!ADV_CF.awaitOpen) return;
+  ADV_CF.awaitOpen = false;
+  var st = advStage();
+  ADV_CF.cards.forEach(function(c){
+    c.style.transform = 'translate(0,26px) scale(.5)';
+    c.style.setProperty('--dim', ADV_DIM[4]);
+  });
+  void st.offsetWidth;                 /* 强制回流：收拢态先落一帧，否则过渡不播 */
+  st.classList.remove('no-anim');
+  advLayout();
+}
+
 /* 文案：中英切换时只刷新文字，不重建 DOM（重建会让图片重新拉取、闪一下） */
 function advFill(){
   var zh = LANG === 'zh';
   var D  = DATA.about_us;
-  document.getElementById('advTitle').textContent = zh ? (D.advantage_title||'我们的优势') : (D.advantage_title_en||'Our Advantages');
+  document.getElementById('advTitle').textContent = zh ? (D.advantage_title||'核心优势') : (D.advantage_title_en||'Core Advantages');
   document.getElementById('advSub1').textContent  = zh ? (D.advantage_sub||'')  : (D.advantage_sub_en||'');
   document.getElementById('advSub2').textContent  = zh ? (D.advantage_sub2||'') : (D.advantage_sub2_en||'');
   document.getElementById('advSub3').textContent  = zh ? (D.advantage_sub3||'') : (D.advantage_sub3_en||'');
@@ -2029,6 +2068,19 @@ function advBuild(){
 
   /* 宽度变化时卡位要重算（--cw 在 640 断点变化），位置缓存作废 */
   window.addEventListener('resize', function(){ ADV_CF.pos = null; advLayout(); });
+
+  /* 入场门控：构建时冻结过渡、瞬时摆好终位（此时多半还在屏外，
+     原写法会让「从中心展开」的动画在加载瞬间播完，滚下来只剩静帧）。
+     等封面流真正进入视口，再从收拢态过渡展开。 */
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window){
+    ADV_CF.awaitOpen = true;
+    st.classList.add('no-anim');
+    var openIO = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ advOpen(); openIO.disconnect(); } });
+    }, { threshold:.3 });
+    openIO.observe(st);
+    setTimeout(advOpen, 6000);   /* 兜底：IO 极端不回调时 6 秒后强制展开 */
+  }
   ADV_CF.built = true;
 }
 
@@ -2321,6 +2373,12 @@ function applyLocale(){
   document.getElementById('aboutTitle').textContent    = zh ? A.slogan : A.slogan_en;
   document.getElementById('aboutBody').innerHTML       = zh ? A.content : A.content_en;
   document.getElementById('aboutMediaCap').textContent = zh ? A.media_cap : A.media_cap_en;
+  /* 左图随语言切换：中文横图，英文竖图（配合 html[lang="en"] 的 3/3.9 竖比例） */
+  var aboutImg = document.getElementById('aboutImg');
+  var aboutImgWant = zh ? './site-source/images/about-hill.webp' : './site-source/images/about-hill-en.webp';
+  if (aboutImg.getAttribute('src') !== aboutImgWant) aboutImg.src = aboutImgWant;
+  /* 图片可点击跳转关于页：无障碍标签随语言切换 */
+  document.getElementById('aboutMediaLink').setAttribute('aria-label', zh ? '了解我们 · 关于丝路之家' : 'About Silk Road Gateway');
   document.getElementById('aboutMore').textContent     = zh ? A.more : A.more_en;
   /* --i 供徽章的依次落位（见 @keyframes tagIn） */
   document.getElementById('aboutTags').innerHTML = (zh ? A.tags : A.tags_en).map(function(t, i){
@@ -2391,7 +2449,7 @@ document.getElementById('inquiry').addEventListener('submit', function(e){
 
 /* ══ 滚动入场动效：IntersectionObserver + 视差 ══ */
 var REVEAL_SEL = [
-  '#services .adv-head', '#services .adv-cf', '#services .adv-cf-foot',
+  '#services .adv-head', '#services .adv-cf-foot',
   '#products .mb-16', '#featList > *', '#products .mt-14',
   '#about .about-layout > *',
   '#contact .ct-lead > *', '#contact .ct-card',
