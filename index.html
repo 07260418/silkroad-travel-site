@@ -2373,9 +2373,9 @@ function applyLocale(){
   document.getElementById('aboutTitle').textContent    = zh ? A.slogan : A.slogan_en;
   document.getElementById('aboutBody').innerHTML       = zh ? A.content : A.content_en;
   document.getElementById('aboutMediaCap').textContent = zh ? A.media_cap : A.media_cap_en;
-  /* 左图随语言切换：中文横图，英文竖图（配合 html[lang="en"] 的 3/3.9 竖比例） */
+  /* 左图随语言切换：中英文同用晚霞清真寺横图（英文桌面端由 CSS 3/3.9 竖比例裁取中间构图） */
   var aboutImg = document.getElementById('aboutImg');
-  var aboutImgWant = zh ? './site-source/images/about-hill.webp' : './site-source/images/about-hill-en.webp';
+  var aboutImgWant = './site-source/images/about-hill.webp';
   if (aboutImg.getAttribute('src') !== aboutImgWant) aboutImg.src = aboutImgWant;
   /* 图片可点击跳转关于页：无障碍标签随语言切换 */
   document.getElementById('aboutMediaLink').setAttribute('aria-label', zh ? '了解我们 · 关于丝路之家' : 'About Silk Road Gateway');
