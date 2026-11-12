@@ -2,6 +2,18 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<script>
+/* 首绘前同步语言：会话内记忆为英文时先给 <html> 打标记并暂隐正文，
+   等页面底部脚本套用完英文文案后再显示，消除「先画中文再闪变英文」 */
+try{
+  if(sessionStorage.getItem('siteLang') === 'en'){
+    var st = document.createElement('style');
+    st.textContent = 'html[data-lang-en]:not([data-lang-ready]) body{visibility:hidden!important}';
+    document.head.appendChild(st);
+    document.documentElement.setAttribute('data-lang-en','');
+  }
+}catch(e){}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>丝路之家</title>
 <link rel="stylesheet" href="./site-source/css/entry.89d5752e.css">
@@ -2395,9 +2407,9 @@ function applyLocale(){
   renderAdvantages(); renderFeatured();
 }
 /* ══ 语言切换：自定义下拉（替代原生 select） ══ */
-/* 语言持久化：记住用户选择，跳转/刷新后保持，不再跳回中文 */
+/* 语言会话记忆：仅当前标签会话内记住选择——站内跳转保持，新开进站一律默认中文 */
 var LANG = 'zh';
-try{ if(localStorage.getItem('siteLang') === 'en') LANG = 'en'; }catch(e){}
+try{ if(sessionStorage.getItem('siteLang') === 'en') LANG = 'en'; }catch(e){}
 var langBtn  = document.getElementById('langBtn');
 var langMenu = document.getElementById('langMenu');
 var langLabel= document.getElementById('langLabel');
@@ -2417,9 +2429,10 @@ langBtn.addEventListener('click', function(e){
   opt.addEventListener('click', function(e){
     e.stopPropagation();
     var lg = opt.dataset.lang;
+    try{ sessionStorage.setItem('siteLang', lg); }catch(e){}   /* 每次选择都落盘：即使与当前显示语言相同，也纠正其他页面遗留的脱节 */
     if(lg === LANG){ closeLang(); return; }
     LANG = lg;
-    try{ localStorage.setItem('siteLang', lg); }catch(e){}
+    try{ sessionStorage.setItem('siteLang', lg); }catch(e){}
     langLabel.textContent = lg === 'zh' ? '中文' : 'EN';
     [].slice.call(langMenu.querySelectorAll('.lang-opt')).forEach(function(o){
       o.setAttribute('aria-selected', String(o.dataset.lang === lg));
@@ -2435,6 +2448,7 @@ document.addEventListener('click', function(e){
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape' && !langMenu.hidden){ closeLang(); langBtn.focus(); }
 });
+/* 会话存储按标签隔离：语言在单标签内天然一致，无需跨标签监听 */
 
 /* ══ 表单 ══ */
 document.getElementById('inquiry').addEventListener('submit', function(e){
@@ -2543,7 +2557,7 @@ function setupParallax(){
     o.setAttribute('aria-selected', String(o.dataset.lang === LANG));
   });
 })();
-applyLocale();
+try{ applyLocale(); }finally{ document.documentElement.setAttribute('data-lang-ready',''); }   /* 英文记忆时首绘暂隐，就绪后立即放开 */
 setupReveal();
 setupParallax();
 </script>
