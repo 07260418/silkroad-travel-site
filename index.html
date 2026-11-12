@@ -732,23 +732,22 @@ html[lang="en"] .about-media::after{
 }
 .about-media-en{font-size:11px; font-weight:500; letter-spacing:.42em; opacity:.85}
 .about-media-cap strong{font-size:clamp(1rem,1.6vw,1.25rem); font-weight:600; letter-spacing:.06em}
-/* 印章：跨图右上角，竖排两列 + 内描边 */
+/* 印章：跨图右上角，横排一行 + 内描边 */
 .about-seal{
   position:absolute; top:24px; right:-16px; z-index:2;
-  width:64px; height:92px; background:#CD7A36; border-radius:5px;
-  display:flex; align-items:center; justify-content:center; gap:3px;
+  height:44px; padding:0 12px; background:#CD7A36; border-radius:5px;
+  display:flex; align-items:center; justify-content:center;
   box-shadow:0 8px 18px -8px rgba(8,32,26,.40);
 }
 .about-seal::before{
   content:''; position:absolute; inset:4px; border:1px solid rgba(253,245,229,.55); border-radius:3px;
 }
 .about-seal span{
-  writing-mode:vertical-rl; text-orientation:upright;
-  font-size:15px; font-weight:600; letter-spacing:.28em; line-height:1;
+  font-size:15px; font-weight:600; letter-spacing:.18em; line-height:1;
   color:#FDF5E5;
-  /* 竖排末尾会多出一份 letter-spacing 的空白，抵消后文字才能在框内真正垂直居中 */
-  margin-bottom:-.28em;
 }
+/* 末尾 span 的 letter-spacing 会多出一份空白，抵消后左右留白才对称 */
+.about-seal span:last-child{margin-right:-.18em}
 /* 落印：图的上浮（.72s）走到后半段时印章"盖"下来，尾段带一点回弹 ——
    静态的方印章因此有了来处，也不抢图本身的主角位。
    延迟 .34s + 时长 .62s，收尾正落在图落定处（去掉揭幕后从 .5s 提前） */
@@ -1268,8 +1267,8 @@ html[lang="en"] .about-media::after{
       <nav class="hidden items-center gap-8 md:flex">
         <!-- 本页内三项走锚点（产品 / 联系我们无独立页）；关于我们是真实二级页 about.html -->
         <a href="#top"        class="nav-link" data-nav="top"       data-i18n="nav.home">首页</a>
-        <a href="product.html"          class="nav-link" data-i18n="nav.products">产品</a>
         <a href="about.html"  class="nav-link"                      data-i18n="nav.about">关于我们</a>
+        <a href="product.html"          class="nav-link" data-i18n="nav.products">产品</a>
         <a href="#contact"    class="nav-link" data-nav="contact"   data-i18n="nav.contact">联系我们</a>
       </nav>
 
@@ -1294,8 +1293,8 @@ html[lang="en"] .about-media::after{
     <!-- 小屏下拉菜单 -->
     <div id="mobileMenu" class="mobile-menu md:hidden" hidden>
       <a href="#top"        class="nav-link-m" data-nav="top"      data-i18n="nav.home">首页</a>
-      <a href="product.html"        class="nav-link-m" data-i18n="nav.products">产品</a>
       <a href="about.html"  class="nav-link-m"                     data-i18n="nav.about">关于我们</a>
+      <a href="product.html"        class="nav-link-m" data-i18n="nav.products">产品</a>
       <a href="#contact"    class="nav-link-m" data-nav="contact"  data-i18n="nav.contact">联系我们</a>
       <a href="tailor.html" class="nav-link-m"                     data-i18n="nav.tailor">定制服务</a>
     </div>
