@@ -732,11 +732,11 @@ html[lang="en"] .about-media::after{
 }
 .about-media-en{font-size:11px; font-weight:500; letter-spacing:.42em; opacity:.85}
 .about-media-cap strong{font-size:clamp(1rem,1.6vw,1.25rem); font-weight:600; letter-spacing:.06em}
-/* 印章：跨图右上角，横排一行 + 内描边 */
+/* 印章：跨图右上角，两行横排（丝路 / 之家）+ 内描边 */
 .about-seal{
   position:absolute; top:24px; right:-16px; z-index:2;
-  height:44px; padding:0 12px; background:#CD7A36; border-radius:5px;
-  display:flex; align-items:center; justify-content:center;
+  width:72px; height:68px; background:#CD7A36; border-radius:5px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
   box-shadow:0 8px 18px -8px rgba(8,32,26,.40);
 }
 .about-seal::before{
@@ -745,9 +745,9 @@ html[lang="en"] .about-media::after{
 .about-seal span{
   font-size:15px; font-weight:600; letter-spacing:.18em; line-height:1;
   color:#FDF5E5;
+  /* 每行末尾 letter-spacing 多出的空白抵消，两行才能真正对齐居中 */
+  margin-right:-.18em;
 }
-/* 末尾 span 的 letter-spacing 会多出一份空白，抵消后左右留白才对称 */
-.about-seal span:last-child{margin-right:-.18em}
 /* 落印：图的上浮（.72s）走到后半段时印章"盖"下来，尾段带一点回弹 ——
    静态的方印章因此有了来处，也不抢图本身的主角位。
    延迟 .34s + 时长 .62s，收尾正落在图落定处（去掉揭幕后从 .5s 提前） */
