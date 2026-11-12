@@ -121,7 +121,16 @@ header .logo-img, header .tailor-btn{ text-shadow:none }
 
 @media (max-width:520px){
   header > div{padding-left:12px !important; padding-right:12px !important; gap:8px !important}
+  .tailor-btn{display:none}                      /* 小屏页头放不下：手机菜单里已有「定制服务」入口 */
   .logo-img{height:34px !important}              /* 44px → 34px，腾出横向空间 */
+  .lang-switch,.hamburger{flex:none}
+}
+/* ≤380px（360px 安卓主流宽）：再压 logo 与间距，保证汉堡按钮完整可见不溢出 */
+@media (max-width:380px){
+  header > div{gap:6px !important}
+  .logo-img{height:28px !important}
+  .lang-btn{padding:5px 2px}
+}
   .tailor-btn{padding:6px 12px; font-size:.75rem; min-height:36px; letter-spacing:0}
   .lang-btn{padding:6px 4px; font-size:.875rem}
   .lang-menu{min-width:104px}
