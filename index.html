@@ -238,6 +238,124 @@ html,body{min-width:0 !important; overflow-x:hidden}
 }
 .bc-main,.bc-sub{ text-shadow:0 1px 10px rgba(0,0,0,.45) }
 
+/* ══ 阅山河：banner 下方全屏轮播（五条文脉线路，与特色产品五条线路同图源）══
+   结构：5 张全屏底图交叉淡切 + Ken Burns 缓推；固定层 = 顶部题名 / 中央本页线路句 / 底部结语+圆点 */
+#yueshanhe{padding:0 !important}   /* 覆盖小屏 `section{padding:56px}` 的通用规则，保证整屏贴边 */
+#yueshanhe .ysh-slide{
+  position:absolute; inset:0;
+  background-position:center; background-size:cover; background-repeat:no-repeat;
+  opacity:0; transform:scale(1.02);
+  transition:opacity 1.4s ease; will-change:opacity,transform;
+}
+#yueshanhe .ysh-slide.on{opacity:1; animation:yshKen 6s cubic-bezier(.22,.61,.36,1) forwards}
+@keyframes yshKen{from{transform:scale(1.1)}to{transform:scale(1.02)}}
+@media (prefers-reduced-motion: reduce){
+  #yueshanhe .ysh-slide{animation:none !important; transform:none !important}
+}
+/* 暗场：上下加深、中部透景，保证白字可读（最深处 ≥ 4.5:1） */
+#yueshanhe .ysh-shade{
+  background:linear-gradient(180deg, rgba(9,20,18,.46) 0%, rgba(9,20,18,.16) 38%, rgba(9,20,18,.34) 72%, rgba(9,20,18,.62) 100%);
+}
+#yueshanhe .ysh-layer{
+  position:relative; min-height:100svh; z-index:1;
+  display:flex; flex-direction:column; align-items:center; text-align:center; color:#FFFFFF;
+  padding:clamp(88px,12vh,128px) clamp(20px,4vw,48px) clamp(14px,2.4vh,24px);
+}
+/* 顶部题名：橙线 + 题字 + 卷首语（与站内组头同构）
+   字号与核心优势标题组对齐：题字 = .adv-eyebrow，卷首语 = .adv-eyebrow-en 同档 */
+#yueshanhe .ysh-rule{display:block; width:44px; height:2px; background:#CD7A36; border-radius:2px; margin:0 auto}
+#yueshanhe .ysh-title{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-size:clamp(1.375rem,4.6vw,1.875rem); font-weight:700; letter-spacing:.3em; margin-right:-.3em;
+  margin:14px 0 0; line-height:1.3; text-shadow:0 2px 14px rgba(0,0,0,.45);
+}
+#yueshanhe .ysh-sub{
+  font-size:clamp(1rem,3.2vw,1.375rem); letter-spacing:.22em; margin-right:-.22em;
+  margin:10px 0 0; opacity:.92; text-shadow:0 1px 8px rgba(0,0,0,.4);
+}
+/* 整篇文案：五条线路句一次全部展示，底图轮换文字不动
+   间距：上方 auto 吃掉剩余空间，下方固定间距 —— 底部结语随之上提贴近诗行 */
+#yueshanhe .ysh-poem{
+  margin:auto 0 clamp(18px,3vh,32px); max-width:56em;
+  padding:clamp(10px,2vh,18px) 0;
+}
+#yueshanhe .ysh-v{
+  margin:0;
+  font-size:clamp(.9375rem,1.5vw,1.125rem); line-height:2; letter-spacing:.05em;
+  font-weight:700;
+  opacity:.95; text-shadow:0 1px 8px rgba(0,0,0,.4);
+  text-wrap:balance;   /* 均衡每行字数，避免换行后末行只剩两三个字 */
+}
+#yueshanhe .ysh-v strong{
+  font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
+  font-weight:700; letter-spacing:.08em; color:#FFFFFF;
+}
+/* 英文桌面端：拉丁整行加粗后折行增多，字号收半档保证仍一屏放下 */
+html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.875rem,1.35vw,1.03125rem)}
+/* 矮屏笔记本（浏览器工具栏占掉顶部后视口常只剩 760~820px）：压缩行距与顶部留白，仍保持一屏 */
+@media (min-width:641px) and (max-height:820px){
+  #yueshanhe .ysh-layer{padding-top:clamp(64px,9vh,88px)}
+  #yueshanhe .ysh-v{line-height:1.8}
+  #yueshanhe .ysh-poem{margin-bottom:14px; padding:6px 0}
+}
+/* 底部结语 + 圆点：颜色与诗行统一（白、同透明度）
+   p 的 max-width 用各自 font-size 的 em 计算，宽度不一致会导致盒子靠左 —— 必须 margin:0 auto 居中 */
+#yueshanhe .ysh-close p{
+  margin:0 auto; max-width:46em;
+  font-size:clamp(.78rem,1vw,.9rem); line-height:1.9; letter-spacing:.05em;
+  color:#FFFFFF; opacity:.95; text-shadow:0 1px 6px rgba(0,0,0,.4);
+  text-wrap:balance;
+}
+#yueshanhe .ysh-close .ysh-punch{
+  margin:10px auto 0;
+  font-size:clamp(.95rem,1.3vw,1.1rem); font-weight:600; letter-spacing:.16em; margin-right:-.16em;
+  opacity:1;
+}
+/* 圆点：独立于结语，margin-top:auto 把自己推到区块底部（padding-bottom 之上）；margin-bottom 上移 10px */
+#yueshanhe .ysh-dots{display:flex; justify-content:center; gap:10px; margin-top:auto; margin-bottom:10px; padding-top:16px}
+#yueshanhe .ysh-dot{
+  width:8px; height:8px; border-radius:50%; padding:0;
+  background:rgba(255,255,255,.4); border:0; cursor:pointer;
+  transition:background-color .25s ease, transform .25s ease;
+}
+#yueshanhe .ysh-dot.on{background:#CD7A36; transform:scale(1.25)}
+#yueshanhe .ysh-dot:focus-visible{outline:2px solid #fff; outline-offset:3px}
+/* 左右箭头：竖直居中悬于两侧，移动端隐藏（有横滑） */
+#yueshanhe .ysh-arrow{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+  width:46px; height:46px; border-radius:50%; padding:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.5);
+  color:#fff; cursor:pointer;
+  transition:background-color .25s ease, transform .25s ease;
+}
+#yueshanhe .ysh-arrow:hover{background:rgba(255,255,255,.26); transform:translateY(-50%) scale(1.06)}
+#yueshanhe .ysh-arrow:focus-visible{outline:2px solid #fff; outline-offset:3px}
+#yueshanhe .ysh-arrow--prev{left:clamp(14px,3vw,44px)}
+#yueshanhe .ysh-arrow--next{right:clamp(14px,3vw,44px)}
+#yueshanhe .ysh-arrow svg{width:20px; height:20px; display:block}
+@media (max-width:767px){ #yueshanhe .ysh-arrow{display:none} }
+@media (max-width:640px){
+  /* 手机端高度由内容决定：去掉强制一屏与 auto 均分，留白改为固定小间距 */
+  #yueshanhe{min-height:auto}
+  #yueshanhe .ysh-layer{min-height:auto; padding-top:84px; padding-bottom:14px; justify-content:flex-start}
+  #yueshanhe .ysh-poem{margin-top:22px; margin-bottom:16px; padding:4px 0}
+  /* 字号对齐整站手机端规范（正文 15px / 说明 13px） */
+  #yueshanhe .ysh-v{font-size:.9375rem; line-height:1.75}
+  #yueshanhe .ysh-close p{font-size:.8125rem; line-height:1.75}
+  #yueshanhe .ysh-close .ysh-punch{font-size:1rem; margin-top:8px}
+  #yueshanhe .ysh-dots{margin-top:18px; padding-top:0}
+}
+/* 英文手机端：字号同样提至整站规范下限，拉丁折行多仅比中文小半档 */
+@media (max-width:640px){
+  html[lang="en"] #yueshanhe .ysh-title{font-size:1.4rem; letter-spacing:.1em; margin-right:-.1em}
+  html[lang="en"] #yueshanhe .ysh-sub{font-size:.78rem; letter-spacing:.12em; margin-right:-.12em}
+  html[lang="en"] #yueshanhe .ysh-layer{padding-left:16px; padding-right:16px}
+  html[lang="en"] #yueshanhe .ysh-v{font-size:.875rem; line-height:1.7}
+  html[lang="en"] #yueshanhe .ysh-close p{font-size:.75rem; line-height:1.7}
+  html[lang="en"] #yueshanhe .ysh-close .ysh-punch{font-size:.875rem; letter-spacing:.08em}
+}
+
 /* 主色实底按钮：与「了解我们」按钮（.adv-more--solid）同款
    #094949 底 + 1.5px 同色描边 + 白字，圆角 8px；白字对比度 10.19:1（AAA） */
 .bc-cta{
@@ -1344,6 +1462,47 @@ html[lang="en"] .about-media::after{
     </div>
   </section>
 
+  <!-- ══ YUESHANHE：阅山河全屏轮播（8 张底图按用户给定顺序，文案整篇固定展示）══
+       底图顺序：清真寺→故宫角楼→云雾山峦→山涧激流→江南烟雨→雾中湖泊→CBD 晚霞。
+       第 1 张内联直出保证首屏可看，其余 6 张由 JS 延迟填充，不与 banner 视频抢带宽 -->
+  <section id="yueshanhe" class="relative w-full overflow-hidden bg-black" aria-label="阅山河">
+    <div class="ysh-slides absolute inset-0" aria-hidden="true">
+      <div class="ysh-slide on" style="background-image:url('./site-source/images/ysh-01-mosque.webp')"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-02-forbidden-city.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-03-misty-mountains.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-04-mountain-river.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-06-jiangnan-rain.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-07-misty-lake.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-08-cbd-sunset.webp"></div>
+    </div>
+    <div class="ysh-shade pointer-events-none absolute inset-0"></div>
+
+    <div class="ysh-layer">
+      <div class="ysh-head">
+        <span class="ysh-rule" aria-hidden="true"></span>
+        <h2 class="ysh-title" data-i18n="ysh.title">阅山河</h2>
+        <p class="ysh-sub" data-i18n="ysh.sub">山河为卷，步履作笔。</p>
+      </div>
+
+      <div class="ysh-poem" id="yshPoem"></div>
+
+      <div class="ysh-close">
+        <p data-i18n="ysh.c1">五方疆土，五条文脉，串联起中国自然风物、千年民俗、商贸往来与文明交融的脉络。</p>
+        <p data-i18n="ysh.c2">我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。</p>
+        <p data-i18n="ysh.c3">山川不语，自有答案，期待与你一同踏上旅途。</p>
+        <p class="ysh-punch" data-i18n="ysh.punch">阅山河，方知华夏；行万里，读懂何以中国。</p>
+      </div>
+      <div class="ysh-dots" id="yshDots" role="group" aria-label="阅山河轮播导航"></div>
+    </div>
+
+    <button type="button" class="ysh-arrow ysh-arrow--prev" id="yshPrev" aria-label="上一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button type="button" class="ysh-arrow ysh-arrow--next" id="yshNext" aria-label="下一张">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </section>
+
   <!-- ══ ABOUT：关于丝路之家（左图右文）══ -->
   <section id="about" style="padding-top:48px; background-color:#F9F7F1">
     <div class="mx-auto max-w-7xl px-6">
@@ -1771,17 +1930,6 @@ html[lang="en"] .about-media::after{
    真实数据（来自 /api/travel/index?lang=zh）
    ══════════════════════════════════════════════════════════ */
 var DATA = {
-  banners:[
-    {id:1,title:"中国，您的穆斯林友好之旅",title_en:"China, Your Way - Muslim-Friendly Travel",
-     subtitle:"为中国入境游提供清真餐饮和精心策划的行程",subtitle_en:"Halal-Friendly Journeys in China. Officially Licensed China Inbound Tour Operator.",
-     image:"./site-source/images/banner001.webp"},
-    {id:2,title:"探索中国的无限可能",title_en:"Explore the Infinite Possibilities of China",
-     subtitle:"商务考察与文化交流之旅",subtitle_en:"Business Inspection & Cultural Exchange Tours",
-     image:"./site-source/images/banner002.webp"},
-    {id:3,title:"家庭亲子欢乐之旅",title_en:"Family Travel - Create Beautiful Memories",
-     subtitle:"为您和家人量身定制的完美假期",subtitle_en:"Perfect holidays tailored for you and your family",
-     image:"./site-source/images/banner003.webp"}
-  ],
   /* 特色产品：四条固定栏目（风光 / 商旅 / 文化 / 亲子），编辑式横匾，
      不按分类筛选 —— 每条都有自己的标签、文案与 CTA */
   featured:[
@@ -1869,6 +2017,11 @@ var I18N = {
        "banner.main":"畅游华夏胜境，悦享舒心旅程",
        "banner.l3":"从山水到人文，从风光到礼遇","banner.l4":"我们为您悉心安排，从容感受华夏魅力",
        "banner.cta":"即刻启程",
+       "ysh.title":"阅山河","ysh.sub":"山河为卷，步履作笔。",
+       "ysh.c1":"五方疆土，五条文脉，串联起中国自然风物、千年民俗、商贸往来与文明交融的脉络。",
+       "ysh.c2":"我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。",
+       "ysh.c3":"山川不语，自有答案，期待与你一同踏上旅途。",
+       "ysh.punch":"阅山河，方知华夏；行万里，读懂何以中国。",
        "products.title":"特色产品","products.all":"查看全部产品",
        "contact.info":"联系方式","contact.addr":"公司地址：","contact.phone":"联系电话：","contact.wa":"WhatsApp：","contact.email":"电子邮箱：",
        "contact.next":"下一站，中国",
@@ -1888,6 +2041,11 @@ var I18N = {
        "banner.l3":"From nature to culture, from scenery to warm hospitality",
        "banner.l4":"Every detail arranged for you, so you can take in China's charm at ease",
        "banner.cta":"Set Off Now",
+       "ysh.title":"Reading Mountains & Rivers","ysh.sub":"With landscapes as our scroll and footsteps as our brush.",
+       "ysh.c1":"Five regions, five cultural arteries — threading together China's natural wonders, millennium-old folkways, trade and the mingling of civilisations.",
+       "ysh.c2":"We would rather not be hurried sightseers; we travel deep and slow, reading the stories a thousand years have settled into the land.",
+       "ysh.c3":"Mountains and rivers speak no words, yet hold their own answers — we look forward to journeying with you.",
+       "ysh.punch":"Read the mountains and rivers, and you come to know China; walk ten thousand miles, and you understand what makes it China.",
        "products.title":"Featured Products","products.all":"View All Products",
        "contact.info":"Contact Information","contact.addr":"Address:","contact.phone":"Phone:","contact.wa":"WhatsApp:","contact.email":"Email:",
        "contact.next":"Next Stop, China",
@@ -1916,6 +2074,88 @@ if(bannerVideo){
 r */
   }
 }
+
+/* ══ 阅山河轮播 ══
+   8 张底图按用户给定顺序轮换；整篇文案同屏完整展示，
+   底图轮换文字不动。4s 自动轮播，悬停暂停；箭头/圆点/横滑三种切换；
+   第 1 张内联直出，其余 7 张延迟 1.2s 填充 data-bg，不与 banner 视频抢首屏带宽 */
+var YSH_LINES = [
+  { t:'西行黄河丝路',   b:'品读中华文明与伊斯兰文化千年交融包容底蕴；',
+    t_en:'Westward · The Yellow River Silk Road', b_en:'Savour a millennium of fusion and inclusiveness between Chinese and Islamic civilisations.' },
+  { t:'北上皇城坝上',   b:'纵览皇家文脉与无垠草原，领略独有雄浑气度；',
+    t_en:'Northward · Imperial Capitals & Bashang Grassland', b_en:'Take in royal heritage and boundless steppe, and a grandeur found nowhere else.' },
+  { t:'东登泰山曲阜',   b:'探寻儒学源头，触摸滋养整个东方的精神根基；',
+    t_en:'Eastward · Mount Tai & Qufu', b_en:'Trace the wellspring of Confucianism, touching the spiritual bedrock that nourished the East.' },
+  { t:'畅游川渝山水',   b:'邂逅古蜀文明神秘与喀斯特峰林铸就天地灵秀；',
+    t_en:'Into the Landscapes of Sichuan & Chongqing', b_en:'Encounter the mystery of ancient Shu and karst peaks sculpting the beauty of heaven and earth.' },
+  { t:'泛舟水乡园林',   b:'静赏江南烟雨与摩登都市交织辉映的盛世风华。',
+    t_en:'Drifting Through Jiangnan\'s Water Towns', b_en:'Savour misty Jiangnan interwoven with the radiant splendour of modern metropolises.' }
+];
+var YSH = { cur:0, n:YSH_LINES.length, timer:null };
+
+function yshFill(){
+  var zh = LANG === 'zh', poem = document.getElementById('yshPoem');
+  if(!poem) return;
+  poem.textContent = '';
+  for(var k = 0; k < YSH_LINES.length; k++){
+    var L = YSH_LINES[k];
+    var p = document.createElement('p'); p.className = 'ysh-v';
+    var s = document.createElement('strong'); s.textContent = zh ? L.t : L.t_en;
+    p.appendChild(s);
+    p.appendChild(document.createTextNode((zh ? '，' : ' — ') + (zh ? L.b : L.b_en)));
+    poem.appendChild(p);
+  }
+}
+function yshGo(i){
+  YSH.cur = (i + YSH.n) % YSH.n;
+  var slides = document.querySelectorAll('#yueshanhe .ysh-slide');
+  var dots   = document.querySelectorAll('#yueshanhe .ysh-dot');
+  for(var k = 0; k < slides.length; k++) slides[k].classList.toggle('on', k === YSH.cur);
+  for(var d = 0; d < dots.length; d++){
+    dots[d].classList.toggle('on', d === YSH.cur);
+    dots[d].setAttribute('aria-current', d === YSH.cur ? 'true' : 'false');
+  }
+}
+function yshBuild(){
+  yshFill();   /* 整篇线路句首渲染（applyLocale 也会调用，此处兜底） */
+  YSH.n = document.querySelectorAll('#yueshanhe .ysh-slide').length;  /* 圆点数跟实际底图数走（当前 8 张） */
+  var box = document.getElementById('yshDots');
+  for(var k = 0; k < YSH.n; k++){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'ysh-dot' + (k === 0 ? ' on' : '');
+    b.setAttribute('aria-label', '第 ' + (k + 1) + ' 张');
+    b.setAttribute('aria-current', k === 0 ? 'true' : 'false');
+    (function(idx){ b.addEventListener('click', function(){ yshGo(idx); yshPlay(); }); })(k);
+    box.appendChild(b);
+  }
+  document.getElementById('yshPrev').addEventListener('click', function(){ yshGo(YSH.cur - 1); yshPlay(); });
+  document.getElementById('yshNext').addEventListener('click', function(){ yshGo(YSH.cur + 1); yshPlay(); });
+  /* 横滑切页（≥40px 判定为滑动，不干扰纵向滚动） */
+  var sec = document.getElementById('yueshanhe'), sx = null;
+  sec.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, {passive:true});
+  sec.addEventListener('touchend', function(e){
+    if(sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx;
+    if(Math.abs(dx) > 40){ yshGo(YSH.cur + (dx < 0 ? 1 : -1)); yshPlay(); }
+    sx = null;
+  }, {passive:true});
+  /* 悬停暂停自动轮播 */
+  sec.addEventListener('mouseenter', yshPause);
+  sec.addEventListener('mouseleave', yshPlay);
+  /* 延迟填充其余底图 */
+  setTimeout(function(){
+    var lazy = document.querySelectorAll('#yueshanhe .ysh-slide[data-bg]');
+    for(var j = 0; j < lazy.length; j++) lazy[j].style.backgroundImage = 'url("' + lazy[j].getAttribute('data-bg') + '")';
+  }, 1200);
+  yshPlay();
+}
+function yshPlay(){
+  yshPause();
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;  /* 减少动效：不自动轮播，仅手动切换 */
+  YSH.timer = setInterval(function(){ yshGo(YSH.cur + 1); }, 4000);
+}
+function yshPause(){ if(YSH.timer){ clearInterval(YSH.timer); YSH.timer = null; } }
+document.addEventListener('visibilitychange', function(){ document.hidden ? yshPause() : yshPlay(); });
 
 /* ══ 优势：照片封面流 ══
    8 条优势 = 8 张照片封面；中心一张完整呈现，两侧逐层收小、照片轻度压暗。
@@ -2413,6 +2653,7 @@ function applyLocale(){
   document.getElementById('ctAddr').textContent   = zh ? C.address : C.address_en;
   renderDests(); bindDate(); renderDate();
   renderAdvantages(); renderFeatured();
+  yshFill();   /* 阅山河整篇线路句随语言重建 */
 }
 /* ══ 语言切换：自定义下拉（替代原生 select） ══ */
 /* 语言会话记忆：仅当前标签会话内记住选择——站内跳转保持，新开进站一律默认中文 */
@@ -2566,6 +2807,7 @@ function setupParallax(){
   });
 })();
 try{ applyLocale(); }finally{ document.documentElement.setAttribute('data-lang-ready',''); }   /* 英文记忆时首绘暂隐，就绪后立即放开 */
+yshBuild();   /* 阅山河轮播：建圆点/绑事件/启动自动播放（在 applyLocale 之后，保证首句语言正确） */
 setupReveal();
 setupParallax();
 </script>
