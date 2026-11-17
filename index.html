@@ -335,6 +335,10 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); li
 #yueshanhe .ysh-arrow--prev{left:clamp(14px,3vw,44px)}
 #yueshanhe .ysh-arrow--next{right:clamp(14px,3vw,44px)}
 #yueshanhe .ysh-arrow svg{width:20px; height:20px; display:block}
+/* 滚动入场：站内 .reveal 系统的透明度是类级 (0,1,0)，压不过本模块的 ID 级 opacity（.92/.95），
+   这里在模块作用域内提权——入场前全隐，入场后回到 1（与原 .92/.95 的差异肉眼不可辨） */
+#yueshanhe .reveal{opacity:0}
+#yueshanhe .reveal.in{opacity:1}
 @media (max-width:767px){ #yueshanhe .ysh-arrow{display:none} }
 @media (max-width:640px){
   /* 手机端高度由内容决定：去掉强制一屏与 auto 均分，留白改为固定小间距 */
@@ -2716,6 +2720,7 @@ document.getElementById('inquiry').addEventListener('submit', function(e){
 
 /* ══ 滚动入场动效：IntersectionObserver + 视差 ══ */
 var REVEAL_SEL = [
+  '#yueshanhe .ysh-head > *', '#yueshanhe .ysh-poem', '#yueshanhe .ysh-close',
   '#services .adv-head', '#services .adv-cf-foot',
   '#products .mb-16', '#featList > *', '#products .mt-14',
   '#about .about-layout > *',
