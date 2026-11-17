@@ -379,6 +379,10 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); li
   #yueshanhe .ysh-v{font-size:.9375rem; line-height:1.75}
   #yueshanhe .ysh-close p{font-size:.8125rem; line-height:1.75}
   #yueshanhe .ysh-close .ysh-punch{font-size:1.15rem; margin-top:8px}
+  /* 结语拆成两段（ysh-punch1 / ysh-punch2）：桌面端两个 span 首尾相接仍是一行，
+     两端对齐不受影响；手机端第二段转 block，强制在「；」后断行，
+     避免浏览器在「行万里，读懂何以中国」句中随机折断 */
+  #yueshanhe .ysh-close .ysh-punch-l2{display:block}
   #yueshanhe .ysh-dots{margin-top:18px; padding-top:0}
 }
 /* 英文手机端：字号同样提至整站规范下限，拉丁折行多仅比中文小半档 */
@@ -1525,7 +1529,7 @@ html[lang="en"] .about-media::after{
         <p data-i18n="ysh.c1">五方疆土，五条文脉，串联起中国自然风物、千年民俗、商贸往来与文明交融的脉络。</p>
         <p class="ysh-just" data-i18n="ysh.c2">我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。</p>
         <p data-i18n="ysh.c3">山川不语，自有答案，期待与你一同踏上旅途。</p>
-        <p class="ysh-punch" data-i18n="ysh.punch">阅山河，方知华夏；行万里，读懂何以中国。</p>
+        <p class="ysh-punch"><span data-i18n="ysh.punch1">阅山河，方知华夏；</span><span class="ysh-punch-l2" data-i18n="ysh.punch2">行万里，读懂何以中国。</span></p>
       </div>
       <div class="ysh-dots" id="yshDots" role="group" aria-label="阅山河轮播导航"></div>
     </div>
@@ -2056,7 +2060,7 @@ var I18N = {
        "ysh.c1":"五方疆土，五条文脉，串联起中国自然风物、千年民俗、商贸往来与文明交融的脉络。",
        "ysh.c2":"我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。",
        "ysh.c3":"山川不语，自有答案，期待与你一同踏上旅途。",
-       "ysh.punch":"阅山河，方知华夏；行万里，读懂何以中国。",
+       "ysh.punch1":"阅山河，方知华夏；","ysh.punch2":"行万里，读懂何以中国。",
        "products.title":"特色产品","products.all":"查看全部产品",
        "contact.info":"联系方式","contact.addr":"公司地址：","contact.phone":"联系电话：","contact.wa":"WhatsApp：","contact.email":"电子邮箱：",
        "contact.next":"下一站，中国",
@@ -2080,7 +2084,7 @@ var I18N = {
        "ysh.c1":"Five regions, five cultural arteries — threading together China's natural wonders, millennium-old folkways, trade and the mingling of civilisations.",
        "ysh.c2":"We would rather not be hurried sightseers; we travel deep and slow, reading the stories a thousand years have settled into the land.",
        "ysh.c3":"Mountains and rivers speak no words, yet hold their own answers — we look forward to journeying with you.",
-       "ysh.punch":"Read the mountains and rivers, and you come to know China; walk ten thousand miles, and you understand what makes it China.",
+       "ysh.punch1":"Read the mountains and rivers, and you come to know China;","ysh.punch2":" walk ten thousand miles, and you understand what makes it China.",
        "products.title":"Featured Products","products.all":"View All Products",
        "contact.info":"Contact Information","contact.addr":"Address:","contact.phone":"Phone:","contact.wa":"WhatsApp:","contact.email":"Email:",
        "contact.next":"Next Stop, China",
