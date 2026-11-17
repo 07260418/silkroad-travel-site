@@ -244,11 +244,21 @@ html,body{min-width:0 !important; overflow-x:hidden}
 #yueshanhe .ysh-slide{
   position:absolute; inset:0;
   background-position:center; background-size:cover; background-repeat:no-repeat;
-  opacity:0; transform:scale(1.02);
+  opacity:0; transform:scale(1.08);
   transition:opacity 1.4s ease; will-change:opacity,transform;
 }
+/* 关键帧终点必须回到 scale(1)：位图按 1:1 落屏才不留上采样，缓推只作为入场动势 */
 #yueshanhe .ysh-slide.on{opacity:1; animation:yshKen 6s cubic-bezier(.22,.61,.36,1) forwards}
-@keyframes yshKen{from{transform:scale(1.1)}to{transform:scale(1.02)}}
+@keyframes yshKen{from{transform:scale(1.08)}to{transform:scale(1)}}
+/* 高亮底图的补暗层（.is-bright）：新换的四张 1920×1080 原图天空/雾气很亮，
+   实测白字在画面中段只有 1.6~2.2:1，靠原有上下暗场压不住。
+   这层随幻灯一起淡入，中央按椭圆加暗（文字正压在这里），边缘轻压，保留画面通透感 */
+#yueshanhe .ysh-slide.is-bright::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(64% 48% at 50% 52%, rgba(9,20,18,.56) 0%, rgba(9,20,18,.40) 58%, rgba(9,20,18,.08) 100%),
+    linear-gradient(180deg, rgba(9,20,18,.34) 0%, rgba(9,20,18,.10) 32%, rgba(9,20,18,.12) 66%, rgba(9,20,18,.30) 100%);
+}
 @media (prefers-reduced-motion: reduce){
   #yueshanhe .ysh-slide{animation:none !important; transform:none !important}
 }
@@ -308,8 +318,28 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); li
 }
 #yueshanhe .ysh-close .ysh-punch{
   margin:10px auto 0;
-  font-size:clamp(.95rem,1.3vw,1.1rem); font-weight:600; letter-spacing:.16em; margin-right:-.16em;
+  font-size:clamp(1.08rem,1.55vw,1.32rem); font-weight:600; letter-spacing:.16em; margin-right:-.16em;
   color:#FFFFFF; opacity:1;
+}
+/* 「我们不愿做走马观花的过客」一段左右对齐 */
+#yueshanhe .ysh-close p.ysh-just{text-align:justify; text-justify:inter-ideograph}
+/* 中文桌面端：结语与上一行两端对齐 —— 盒子撑满 .ysh-close（其宽由 39 字的 c1/c2 决定），
+   再用 CJK 字间距把小字句均匀撑到同宽；末字的 letter-spacing 由上面的 -.16em 负 margin 抵消，
+   因此左右端点与上一行严格重合。行尾对齐必须写 text-align-last，否则最后一行（也是唯一行）不参与撑开 */
+@media (min-width:641px){
+  html[lang^="zh"] #yueshanhe .ysh-close p.ysh-punch{
+    /* 宽度多给 .26em：句末「。」的字面墨迹比字身窄，字号越大这块留白越宽（24px 时约 7px、
+       14.4px 时约 4px），若不补，右端墨迹会比上一行缩进 5~6px，看着仍不齐。
+       补的量 ≈ 0.7×(本行字号 − 上一行字号)，用 em 表达即 0.26em 左右 */
+    width:calc(100% + .26em); margin:10px 0 0;
+    /* 字号提一档（21.12 → 24px @1440）：撑满同宽时若只靠字距拉，字会散；
+       字号与字距一起加，撑开的幅度才不刺眼。英文版不受影响（下面规则只匹配 zh） */
+    font-size:clamp(1.2rem,1.75vw,1.5rem);
+    /* 关掉 letter-spacing 交给 justify 分配间距：字距若留着，末字后会多出一段字距，
+       右端点就比上一行短 3~4px；置 0 后由 inter-ideograph 均分，右端点才压得准 */
+    letter-spacing:0;
+    text-align:justify; text-align-last:justify; text-justify:inter-ideograph;
+  }
 }
 /* 圆点：独立于结语，margin-top:auto 把自己推到区块底部（padding-bottom 之上）；margin-bottom 上移 10px */
 #yueshanhe .ysh-dots{display:flex; justify-content:center; gap:10px; margin-top:auto; margin-bottom:10px; padding-top:16px}
@@ -348,7 +378,7 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); li
   /* 字号对齐整站手机端规范（正文 15px / 说明 13px） */
   #yueshanhe .ysh-v{font-size:.9375rem; line-height:1.75}
   #yueshanhe .ysh-close p{font-size:.8125rem; line-height:1.75}
-  #yueshanhe .ysh-close .ysh-punch{font-size:1rem; margin-top:8px}
+  #yueshanhe .ysh-close .ysh-punch{font-size:1.15rem; margin-top:8px}
   #yueshanhe .ysh-dots{margin-top:18px; padding-top:0}
 }
 /* 英文手机端：字号同样提至整站规范下限，拉丁折行多仅比中文小半档 */
@@ -358,7 +388,7 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); li
   html[lang="en"] #yueshanhe .ysh-layer{padding-left:16px; padding-right:16px}
   html[lang="en"] #yueshanhe .ysh-v{font-size:.875rem; line-height:1.7}
   html[lang="en"] #yueshanhe .ysh-close p{font-size:.75rem; line-height:1.7}
-  html[lang="en"] #yueshanhe .ysh-close .ysh-punch{font-size:.875rem; letter-spacing:.08em}
+  html[lang="en"] #yueshanhe .ysh-close .ysh-punch{font-size:1rem; letter-spacing:.08em}
 }
 
 /* 主色实底按钮：与「了解我们」按钮（.adv-more--solid）同款
@@ -1459,7 +1489,7 @@ html[lang="en"] .about-media::after{
 
     <div class="absolute inset-0 flex items-center justify-center text-center text-white" id="heroCopy">
       <div class="banner-copy px-4">
-        <h1 class="bc-main" data-i18n="banner.main">畅游华夏胜境，悦享舒心旅程</h1>
+        <h1 class="bc-main" data-i18n="banner.main">畅游华夏胜境&nbsp;&nbsp;悦享舒心旅程</h1>
         <p  class="bc-sub"  data-i18n="banner.l3">从山水到人文，从风光到礼遇</p>
         <p  class="bc-sub"  data-i18n="banner.l4">我们为您悉心安排，从容感受华夏魅力</p>
         <a  href="#products" id="bannerCta" class="bc-cta" data-i18n="banner.cta">即刻启程</a>
@@ -1467,18 +1497,18 @@ html[lang="en"] .about-media::after{
     </div>
   </section>
 
-  <!-- ══ YUESHANHE：阅山河全屏轮播（8 张底图按用户给定顺序，文案整篇固定展示）══
-       底图顺序：清真寺→故宫角楼→云雾山峦→山涧激流→江南烟雨→雾中湖泊→CBD 晚霞。
-       第 1 张内联直出保证首屏可看，其余 6 张由 JS 延迟填充，不与 banner 视频抢带宽 -->
+  <!-- ══ YUESHANHE：阅山河全屏轮播（6 张底图，文案整篇固定展示）══
+       底图顺序：层峦日出→故宫角楼→山涧激流→园林烟雨→雾中湖泊→CBD 晚霞。
+       前四张用 1920×1080 原图直出（不重编码，只换文件名以避开旧缓存）。
+       第 1 张内联直出保证首屏可看，其余 5 张由 JS 延迟填充，不与 banner 视频抢带宽 -->
   <section id="yueshanhe" class="relative w-full overflow-hidden bg-black" aria-label="阅山河">
     <div class="ysh-slides absolute inset-0" aria-hidden="true">
-      <div class="ysh-slide on" style="background-image:url('./site-source/images/ysh-01-mosque.webp')"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-02-forbidden-city.webp"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-03-misty-mountains.webp"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-04-mountain-river.webp"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-06-jiangnan-rain.webp"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-07-misty-lake.webp"></div>
-      <div class="ysh-slide" data-bg="./site-source/images/ysh-08-cbd-sunset.webp"></div>
+      <div class="ysh-slide is-bright on" style="background-image:url('./site-source/images/ysh-11-ridges.webp')"></div>
+      <div class="ysh-slide is-bright" data-bg="./site-source/images/ysh-12-forbidden-city.webp"></div>
+      <div class="ysh-slide is-bright" data-bg="./site-source/images/ysh-13-river-valley.webp"></div>
+      <div class="ysh-slide is-bright" data-bg="./site-source/images/ysh-14-garden-rain.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-15-misty-lake.webp"></div>
+      <div class="ysh-slide" data-bg="./site-source/images/ysh-16-cbd-sunset.webp"></div>
     </div>
     <div class="ysh-shade pointer-events-none absolute inset-0"></div>
 
@@ -1493,7 +1523,7 @@ html[lang="en"] .about-media::after{
 
       <div class="ysh-close">
         <p data-i18n="ysh.c1">五方疆土，五条文脉，串联起中国自然风物、千年民俗、商贸往来与文明交融的脉络。</p>
-        <p data-i18n="ysh.c2">我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。</p>
+        <p class="ysh-just" data-i18n="ysh.c2">我们不愿做走马观花的过客，只愿以深度慢行的旅途，读懂土地深处沉淀的千年故事。</p>
         <p data-i18n="ysh.c3">山川不语，自有答案，期待与你一同踏上旅途。</p>
         <p class="ysh-punch" data-i18n="ysh.punch">阅山河，方知华夏；行万里，读懂何以中国。</p>
       </div>
@@ -2019,7 +2049,7 @@ var DATA = {
 
 var I18N = {
   zh:{ "nav.home":"首页","nav.products":"产品","nav.about":"关于我们","nav.contact":"联系我们","nav.tailor":"定制服务",
-       "banner.main":"畅游华夏胜境，悦享舒心旅程",
+       "banner.main":"畅游华夏胜境\u00A0\u00A0悦享舒心旅程",
        "banner.l3":"从山水到人文，从风光到礼遇","banner.l4":"我们为您悉心安排，从容感受华夏魅力",
        "banner.cta":"即刻启程",
        "ysh.title":"阅山河","ysh.sub":"山河为卷，步履作笔。",
@@ -2042,7 +2072,7 @@ var I18N = {
        "footer.slogan":"专注于旅游服务的国际旅行社","footer.links":"快速链接","footer.services":"我们的服务",
        "footer.s1":"定制旅行","footer.s2":"商务考察访问","footer.rights":"版权所有" },
   en:{ "nav.home":"Home","nav.products":"Products","nav.about":"About Us","nav.contact":"Contact","nav.tailor":"Tailor-made",
-       "banner.main":"Roam China's Splendid Landscapes, Enjoy a Carefree Journey",
+       "banner.main":"Roam China's Splendid Landscapes\u00A0\u00A0Enjoy a Carefree Journey",
        "banner.l3":"From nature to culture, from scenery to warm hospitality",
        "banner.l4":"Every detail arranged for you, so you can take in China's charm at ease",
        "banner.cta":"Set Off Now",
