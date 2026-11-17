@@ -282,7 +282,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
 #yueshanhe .ysh-v{
   margin:0;
   font-size:clamp(.9375rem,1.5vw,1.125rem); line-height:2; letter-spacing:.05em;
-  font-weight:700;
+  font-weight:400;
   opacity:.95; text-shadow:0 1px 8px rgba(0,0,0,.4);
   text-wrap:balance;   /* 均衡每行字数，避免换行后末行只剩两三个字 */
 }
@@ -290,8 +290,8 @@ html,body{min-width:0 !important; overflow-x:hidden}
   font-family:'Alibaba PuHuiTi 3.0','PingFang SC','Microsoft YaHei','Hiragino Sans GB',Arial,sans-serif;
   font-weight:700; letter-spacing:.08em; color:#FFFFFF;
 }
-/* 英文桌面端：拉丁整行加粗后折行增多，字号收半档保证仍一屏放下 */
-html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.875rem,1.35vw,1.03125rem)}
+/* 英文桌面端：分行后每条占 3 行，字号收半档 + 行高收紧，保证整屏仍一屏放下 */
+html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.8125rem,1.25vw,.96875rem); line-height:1.6}
 /* 矮屏笔记本（浏览器工具栏占掉顶部后视口常只剩 760~820px）：压缩行距与顶部留白，仍保持一屏 */
 @media (min-width:641px) and (max-height:820px){
   #yueshanhe .ysh-layer{padding-top:clamp(64px,9vh,88px)}
@@ -303,13 +303,13 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.875rem,1.35vw,1.03125rem)}
 #yueshanhe .ysh-close p{
   margin:0 auto; max-width:46em;
   font-size:clamp(.78rem,1vw,.9rem); line-height:1.9; letter-spacing:.05em;
-  color:#FFFFFF; opacity:.95; text-shadow:0 1px 6px rgba(0,0,0,.4);
+  color:#F2EAD9; opacity:.95; text-shadow:0 1px 6px rgba(0,0,0,.4);
   text-wrap:balance;
 }
 #yueshanhe .ysh-close .ysh-punch{
   margin:10px auto 0;
   font-size:clamp(.95rem,1.3vw,1.1rem); font-weight:600; letter-spacing:.16em; margin-right:-.16em;
-  opacity:1;
+  color:#FFFFFF; opacity:1;
 }
 /* 圆点：独立于结语，margin-top:auto 把自己推到区块底部（padding-bottom 之上）；margin-bottom 上移 10px */
 #yueshanhe .ysh-dots{display:flex; justify-content:center; gap:10px; margin-top:auto; margin-bottom:10px; padding-top:16px}
@@ -327,9 +327,10 @@ html[lang="en"] #yueshanhe .ysh-v{font-size:clamp(.875rem,1.35vw,1.03125rem)}
   display:flex; align-items:center; justify-content:center;
   background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.5);
   color:#fff; cursor:pointer;
-  transition:background-color .25s ease, transform .25s ease;
+  transition:background-color .3s ease, color .3s ease, transform .25s ease;
 }
-#yueshanhe .ysh-arrow:hover{background:rgba(255,255,255,.26); transform:translateY(-50%) scale(1.06)}
+#yueshanhe .ysh-arrow:hover{background:#094949; color:#FDF5E5; border-color:#094949; transform:translateY(-50%) scale(1.06)}
+#yueshanhe .ysh-arrow:active{transform:translateY(-50%) scale(.96)}
 #yueshanhe .ysh-arrow:focus-visible{outline:2px solid #fff; outline-offset:3px}
 #yueshanhe .ysh-arrow--prev{left:clamp(14px,3vw,44px)}
 #yueshanhe .ysh-arrow--next{right:clamp(14px,3vw,44px)}
@@ -2100,9 +2101,11 @@ function yshFill(){
   for(var k = 0; k < YSH_LINES.length; k++){
     var L = YSH_LINES[k];
     var p = document.createElement('p'); p.className = 'ysh-v';
-    var s = document.createElement('strong'); s.textContent = zh ? L.t : L.t_en;
+    var s = document.createElement('strong');
+    s.textContent = (zh ? L.t : L.t_en) + (zh ? '，' : '');
     p.appendChild(s);
-    p.appendChild(document.createTextNode((zh ? '，' : ' — ') + (zh ? L.b : L.b_en)));
+    p.appendChild(document.createElement('br'));
+    p.appendChild(document.createTextNode(zh ? L.b : '— ' + L.b_en));
     poem.appendChild(p);
   }
 }
