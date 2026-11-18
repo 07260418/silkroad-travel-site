@@ -1949,9 +1949,14 @@ function renderDetail(){
     'linear-gradient(0deg, rgba(8,28,24,.10), rgba(8,28,24,.10)), url(' + P.image + ')';
 
   var name = zh ? P.title : P.title_en;
-  /* 返回链接带分类：速览「返回产品列表」与面包屑「产品」都回到该线路所属的产品线，
-     列表页 catFromUrl() 会校验参数，无效值自动落回「全部」 */
-  var backHref = 'product.html?cat=' + encodeURIComponent(P.cat || 'all');
+  /* 返回链接带分类：优先带回「进入前浏览的分类」（列表卡片链接带 from=CAT），
+     保证从全部分类进来返回还在全部分类；直接打开/分享的详情页没有 from，
+     回落到该线路所属的产品线。列表页 catFromUrl() 会校验参数，无效值自动落回「全部」 */
+  var mFrom = /[?&]from=([^&#]*)/.exec(location.search);
+  var backCat;
+  if(mFrom){ try { backCat = decodeURIComponent(mFrom[1]); } catch(e){ backCat = mFrom[1]; } }
+  else { backCat = P.cat || 'all'; }
+  var backHref = 'product.html?cat=' + encodeURIComponent(backCat);
   document.getElementById('dtBack').href = backHref;
   document.getElementById('dtCrumb').innerHTML =
       '<a href="index.html">' + t['dt.crumbHome'] + '</a> / ' +

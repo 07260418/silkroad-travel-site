@@ -1724,7 +1724,9 @@ function renderProducts(){
   document.getElementById('pdGrid').innerHTML = view.map(function(p, i){
     var label = chipLabel(p, i, zh);
     var alt = zh ? (label + '：' + p.title) : (label + ': ' + p.title_en);
-    return '<a class="pd-card" href="product-detail.html?p=' + p.id + '"' +
+    /* from=CAT：把进入前浏览的分类带给详情页，返回时原样带回，
+       保证「从全部分类进来→返回还在全部分类」，不落到产品自身所属分类 */
+    return '<a class="pd-card" href="product-detail.html?p=' + p.id + '&from=' + encodeURIComponent(CAT) + '"' +
              ' aria-label="' + t['pd.detailOf'] + (zh ? p.title : p.title_en) + '">' +
              '<figure class="pd-card-media">' +
                '<img src="' + p.image + '" alt="' + alt + '"' + (i < 3 ? '' : ' loading="lazy"') + ' decoding="async">' +
