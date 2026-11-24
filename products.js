@@ -36,7 +36,12 @@ var PRODUCTS = [
               './site-source/images/详情页/imperial-grassland/hg-08-day6.webp',
               './site-source/images/详情页/imperial-grassland/hg-09-day7.webp',
               './site-source/images/详情页/imperial-grassland/hg-10-day8.webp',
-              './site-source/images/详情页/imperial-grassland/hg-11-day9.webp']},
+              './site-source/images/详情页/imperial-grassland/hg-11-day9.webp'],
+   itin_imgs_en:['./site-source/images/详情页/imperial-grassland/hg-en-01-cover.webp',
+              './site-source/images/详情页/imperial-grassland/hg-en-02-highlights.webp',
+              './site-source/images/详情页/imperial-grassland/hg-en-03-day1-3.webp',
+              './site-source/images/详情页/imperial-grassland/hg-en-04-day4-6.webp',
+              './site-source/images/详情页/imperial-grassland/hg-en-05-day7-9.webp']},
 
   {id:'shandong-coast', cat:'scenic',
    tag:'风光度假', tag_en:'Scenic Retreat',

@@ -1971,9 +1971,9 @@ function renderDetail(){
       '<div><dt>' + t['dt.days'] + '</dt><dd>' + duration(P, zh) + '</dd></div>' +
       '<div><dt>' + t['dt.when'] + '</dt><dd>' + nb(esc(zh ? P.when : P.when_en)) + '</dd></div>';
 
-  /* 行程海报图：顾问提供的行程长图（中文成图），仅中文页展示；
-     英文页暂无文本行程 → 与中文无图时一致，走插画缺省态，不留空白区块 */
-  var itinImgs = zh ? (P.itin_imgs || []) : [];
+  /* 行程海报图：顾问提供的行程长图，中英各自成图（itin_imgs / itin_imgs_en）；
+     某语言没有成图时 → 与无图一致，走插画缺省态，不留空白区块 */
+  var itinImgs = (zh ? P.itin_imgs : P.itin_imgs_en) || [];
   var imgWrap = document.getElementById('dtItinImgs');
   if(itinImgs.length){
     imgWrap.hidden = false;
