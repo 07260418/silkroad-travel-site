@@ -64,7 +64,11 @@ var PRODUCTS = [
               './site-source/images/详情页/shandong-coast/ql-07-day6.webp',
               './site-source/images/详情页/shandong-coast/ql-08-day7.webp',
               './site-source/images/详情页/shandong-coast/ql-09-day8.webp',
-              './site-source/images/详情页/shandong-coast/ql-10-day9.webp']},
+              './site-source/images/详情页/shandong-coast/ql-10-day9.webp'],
+   itin_imgs_en:['./site-source/images/详情页/shandong-coast/ql-en-01-cover-highlights.webp',
+              './site-source/images/详情页/shandong-coast/ql-en-02-day1-4.webp',
+              './site-source/images/详情页/shandong-coast/ql-en-03-day5-7.webp',
+              './site-source/images/详情页/shandong-coast/ql-en-04-day8-9.webp']},
 
   {id:'yellow-river-desert', cat:'scenic',
    tag:'风光度假', tag_en:'Scenic Retreat',
