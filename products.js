@@ -89,6 +89,13 @@ var PRODUCTS = [
               './site-source/images/详情页/yellow-river/yh-05-day5.webp',
               './site-source/images/详情页/yellow-river/yh-06-day6.webp',
               './site-source/images/详情页/yellow-river/yh-07-day6-8.webp'],
+   itin_imgs_en:['./site-source/images/详情页/yellow-river/yh-en-01-cover.webp',
+              './site-source/images/详情页/yellow-river/yh-en-02-highlights.webp',
+              './site-source/images/详情页/yellow-river/yh-en-03-day1-2.webp',
+              './site-source/images/详情页/yellow-river/yh-en-04-day3-4.webp',
+              './site-source/images/详情页/yellow-river/yh-en-05-day5.webp',
+              './site-source/images/详情页/yellow-river/yh-en-06-day6.webp',
+              './site-source/images/详情页/yellow-river/yh-en-07-day7-8.webp'],
    itin:[
     {title:'初见黄河之都，开启塞上之旅：抵达兰州',
      title_en:'First glimpse of the Yellow River capital: arrive in Lanzhou',
@@ -144,7 +151,13 @@ var PRODUCTS = [
    for_:'年轻客群、自然风光', for_en:'Young travellers & nature lovers',
    when:'6-8 月九寨黄龙避暑，10 月中下旬彩林全盛景如画',
    when_en:'Jun–Aug: escape the heat at Jiuzhaigou. Mid–late Oct: peak autumn colour.',
-   image:'./site-source/images/tailor-hero-lake.webp'},
+   image:'./site-source/images/tailor-hero-lake.webp',
+   itin_imgs_en:['./site-source/images/详情页/sichuan-jiuzhaigou/sj-en-01-cover.webp',
+              './site-source/images/详情页/sichuan-jiuzhaigou/sj-en-02-highlights.webp',
+              './site-source/images/详情页/sichuan-jiuzhaigou/sj-en-03-day1-3.webp',
+              './site-source/images/详情页/sichuan-jiuzhaigou/sj-en-04-day4-6.webp',
+              './site-source/images/详情页/sichuan-jiuzhaigou/sj-en-05-day7-8.webp',
+              './site-source/images/详情页/sichuan-jiuzhaigou/sj-en-06-day9-10.webp']},
 
   /* ── 商旅考察（线路一 ~ 三）── */
   {id:'imperial-grassland-business', cat:'business',
