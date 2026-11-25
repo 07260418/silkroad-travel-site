@@ -1659,7 +1659,7 @@ html,body{min-width:0 !important; overflow-x:hidden}
           <div class="space-y-2 text-sm">
             <p>+86 18563079286</p>
             <p>WhatsApp: +86 18563079286</p>
-            <p>info@hellosilu.com</p>
+            <p>info@safarark.com</p>
           </div>
         </div>
 
@@ -1869,9 +1869,9 @@ var I18N = {
     "footer.s1":"Customized Tours","footer.s2":"Business Inspection Visits","footer.rights":"All Rights Reserved.",
 
     "dt.crumbHome":"Home","dt.crumbProducts":"Products","dt.crumbAria":"Breadcrumb",
-    "dt.days":"Duration","dt.for":"Recommended For","dt.when":"Best Time","dt.cat":"Category",
-    "dt.itinTitle":"Itinerary Overview","dt.itinNote":"A day-by-day template. Once your travel dates are confirmed, a consultant will lay out the full daily schedule.",
-    "dt.itinEmptyTitle":"No details yet","dt.itinEmptyDesc":"Ask your consultant for the daily schedule.",
+    "dt.days":"Duration","dt.for":"Recommended for","dt.when":"Best Time to Visit","dt.cat":"Category",
+    "dt.itinTitle":"Daily Itinerary","dt.itinNote":"A day-by-day template. Once your travel dates are confirmed, a consultant will lay out the full daily schedule.",
+    "dt.itinEmptyTitle":"No details available yet","dt.itinEmptyDesc":"Please contact our consultants for the daily itinerary.",
     "dt.dayTitle":"To be confirmed","dt.dayPh":"Details being finalised",
     "dt.costTitle":"What's Included","dt.inTitle":"Included","dt.outTitle":"Not Included",
     "dt.in":[
@@ -1896,7 +1896,7 @@ var I18N = {
       "The order of visits may shift with weather, flights or local events — service standards stay the same.",
       "Halal meals, prayer times and mosque visits can be arranged on request. Please note them when booking."
     ],
-    "dt.sideTitle":"At a Glance","dt.cta":"Enquire Now","dt.back":"Back to all products",
+    "dt.sideTitle":"Itinerary Overview","dt.cta":"Enquire & Customize","dt.back":"Back to Product List",
     "dt.missTitle":"Route not found","dt.missDesc":"This route may have changed or the link is incomplete. Head back to see all products.",
     "dt.missBtn":"Back to Products"
   }
@@ -1920,10 +1920,10 @@ function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── 时长文案：9 天 8 晚 / 9 Days, 8 Nights ── */
+/* ── 时长文案：9 天 8 晚 / 9 days / 8 nights（英文按终稿文档） ── */
 function duration(p, zh){
   var d = p.days || 0, n = Math.max(d - 1, 0);
-  return zh ? (d + ' 天 ' + n + ' 晚') : (d + ' Days, ' + n + ' Nights');
+  return zh ? (d + ' 天 ' + n + ' 晚') : (d + ' days / ' + n + ' nights');
 }
 
 /* ══ 渲染详情页 ══ */
